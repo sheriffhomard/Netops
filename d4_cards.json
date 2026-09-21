@@ -1,0 +1,317 @@
+[
+  [
+    "NAT Inside Local vs Inside Global",
+    "Quelle est la différence fondamentale entre une adresse 'Inside Local' et une adresse 'Inside Global' dans la terminologie NAT de Cisco ?",
+    "Terminologie NAT Cisco (RFC 2663)",
+    "• Inside Local : L'adresse IP privée attribuée à un équipement sur le réseau interne local (ex: 192.168.1.50). Elle n'est pas routable sur Internet.\n• Inside Global : L'adresse IP publique légitime (allouée par le FAI) qui représente l'équipement interne aux yeux du monde extérieur (Internet).\n• Outside Local : L'adresse IP d'un hôte externe telle qu'elle apparaît sur le réseau local interne.\n• Outside Global : L'adresse IP publique réelle assignée à un hôte sur le réseau externe (Internet).",
+    "RFC 2663 (IP Network Address Translator Terminology)",
+    "R1# show ip nat translations\nPro Inside global      Inside local       Outside local      Outside global\n--- 203.0.113.5:1024  192.168.1.50:1024  198.51.100.1:80    198.51.100.1:80",
+    "Inside Local = IP privée dans le LAN. Inside Global = IP publique sur Internet."
+  ],
+  [
+    "NAT Statique (Static NAT 1:1)",
+    "Quel est le cas d'usage typique du NAT Statique (Static NAT 1:1) et quelle est sa commande de configuration sur Cisco IOS ?",
+    "Mappage Fixe Un pour Un (1:1 Static NAT)",
+    "• Rôle : Établir une correspondance permanente et bidirectionnelle un-pour-un entre une adresse IP privée interne (Inside Local) et une adresse IP publique dédiée (Inside Global).\n• Cas d'usage : Rendre un serveur interne (Serveur Web, Mail, SFTP) accessible en permanence depuis Internet sur son adresse publique fixe.\n• Commande IOS : 'ip nat inside source static <IP-Locale> <IP-Globale>' configurée en mode global, avec 'ip nat inside' et 'ip nat outside' sur les interfaces respectives.",
+    "Cisco IOS IP Addressing Services Command Reference",
+    "R1(config)# ip nat inside source static 192.168.10.10 203.0.113.10\nR1(config-if)# interface Gi0/0\nR1(config-if)# ip nat inside\nR1(config-if)# interface Gi0/1\nR1(config-if)# ip nat outside",
+    "Association fixe 1:1 pour publier un serveur interne vers Internet."
+  ],
+  [
+    "NAT Dynamique (Dynamic NAT Pool)",
+    "Comment fonctionne le NAT Dynamique avec un pool d'adresses publiques et que se passe-t-il lorsque le pool est épuisé ?",
+    "Allocation Dynamique 1:1 à partir d'un Pool",
+    "• Fonctionnement : Les hôtes internes demandant à sortir sur Internet reçoivent temporairement une adresse IP publique disponible parmi un bloc (pool) d'adresses définies par l'administrateur.\n• Épuisement du Pool : Comme le NAT dynamique standard effectue un mappage 1:1 (sans multiplexage de ports), dès que toutes les adresses publiques du pool sont allouées, TOUTE NOUVELLE REQUÊTE est immédiatement rejetée (paquets jetés) jusqu'à ce qu'une session existante expire et libère son adresse !",
+    "RFC 3022 (Traditional IP Network Address Translator)",
+    "R1(config)# ip nat pool PUBLIC_POOL 203.0.113.10 203.0.113.14 netmask 255.255.255.248\nR1(config)# ip nat inside source list 1 pool PUBLIC_POOL",
+    "Sans overload, c'est du 1:1 : si le pool est vide, les nouveaux flux sont bloqués."
+  ],
+  [
+    "PAT / NAT Overload (Port Address Translation)",
+    "Comment le PAT (Port Address Translation / NAT Overload) permet-il à des milliers d'hôtes internes de partager une unique adresse IP publique ?",
+    "Multiplexage de Ports de Couche 4 (PAT)",
+    "• Principe : PAT inspecte et modifie les numéros de ports source de couche 4 (TCP ou UDP).\n• Mécanisme : Chaque flux émis par un hôte interne est associé à l'adresse IP publique unique combinée à un numéro de port source unique (16 bits, offrant théoriquement jusqu'à ~65 000 sessions simultanées).\n• Maintien de l'état : Le routeur conserve une table de correspondance [IP privée:Port privé <-> IP publique:Port public aléatoire] pour réacheminer le trafic retour vers le bon hôte local.",
+    "RFC 3022 § 4.1 (NAPT)",
+    "R1(config)# access-list 1 permit 192.168.0.0 0.0.255.255\nR1(config)# ip nat inside source list 1 interface GigabitEthernet0/1 overload",
+    "Le mot-clé 'overload' utilise les numéros de ports TCP/UDP pour distinguer les hôtes."
+  ],
+  [
+    "Port Forwarding avec PAT Statique",
+    "Comment configurer le Port Forwarding sur un routeur Cisco pour rediriger le port TCP 80 d'une IP publique vers un serveur web interne sur le port 8080 ?",
+    "Redirection de Port Spécifique (PAT Statique)",
+    "• Commande IOS :\n'ip nat inside source static tcp <IP-Locale> <Port-Local> <IP-Globale> <Port-Global>'\n• Exemple pour rediriger le port 80 public vers le port 8080 privé :\n'ip nat inside source static tcp 192.168.1.100 8080 203.0.113.2 80'\n• Bénéfice : Permet d'héberger plusieurs services différents (Web, SSH, Mail) sur des serveurs internes distincts derrière une seule et même adresse IP publique.",
+    "Cisco IOS NAT Configuration Guide",
+    "R1(config)# ip nat inside source static tcp 192.168.1.100 8080 203.0.113.2 80\nR1(config)# ip nat inside source static tcp 192.168.1.200 22 203.0.113.2 2222",
+    "Préciser le protocole (tcp/udp) et les ports source/destination."
+  ],
+  [
+    "Affichage des Traductions NAT : show ip nat translations",
+    "Que montre la commande 'show ip nat translations' et comment interpréter une ligne contenant un astérisque (*) ou des ports ?",
+    "Inspection de la Table de Traduction NAT",
+    "• Ligne sans port : Indique une entrée statique permanente 1:1 configurée manuellement.\n• Ligne avec ports (IP:Port) : Indique une session dynamique active gérée par PAT (Overload).\n• Colonnes clés : Protocol, Inside global, Inside local, Outside local, Outside global.\n• Utilisation en dépannage : Permet de vérifier si le routeur reçoit bien le trafic du client et s'il effectue correctement la translation avant l'émission sur le WAN.",
+    "Cisco IOS Master Command List",
+    "R1# show ip nat translations\nPro Inside global          Inside local           Outside local          Outside global\ntcp 203.0.113.1:51234      192.168.1.25:51234     198.51.100.5:443       198.51.100.5:443",
+    "Vérifie la correspondance entre l'IP interne et l'IP/port externe."
+  ],
+  [
+    "Statistiques NAT : show ip nat statistics",
+    "Quelles informations cruciales la commande 'show ip nat statistics' fournit-elle pour le diagnostic ?",
+    "Compteurs & Diagnostic Global NAT",
+    "• Informations affichées :\n1. Interfaces définies en 'inside' et 'outside'.\n2. Nombre total de traductions actives (Total active translations).\n3. Compteurs de 'Hits' (paquets traduits avec succès) et 'Misses' (premiers paquets d'un nouveau flux créant une entrée).\n4. Nom des pools configurés, plage d'adresses, masque et taux d'allocation (allocated).\n5. Nombre de paquets abandonnés par manque d'adresses ou de ports (drops/failures).",
+    "Cisco IOS NAT Configuration Guide",
+    "R1# show ip nat statistics\nTotal active translations: 142 (1 static, 141 dynamic; 141 extended)\nOutside interfaces: GigabitEthernet0/1\nInside interfaces: GigabitEthernet0/0\nHits: 45892  Misses: 154",
+    "Affiche les interfaces inside/outside, les hits/misses et les pools."
+  ],
+  [
+    "Purge de la Table NAT : clear ip nat translation",
+    "Comment vider la table de translation NAT en cas d'incident ou de saturation de sessions, et quelle est la syntaxe pour purger toutes les entrées dynamiques ?",
+    "Réinitialisation de la Table de Traduction NAT",
+    "• Commande globale : 'clear ip nat translation *'\n• Attention : Cette commande supprime immédiatement TOUTES les entrées dynamiques en mémoire, réinitialisant brutalement toutes les connexions TCP/UDP en cours des utilisateurs LAN.\n• Ciblage fin : Il est possible de cibler une IP ou un port spécifique :\n  'clear ip nat translation inside <IP-Locale>'\n  'clear ip nat translation protocol tcp <IP-Locale> <Port-L> <IP-Globale> <Port-G>'.",
+    "Cisco IOS Network Address Translation Command Reference",
+    "R1# clear ip nat translation *\nR1# clear ip nat translation inside 192.168.1.50",
+    "clear ip nat translation * pour vider toutes les sessions dynamiques."
+  ],
+  [
+    "Timeouts NAT : UDP vs TCP Sessions",
+    "Quels sont les délais d'inactivité (timeouts) par défaut des traductions NAT sous Cisco IOS pour TCP et UDP ?",
+    "Minuteurs de Rétention des Entrées NAT",
+    "• TCP Timeout : Par défaut 86 400 secondes (24 heures) pour une connexion établie. Une connexion fermée (FIN/RST) expire en 1 minute.\n• UDP Timeout : Par défaut 300 secondes (5 minutes).\n• ICMP Timeout : Par défaut 60 secondes (1 minute).\n• DNS Timeout : Par défaut 60 secondes.\n• Réglage manuel : 'ip nat translation timeout <secondes>' ou 'ip nat translation tcp-timeout <secondes>'.",
+    "Cisco IOS NAT Configuration Guide",
+    "R1(config)# ip nat translation tcp-timeout 3600\nR1(config)# ip nat translation udp-timeout 120",
+    "TCP = 24h par défaut ; UDP = 5min ; ICMP = 1min."
+  ],
+  [
+    "Ordre d'Exécution NAT : Routage vs NAT Inside/Outside",
+    "Dans quel ordre un routeur Cisco exécute-t-il le routage et le NAT pour un paquet entrant sur une interface 'inside' vers une interface 'outside' ?",
+    "Ordre des Opérations Cisco IOS (Inside vers Outside)",
+    "• Paquet entrant sur Inside vers Outside :\n1. Vérification des ACLs d'entrée.\n2. Décision de Routage (Routing Table Lookup) : Détermine l'interface de sortie.\n3. Traduction NAT (Inside vers Outside) : Translation de l'adresse source (Inside Local -> Inside Global).\n4. Vérification des ACLs de sortie.\n5. Encapsulation L2 et émission.\n• Règle clé : Le routage a lieu AVANT le NAT quand le paquet va de Inside vers Outside !",
+    "Cisco IOS Order of Operation Whitepaper",
+    "Inside -> Outside : Ingress ACL -> ROUTING -> NAT -> Egress ACL\nOutside -> Inside : Ingress ACL -> NAT -> ROUTING -> Egress ACL",
+    "Inside vers Outside : le routage est fait AVANT le NAT."
+  ],
+  [
+    "NAT Outside vers Inside : Ordre des Opérations",
+    "Dans quel ordre un routeur traite-t-il un paquet arrivant de l'extérieur ('outside') à destination du réseau interne ('inside') ?",
+    "Ordre des Opérations Cisco IOS (Outside vers Inside)",
+    "• Paquet entrant sur Outside vers Inside :\n1. Vérification des ACLs d'entrée sur l'interface outside.\n2. Traduction NAT : Translation de l'adresse destination (Inside Global -> Inside Local).\n3. Décision de Routage : Recherche dans la table de routage pour acheminer le paquet vers l'interface LAN interne.\n4. Vérification des ACLs de sortie sur l'interface inside.\n5. Émission vers l'hôte local.\n• Règle clé : Le NAT a lieu AVANT le routage lors d'un flux Outside vers Inside !",
+    "Cisco IOS Order of Operation Whitepaper",
+    "Outside -> Inside : Ingress ACL -> NAT (Destination) -> ROUTING -> Egress ACL",
+    "Outside vers Inside : le NAT est fait AVANT la décision de routage."
+  ],
+  [
+    "NAT & Protocoles Applicatifs : Dépendance aux ALGs",
+    "Pourquoi des protocoles comme FTP ou SIP nécessitent-ils un module ALG (Application Layer Gateway) avec le NAT ?",
+    "Application Layer Gateway (ALG) & NAT Fixup",
+    "• Problématique : Certains protocoles applicatifs intègrent l'adresse IP et le numéro de port dans le corps même des données utiles (Payload de niveau 7) du paquet, et pas seulement dans l'en-tête IP/TCP.\n• Exemple FTP Actif : La commande 'PORT' transmet l'adresse IP interne du client au serveur FTP. Sans ALG, le serveur tente d'ouvrir une connexion retour vers une IP privée RFC 1918 non routable !\n• Rôle de l'ALG : Inspecte le payload applicatif en profondeur (DPI) et réécrit l'adresse IP et le port à l'intérieur de la charge utile pour maintenir la connectivité.",
+    "RFC 2663 § 2.9 (Application Level Gateway)",
+    "R1(config)# ip nat service ftp\nR1(config)# ip nat service sip",
+    "L'ALG modifie les adresses IP intégrées dans le payload applicatif L7 (FTP, SIP)."
+  ],
+  [
+    "Double NAT (Twice NAT) : Cas d'Usage",
+    "Qu'est-ce que le 'Twice NAT' (Double NAT) et dans quelle situation d'entreprise est-il indispensable ?",
+    "Translation Simultanée Source et Destination",
+    "• Définition : Traduction conjointe et simultanée de l'adresse IP source ET de l'adresse IP destination d'un même paquet au passage de la passerelle.\n• Cas d'usage typique : Fusion d'entreprises ou rachat de filiales où les deux entités utilisent exactement les mêmes plages d'adresses privées (ex: 192.168.1.0/24 des deux côtés).\n• Résolution : Twice NAT masque les adresses locales de part et d'autre avec des plages virtuelles pour éviter tout conflit de chevauchement d'adresses.",
+    "Cisco ASA / IOS Network Address Translation Guide",
+    "R1(config)# ip nat pool OVERLAP_SRC ...\nR1(config)# ip nat outside source static ...",
+    "Utilisé lors de fusions d'entreprises ayant des sous-réseaux IP identiques en conflit."
+  ],
+  [
+    "NAT Virtual Interface (NVI)",
+    "Quelle limitation du NAT traditionnel l'architecture Cisco NVI (NAT Virtual Interface) résout-elle ?",
+    "Suppression de la Dichotomie Inside/Outside",
+    "• Limite classique : Le NAT traditionnel exige qu'un paquet transite explicitement entre une interface taguée 'inside' et une interface taguée 'outside'. Le trafic entre deux interfaces 'inside' ne peut pas être traduit.\n• Solution NVI : Les interfaces sont configurées avec la commande 'ip nat enable'. Tout paquet nécessitant une traduction est routé vers une interface virtuelle 'NVI0', permettant le NAT entre deux zones quelconques, du NAT inter-VRF, ou du routage asymétrique.",
+    "Cisco IOS NAT Virtual Interface (NVI) Guide",
+    "R1(config-if)# ip nat enable\nR1# show ip nat nvi translations",
+    "NVI remplace inside/outside par 'ip nat enable' pour traduire entre n'importe quelles interfaces."
+  ],
+  [
+    "Carrier-Grade NAT (CGNAT) & RFC 6598",
+    "Quelle est la plage d'adresses IPv4 dédiée réservée au Carrier-Grade NAT (CGN / Large-Scale NAT) par la RFC 6598 ?",
+    "Préfixe IPv4 Réservé CGNAT (100.64.0.0/10)",
+    "• Plage réservée : 100.64.0.0/10 (adresses allant de 100.64.0.0 à 100.127.255.255, soit 4 194 304 adresses).\n• Rôle : Utilisée par les Fournisseurs d'Accès Internet (FAI) pour attribuer des adresses IP à leurs box clientes sans entrer en conflit avec les plages privées RFC 1918 (10.0.0.0/8, 192.168.0.0/16) utilisées dans les foyers et entreprises.\n• Fonctionnement : Le FAI effectue un second niveau de NAT (NAT444) entre l'adresse 100.64.x.x du client et son pool d'IP publiques Internet.",
+    "RFC 6598 (IANA-Reserved IPv4 Prefix for Shared Address Space)",
+    "R1# show ip route 100.64.0.0 255.192.0.0",
+    "100.64.0.0/10 : réservé aux FAI pour éviter les conflits avec la RFC 1918."
+  ],
+  [
+    "NAT64 & DNS64 : Transition IPv6 vers IPv4",
+    "Quel est le rôle du couple NAT64 / DNS64 dans les réseaux de transition IPv6-only ?",
+    "Interconnexion Clients IPv6 vers Serveurs IPv4",
+    "• Problème : Un client disposant uniquement d'une connectivité IPv6 ne peut pas joindre nativement un serveur Internet disponible uniquement en IPv4.\n• DNS64 : Lorsqu'un client demande l'enregistrement AAAA d'un site IPv4-only, le serveur DNS64 synthétise une adresse IPv6 fictive en préfixant l'adresse IPv4 avec un préfixe Well-Known (64:ff9b::/96).\n• NAT64 : La passerelle route ce paquet IPv6, retire le préfixe et traduit le paquet en IPv4 standard vers le serveur cible.",
+    "RFC 6146 (Stateful NAT64) & RFC 6147 (DNS64)",
+    "Préfixe Well-Known NAT64 : 64:ff9b::/96\nExemple : 192.0.2.1 devient 64:ff9b::192.0.2.1",
+    "DNS64 crée une fausse IPv6 (64:ff9b::) et NAT64 traduit vers l'IPv4."
+  ],
+  [
+    "NAT Bypass avec Route-Maps (Policy NAT)",
+    "Comment empêcher la traduction NAT pour le trafic destiné à un VPN IPsec inter-sites tout en traduisant le trafic Internet ?",
+    "Policy NAT via Route-Map de Filtrage",
+    "• Problème : Tout le trafic sortant du LAN interne risque d'être traduit en adresse publique par PAT, ce qui brise le routage privé du tunnel VPN IPsec vers le site distant.\n• Solution Policy NAT :\n  1. Créer une ACL identifiant le trafic Internet (deny vers le réseau distant du VPN, permit any pour le reste).\n  2. Associer la Route-Map ou l'ACL à l'instruction NAT.\n  - Résultat : Les paquets vers le site distant conservent leur IP privée source originale et empruntent le tunnel IPsec sans être modifiés.",
+    "Cisco IOS Security Configuration Guide",
+    "R1(config)# access-list 105 deny ip 192.168.1.0 0.0.0.255 192.168.2.0 0.0.0.255\nR1(config)# access-list 105 permit ip 192.168.1.0 0.0.0.255 any\nR1(config)# ip nat inside source list 105 interface Gi0/1 overload",
+    "Deny dans l'ACL NAT pour le sous-réseau distant du VPN pour éviter la traduction."
+  ],
+  [
+    "NAT Pool avec Masque de Sous-Réseau ou Préfixe",
+    "Quelle est la syntaxe exacte pour déclarer un pool d'adresses NAT publiques avec 'prefix-length' sous Cisco IOS ?",
+    "Définition d'un Pool d'Adresses NAT",
+    "• Deux syntaxes équivalentes :\n1. Avec netmask :\n'ip nat pool NOM_POOL 203.0.113.1 203.0.113.6 netmask 255.255.255.248'\n2. Avec prefix-length :\n'ip nat pool NOM_POOL 203.0.113.1 203.0.113.6 prefix-length 29'\n• Remarque : Si une seule adresse IP publique est disponible dans le pool, l'adresse de début et l'adresse de fin sont identiques.",
+    "Cisco IOS Command Reference",
+    "R1(config)# ip nat pool MON_POOL 203.0.113.10 203.0.113.10 prefix-length 30",
+    "ip nat pool <nom> <ip-début> <ip-fin> prefix-length <longueur>."
+  ],
+  [
+    "NAT Static Network-to-Network",
+    "Comment mapper un sous-réseau privé complet /24 vers un sous-réseau public /24 sans spécifier chaque hôte individuellement ?",
+    "NAT Statique de Réseau Entier (Network Mapping)",
+    "• Commande IOS :\n'ip nat inside source static network <IP-Réseau-Local> <IP-Réseau-Global> <Masque>'\n• Exemple : 'ip nat inside source static network 192.168.1.0 198.51.100.0 /24'\n• Comportement : Chaque hôte conserve son dernier octet d'hôte (192.168.1.15 devient 198.51.100.15). Cela évite de rédiger 254 lignes de NAT statique individuelles !",
+    "Cisco IOS NAT Configuration Guide",
+    "R1(config)# ip nat inside source static network 10.1.1.0 203.0.113.0 /24",
+    "ip nat inside source static network traduit tout le sous-réseau en conservant les IDs d'hôtes."
+  ],
+  [
+    "Sécurité NAT : Attaque par Épuisement de Ports PAT",
+    "Comment un attaquant interne ou un malware peut-il provoquer un déni de service (DoS) sur un routeur effectuant du PAT ?",
+    "PAT Port Exhaustion & Attaque DoS",
+    "• Mécanisme de l'attaque : Un hôte compromis génère massivement des connexions TCP SYN vers des destinations aléatoires à très haute cadence.\n• Conséquence : Chaque session consomme un port source de l'adresse publique unique du routeur. Une fois les ~65 000 ports épuisés, plus aucun utilisateur légitime du réseau ne peut naviguer sur Internet !\n• Protection Cisco : 'ip nat translation max-entries <nombre>' pour plafonner le nombre de sessions NAT autorisées par utilisateur ou globalement.",
+    "Cisco IOS NAT Rate Limiting Guide",
+    "R1(config)# ip nat translation max-entries 3000\nR1(config)# ip nat translation max-entries host 192.168.1.50 100",
+    "ip nat translation max-entries limite le nombre de sessions par hôte pour bloquer l'épuisement."
+  ],
+  [
+    "NTP : Rôle & Importance en Réseau",
+    "Pourquoi la synchronisation précise de l'heure via NTP (Network Time Protocol) est-elle critique pour la sécurité et le dépannage réseau ?",
+    "Rôle Fondamental de NTP (RFC 5905)",
+    "• Corrélation d'incidents (Syslog) : Sans horloge commune, il est impossible de reconstituer la chronologie exacte d'une attaque ou d'une panne entre un pare-feu, un switch et un routeur.\n• Sécurité & Certificats X.509 : La validation de certificats TLS/SSL, IPsec IKEv2 et 802.1X échoue immédiatement si l'horloge locale est en dehors de la plage de validité du certificat.\n• Kerberos / Active Directory : Rejette toute authentification si le décalage (clock skew) dépasse 5 minutes (300 secondes).\n• Port de transport : UDP port 123.",
+    "RFC 5905 (Network Time Protocol Version 4)",
+    "R1# show clock detail\n*14:32:05.124 UTC Mon Sep 21 2026\nTime source is NTP",
+    "UDP 123. Vital pour corréler les logs Syslog et valider les certificats TLS/X.509."
+  ],
+  [
+    "NTP Stratum : Hiérarchie de 0 à 16",
+    "Que représente le niveau de 'Stratum' dans la hiérarchie NTP et que signifie une valeur de Stratum 16 ?",
+    "Hiérarchie des Niveaux de Stratum NTP",
+    "• Stratum 0 : Horloges de référence physique de haute précision (Horloges atomiques au Césium, satellites GPS, récepteurs radio CDMA). Non connectées directement à un réseau IP.\n• Stratum 1 : Serveurs NTP primaires directement reliés à une horloge Stratum 0.\n• Stratum 2 : Serveurs synchronisés sur des serveurs Stratum 1 via le réseau IP.\n• Incrémentation : Chaque saut NTP incrémente le stratum de 1.\n• Stratum 16 : Indique un équipement NON SYNCHRONISÉ ou inaccessible (l'horloge n'est pas fiable et ne doit pas être utilisée).",
+    "RFC 5905 § 7.3",
+    "R1# show ntp status\nClock is synchronized, stratum 2, reference is 192.0.2.1",
+    "Stratum 0 = horloge atomique/GPS. Stratum 1 = serveur branché dessus. Stratum 16 = non synchronisé."
+  ],
+  [
+    "NTP Modes : Client/Server vs Symmetric Peer",
+    "Quelle est la différence opérationnelle entre le mode 'Client/Server' et le mode 'Symmetric Active/Passive (Peer)' en NTP ?",
+    "Modes d'Association NTP",
+    "• Client/Server ('ntp server <IP>') :\n  - Le client envoie des requêtes au serveur pour synchroniser son horloge locale.\n  - Le serveur ne synchronise jamais son horloge à partir du client (relation unidirectionnelle d'autorité).\n• Symmetric Active/Passive ('ntp peer <IP>') :\n  - Deux routeurs de même niveau hiérarchique se synchronisent mutuellement.\n  - Si l'un des deux perd sa source externe principale, il peut adopter l'heure de son homologue (redondance locale entre routeurs de cœur de réseau).",
+    "RFC 5905 § 3 (NTP Protocol Modes)",
+    "R1(config)# ntp server 216.239.35.0\nR1(config)# ntp peer 10.1.1.2",
+    "ntp server = je reçois l'heure sans l'influencer. ntp peer = synchronisation mutuelle bilatérale."
+  ],
+  [
+    "Commande show ntp status : Analyse des Champs",
+    "Quels sont les indicateurs clés à vérifier dans la sortie de 'show ntp status' pour certifier la synchronisation ?",
+    "Validation de la Synchronisation NTP",
+    "• 'Clock is synchronized' vs 'Clock is unsynchronized' : Statut binaire de la synchronisation locale.\n• 'stratum X' : Niveau de distance à l'horloge de référence (ex: stratum 3).\n• 'reference is <IP>' : Adresse IP de la source de temps actuellement retenue.\n• 'nominal freq' & 'actual freq' : Dérive de l'oscillateur matériel interne.\n• 'offset' : Différence de temps estimée (en millisecondes) entre l'horloge locale et la référence (doit être proche de 0 ms).",
+    "Cisco IOS Configuration Fundamentals Command Reference",
+    "R1# show ntp status\nClock is synchronized, stratum 3, reference is 10.10.10.1\nnominal freq is 250.0000 Hz, actual freq is 249.9998 Hz, precision is 2**18\nreference time is EB82A540.B82834E8 (10:15:28.719 UTC Mon Sep 21 2026)\nclock offset is 1.4250 msec, root delay is 22.45 msec",
+    "Vérifier 'Clock is synchronized', le stratum et l'offset (< quelques millisecondes)."
+  ],
+  [
+    "Commande show ntp associations : Symboles d'État",
+    "Dans la commande 'show ntp associations', que signifient les symboles '*' (astérisque), '+' (plus) et '~' (tilde) devant une adresse de serveur ?",
+    "Interprétation des Symboles d'Association NTP",
+    "• '*' (Master Peer / Sys.Peer) : Le serveur actuellement sélectionné comme référence de temps principale par l'algorithme d'intersection NTP.\n• '+' (Candidate) : Serveur candidat valide et conforme, prêt à devenir la référence principale en cas de défaillance du maître.\n• '#' (Selected) : Bon serveur alternatif.\n• '-' (Outlyer) : Serveur rejeté par l'algorithme car son heure présente un écart anormal (outlier/falseticker).\n• '~' (Configured) : L'association a été configurée statiquement dans la configuration.",
+    "Cisco IOS Network Time Protocol Command Reference",
+    "R1# show ntp associations\n  address         ref clock       st   when   poll reach  delay  offset   disp\n*~10.10.10.1      192.0.2.1        2     42     64   377   2.45   1.425  1.23\n+~10.20.20.1      198.51.100.1     2     18     64   377   8.12   2.104  1.45",
+    "* = serveur maître choisi. + = candidat alternatif valide. - = rejeté (dérive trop forte)."
+  ],
+  [
+    "Authentification NTP : Sécurisation par Clé Partagée",
+    "Comment configurer l'authentification NTP sur Cisco IOS pour empêcher un attaquant d'injecter une fausse heure (NTP Spoofing) ?",
+    "Sécurisation NTP via Clé Partagée MD5 / SHA-1",
+    "• Étapes de configuration :\n1. Activer l'authentification : 'ntp authenticate'\n2. Définir la clé secrète partagée : 'ntp authentication-key 1 md5 CiscoNtpPass123'\n3. Déclarer la clé comme fiable : 'ntp trusted-key 1'\n4. Associer la clé au serveur : 'ntp server 10.1.1.1 key 1'\n• Règle : Si le serveur NTP externe n'inclut pas le digest HMAC correspondant à la clé 1 dans ses paquets UDP 123, le client ignore et détruit immédiatement le paquet.",
+    "Cisco IOS NTP Security Configuration Guide",
+    "R1(config)# ntp authenticate\nR1(config)# ntp authentication-key 1 md5 Secr3tKey\nR1(config)# ntp trusted-key 1\nR1(config)# ntp server 10.1.1.1 key 1",
+    "Quatre commandes : ntp authenticate, authentication-key, trusted-key, puis 'key X' sur ntp server."
+  ],
+  [
+    "NTP Source Interface (Loopback)",
+    "Pourquoi est-il fortement recommandé d'utiliser une interface Loopback comme source NTP avec 'ntp source Loopback0' ?",
+    "Stabilité des Échanges NTP via Interface Virtuelle",
+    "• Problème : Si un routeur utilise une interface physique pour envoyer ses requêtes NTP et que cette interface tombe, l'adresse IP source change lors du basculement sur le chemin de secours, ce qui peut briser les associations NTP sécurisées ou filtrées par ACL.\n• Solution : 'ntp source Loopback0' garantit que tous les paquets NTP émis partent avec l'adresse IP de la Loopback. Comme une Loopback ne tombe jamais (tant que le routeur fonctionne), les sessions NTP restent actives quel que soit le chemin de routage emprunté.",
+    "Cisco Network Management Best Practices",
+    "R1(config)# ntp source Loopback0",
+    "L'interface Loopback ne tombe jamais, assurant la pérennité de l'IP source NTP."
+  ],
+  [
+    "NTP Access-Group : Filtrage par ACL",
+    "À quoi sert la commande 'ntp access-group' et quels sont les 4 niveaux de restriction possibles (peer, serve, serve-only, query-only) ?",
+    "Contrôle d'Accès NTP (ntp access-group)",
+    "• Rôle : Restreint les équipements autorisés à dialoguer avec le service NTP du routeur via des ACLs standards IPv4.\n• Les 4 Niveaux de Restriction :\n  1. 'peer' : Autorise la synchronisation complète et les requêtes de contrôle.\n  2. 'serve' : Autorise les clients à synchroniser leur heure sur ce routeur, mais ce routeur refuse de se synchroniser sur eux.\n  3. 'serve-only' : Autorise uniquement les demandes de temps (pas de requêtes de contrôle/diagnostic).\n  4. 'query-only' : Autorise uniquement les requêtes de contrôle (ex: ntpq / surveillance SNMP) sans échange de temps.",
+    "Cisco IOS NTP Security Best Practices",
+    "R1(config)# access-list 10 permit 192.168.1.0 0.0.0.255\nR1(config)# ntp access-group serve-only 10",
+    "Filtrage par ACL : serve-only autorise les clients à prendre l'heure sans modifier le routeur."
+  ],
+  [
+    "Horloge Manuelle & Fuseau Horaire : clock timezone & summer-time",
+    "Comment configurer le fuseau horaire de Paris (UTC+1) et le passage à l'heure d'été automatique sur Cisco IOS ?",
+    "Gestion des Fuseaux Horaires et Changement d'Heure",
+    "• Définition du fuseau de base (UTC+1) :\n'clock timezone CET 1 0' (Central European Time, décalage de +1 heure et 0 minute par rapport à UTC).\n• Activation de l'heure d'été automatique (CEST - Central European Summer Time) :\n'clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00'\n• Remarque : L'horloge interne matérielle fonctionne toujours en UTC ; ces commandes modifient uniquement l'affichage des logs et des commandes 'show clock'.",
+    "Cisco IOS Configuration Fundamentals Command Reference",
+    "R1(config)# clock timezone CET 1 0\nR1(config)# clock summer-time CEST recurring last Sun Mar 2:00 last Sun Oct 3:00",
+    "clock timezone <nom> <heures> <minutes> et clock summer-time recurring pour l'heure d'été."
+  ],
+  [
+    "NTP Broadcast vs Multicast Mode",
+    "Dans quel scénario utilise-t-on le mode NTP Broadcast ou Multicast sur un réseau local d'entreprise ?",
+    "Diffusion d'Heure sans Configuration Client Individuelle",
+    "• Fonctionnement : Sur un segment LAN avec des centaines de switches ou terminaux, le routeur principal diffuse périodiquement l'heure en broadcast ('ntp broadcast') ou en multicast vers l'adresse réservée '224.0.1.1' ('ntp multicast 224.0.1.1').\n• Avantage : Les clients n'ont pas besoin de connaître l'IP du serveur : ils écoutent simplement sur leur interface ('ntp broadcast client' ou 'ntp multicast client').\n• Inconvénient : Précision légèrement inférieure au mode unicast en raison des variations de latence de diffusion.",
+    "RFC 5905 § 3.2",
+    "R1(config-if)# ntp broadcast\nSW1(config-if)# ntp broadcast client",
+    "NTP Broadcast/Multicast permet aux clients d'écouter l'heure sur le LAN sans configurer d'IP serveur."
+  ],
+  [
+    "NTP Master Local : Fonction d'Horloge de Secours",
+    "Que fait la commande 'ntp master [stratum]' et quel est le risque de l'activer sans précaution ?",
+    "Routeur Érigé en Horloge de Référence Autonome",
+    "• Fonctionnement : Force le routeur à se déclarer comme serveur NTP faisant autorité avec le stratum indiqué (ex: 'ntp master 8'), même s'il n'est lui-même synchronisé sur aucune horloge externe.\n• Cas d'usage : Réseaux isolés d'usine ou de défense n'ayant aucun accès Internet ou GPS, pour maintenir au moins tous les équipements internes à la même heure relative.\n• RISQUE MAJEUR : Si configuré avec un stratum trop bas (ex: 'ntp master 2') sur un réseau connecté à Internet, le routeur peut diffuser une heure fausse et désynchroniser toute l'infrastructure !",
+    "Cisco IOS NTP Command Reference",
+    "R1(config)# ntp master 8",
+    "ntp master X : le routeur se prend pour une référence NTP. À n'utiliser qu'en réseau isolé."
+  ],
+  [
+    "SNTP (Simple Network Time Protocol) vs NTPv4",
+    "En quoi SNTP (Simple NTP - RFC 4330) diffère-t-il de l'implémentation complète de NTPv4 ?",
+    "Comparatif SNTP vs NTP Complet",
+    "• SNTP (Simple NTP) : Version allégée sans algorithmes complexes de filtrage statistique, d'estimation de dérive d'horloge (drift) ou d'évitement des serveurs trompeurs (falsetickers). Il lit simplement l'heure reçue et l'applique directement.\n• Cas d'usage SNTP : Petits commutateurs d'accès d'entrée de gamme, caméras IP ou microcontrôleurs IoT ayant des ressources CPU limitées.\n• NTP complet : Indispensable sur les routeurs de distribution et de cœur pour garantir une précision à la microseconde et résister aux pannes de sources.",
+    "RFC 4330 (Simple Network Time Protocol - SNTP)",
+    "SW1(config)# sntp server 192.168.1.1",
+    "SNTP est une version simplifiée sans calculs statistiques de dérive, réservée aux petits équipements."
+  ],
+  [
+    "NTP Version : Spécifier la Version du Protocole",
+    "Comment forcer un équipement Cisco à communiquer avec un serveur en NTP version 3 ou version 4 ?",
+    "Configuration de la Version NTP",
+    "• Commande IOS :\n'ntp server <IP> version <1-4>'\n• Exemple : 'ntp server 10.1.1.10 version 4'\n• Apports de NTPv4 (RFC 5905) : Support natif d'IPv6, algorithmes de mitigation de dérive améliorés, sécurité renforcée (chiffrement et certificats Autokey), et compatibilité descendante avec NTPv3 (RFC 1305).",
+    "Cisco IOS Network Time Protocol Command Reference",
+    "R1(config)# ntp server 2001:db8:acad::1 version 4",
+    "Ajouter 'version 4' à la fin de la commande 'ntp server'."
+  ],
+  [
+    "Horloge Matérielle Hardware Clock (Calendar) vs Software Clock",
+    "Quelle est la différence entre l'horloge logicielle (Clock) et l'horloge matérielle sur batterie (Calendar) sur un routeur Cisco modulaire ?",
+    "Clock Logicielle vs Calendar Matériel",
+    "• Software Clock : Horloge gérée par le CPU et le système Cisco IOS en mémoire vive. C'est elle qui est synchronisée par NTP et qui horodate les paquets et messages Syslog.\n• Hardware Calendar : Puce d'horloge temps réel (RTC) alimentée par une pile bouton sur la carte mère, qui continue de tourner même lorsque le routeur est hors tension.\n• Synchronisation : 'clock update-calendar' demande à NTP de mettre à jour la pile matérielle RTC à partir de l'heure logicielle synchronisée.",
+    "Cisco IOS System Management Guide",
+    "R1# show calendar\nR1(config)# clock update-calendar",
+    "Clock = RAM (synchronisée par NTP). Calendar = pile RTC physique qui survit aux reboots."
+  ],
+  [
+    "NTP Timers : Poll Interval & Min/Max Poll",
+    "Que signifient les valeurs 'poll' et 'reach' affichées dans la commande 'show ntp associations' ?",
+    "Intervalles d'Interrogation & Registre de Portée NTP",
+    "• Poll (Intervalle d'interrogation) : Fréquence d'émission des requêtes NTP en puissances de 2 secondes. Exemple : Poll 64 = 2^6 = interrogation toutes les 64 secondes (peut monter jusqu'à 1024s en régime stable).\n• Reach (Registre de joignabilité) : Registre à décalage de 8 bits affiché en octal (ex: 377 en octal = 11111111 en binaire).\n- Une valeur de 377 signifie que les 8 dernières requêtes consécutives ont toutes reçu une réponse réussie du serveur NTP !",
+    "RFC 5905 § 7.3",
+    "R1# show ntp associations\naddress         ref clock     st   when   poll reach\n10.1.1.1        192.0.2.1      2     12     64   377",
+    "Poll = intervalle en secondes. Reach 377 (octal) = 8 succès consécutifs sur les 8 dernières sondes."
+  ]
+]

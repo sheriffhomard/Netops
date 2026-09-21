@@ -1,0 +1,6 @@
+{
+  "name": "NetOps Academy",
+  "description": "Enterprise NOC Engine & Plateforme de simulation d'examens et lab virtuel pour certifications réseau et cyber (CCNA, CCNP ENCOR, PCNSE, CompTIA, Junos).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
