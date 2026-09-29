@@ -53,6 +53,84 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
       isSpecial: true,
     },
     {
+      id: 'ENCOR-D1',
+      label: 'Cisco ENCOR-D1 (Architecture)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D1').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENCOR-D2',
+      label: 'Cisco ENCOR-D2 (Virtualization & SD-WAN)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D2').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENCOR-D3',
+      label: 'Cisco ENCOR-D3 (Infrastructure & Wireless)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D3').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENCOR-D4',
+      label: 'Cisco ENCOR-D4 (Network Assurance)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D4').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENCOR-D5',
+      label: 'Cisco ENCOR-D5 (Security & AAA)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D5').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENCOR-D6',
+      label: 'Cisco ENCOR-D6 (Automation & Programmability)',
+      count: cards.filter((c) => c.moduleCode === 'ENCOR-D6').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENARSI-D1',
+      label: 'Cisco ENARSI-D1 (Advanced Routing)',
+      count: cards.filter((c) => c.moduleCode === 'ENARSI-D1').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENARSI-D2',
+      label: 'Cisco ENARSI-D2 (VPN Technologies)',
+      count: cards.filter((c) => c.moduleCode === 'ENARSI-D2').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENARSI-D3',
+      label: 'Cisco ENARSI-D3 (Infrastructure Security)',
+      count: cards.filter((c) => c.moduleCode === 'ENARSI-D3').length,
+      isSpecial: true,
+    },
+    {
+      id: 'ENARSI-D4',
+      label: 'Cisco ENARSI-D4 (Infrastructure Services)',
+      count: cards.filter((c) => c.moduleCode === 'ENARSI-D4').length,
+      isSpecial: true,
+    },
+    {
+      id: 'SCOR-D1',
+      label: 'Cisco SCOR-D1 (Security Concepts & Threats)',
+      count: cards.filter((c) => c.moduleCode === 'SCOR-D1').length,
+      isSpecial: true,
+    },
+    {
+      id: 'SCOR-D2',
+      label: 'Cisco SCOR-D2 (Network Security & Firewalls)',
+      count: cards.filter((c) => c.moduleCode === 'SCOR-D2').length,
+      isSpecial: true,
+    },
+    {
+      id: 'SCOR-D3',
+      label: 'Cisco SCOR-D3 (Securing the Cloud & SaaS)',
+      count: cards.filter((c) => c.moduleCode === 'SCOR-D3').length,
+      isSpecial: true,
+    },
+    {
       id: 'OSPF & BGP',
       label: 'OSPF & BGP',
       count: cards.filter((c) => c.category === 'OSPF & BGP').length,
@@ -81,12 +159,9 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
 
   const filteredCards = cards.filter((c) => {
     if (selectedFilter === 'all') return true;
-    if (selectedFilter === 'CCNA-D1') return c.moduleCode === 'CCNA-D1';
-    if (selectedFilter === 'CCNA-D2') return c.moduleCode === 'CCNA-D2';
-    if (selectedFilter === 'CCNA-D3') return c.moduleCode === 'CCNA-D3';
-    if (selectedFilter === 'CCNA-D4') return c.moduleCode === 'CCNA-D4';
-    if (selectedFilter === 'CCNA-D5') return c.moduleCode === 'CCNA-D5';
-    if (selectedFilter === 'CCNA-D6') return c.moduleCode === 'CCNA-D6';
+    if (selectedFilter.startsWith('CCNA-') || selectedFilter.startsWith('ENCOR-') || selectedFilter.startsWith('ENARSI-')) {
+      return c.moduleCode === selectedFilter;
+    }
     return c.category === selectedFilter;
   });
 

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ViewMode } from './types';
 import { currentUser } from './data/mockData';
+import { useAuth } from './context/AuthContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { UserProfileModal } from './components/UserProfileModal';
 import { CommandPaletteModal } from './components/CommandPaletteModal';
 import { SubnetCalculatorModal } from './components/SubnetCalculatorModal';
 import { DashboardView } from './views/DashboardView';
@@ -13,14 +15,25 @@ import { QuestionBankView } from './views/QuestionBankView';
 import { AnalyticsView } from './views/AnalyticsView';
 import { WorkshopsView } from './views/WorkshopsView';
 import { FlashcardsView } from './views/FlashcardsView';
+import { CloudEncyclopediaView } from './views/CloudEncyclopediaView';
 
 export function App() {
+  const { user, userProfile } = useAuth();
   const [currentView, setCurrentView] = useState<ViewMode>('tableau-de-bord');
   const [selectedExamCode, setSelectedExamCode] = useState<string>('350-401 ENCOR');
   const [nocMode, setNocMode] = useState<boolean>(true);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [isSubnetCalcOpen, setIsSubnetCalcOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+
+
+  // Cross-linking state between Flashcards and Cloud Knowledge base
+  const [cloudInitialTab, setCloudInitialTab] = useState<'glossaire' | 'encyclopedie' | 'matrice'>('encyclopedie');
+  const [cloudInitialTermId, setCloudInitialTermId] = useState<string | null>(null);
+  const [cloudInitialArticleId, setCloudInitialArticleId] = useState<string | null>(null);
+  const [flashcardSearchQuery, setFlashcardSearchQuery] = useState<string>('');
+  const [flashcardModule, setFlashcardModule] = useState<string>('all');
 
   // Live session elapsed timer in sidebar
   const [sessionSeconds, setSessionSeconds] = useState<number>(6120); // starts at 1h 42m
@@ -61,6 +74,30 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigateToFlashcards = (searchQuery?: string, moduleCode?: string) => {
+    if (searchQuery !== undefined) setFlashcardSearchQuery(searchQuery);
+    if (moduleCode !== undefined) setFlashcardModule(moduleCode);
+    setCurrentView('flashcards');
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenCloudTerm = (termId: string) => {
+    setCloudInitialTab('glossaire');
+    setCloudInitialTermId(termId);
+    setCurrentView('glossaire-cloud');
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenCloudArticle = (articleId: string) => {
+    setCloudInitialTab('encyclopedie');
+    setCloudInitialArticleId(articleId);
+    setCurrentView('glossaire-cloud');
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div
       className={`min-h-screen bg-[#0f131c] text-[#dfe2ee] flex ${
@@ -78,8 +115,15 @@ export function App() {
               {isMobileMenuOpen ? 'close' : 'menu'}
             </span>
           </button>
+          <img
+            alt="NetOps Logo"
+            className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#00e5ff]/50"
+            src="/src/assets/images/netops_logo_1790514169496.jpg"
+            referrerPolicy="no-referrer"
+          />
           <span className="font-semibold text-sm text-[#00e5ff] font-mono">NetOps Academy</span>
         </div>
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsSearchOpen(true)}
@@ -87,11 +131,17 @@ export function App() {
           >
             <span className="material-symbols-outlined text-xl">search</span>
           </button>
-          <img
-            alt="Profile"
-            className="w-7 h-7 rounded-full object-cover"
-            src={currentUser.avatarUrl}
-          />
+          <button
+            onClick={() => setIsProfileModalOpen(true)}
+            className="flex items-center"
+            title="Profil & Connexion"
+          >
+            <img
+              alt="Profile"
+              className="w-7 h-7 rounded-full object-cover ring-1 ring-[#00e5ff]/50"
+              src={user?.photoURL || userProfile?.photoURL || currentUser.avatarUrl}
+            />
+          </button>
         </div>
       </div>
 
@@ -140,7 +190,23 @@ export function App() {
           )}
 
           {currentView === 'flashcards' && (
-            <FlashcardsView onNavigate={handleNavigate} />
+            <FlashcardsView
+              onNavigate={handleNavigate}
+              initialSearchQuery={flashcardSearchQuery}
+              initialModule={flashcardModule}
+              onOpenCloudTerm={handleOpenCloudTerm}
+              onOpenCloudArticle={handleOpenCloudArticle}
+            />
+          )}
+
+          {currentView === 'glossaire-cloud' && (
+            <CloudEncyclopediaView
+              onNavigate={handleNavigate}
+              onNavigateToFlashcards={handleNavigateToFlashcards}
+              initialTab={cloudInitialTab}
+              initialTermId={cloudInitialTermId}
+              initialArticleId={cloudInitialArticleId}
+            />
           )}
 
           {currentView === 'ateliers-et-labs' && (
@@ -189,8 +255,14 @@ export function App() {
         isOpen={isSubnetCalcOpen}
         onClose={() => setIsSubnetCalcOpen(false)}
       />
+
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+      />
     </div>
   );
 }
+
 
 export default App;

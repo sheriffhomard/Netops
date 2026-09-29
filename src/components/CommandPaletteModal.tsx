@@ -59,8 +59,20 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
     {
       type: 'Flashcards',
       title: 'Flashcards & Mémos (SRS Répétition Espacée)',
-      desc: '90+ Fiches mémos : 81 cartes Cisco CCNA (D1, D2, D3), ENCOR, PCNSE, CompTIA, JNCIA, Mode Blitz & Création',
+      desc: '1900+ Cartes d\'entraînement : Cisco CCNA (D1-D6), ENCOR (D1-D6), ENARSI (D1-D4), SCOR (D1-D3), Palo Alto, CompTIA, Juniper',
       view: 'flashcards' as ViewMode,
+    },
+    {
+      type: 'Certification',
+      title: 'Cisco CCNP Security 350-701 SCOR',
+      desc: 'Security Concepts, Network Security Firewalls/VPN, Securing Cloud & SaaS (300 Cartes Flashcards)',
+      view: 'flashcards' as ViewMode,
+    },
+    {
+      type: 'Cloud',
+      title: 'Encyclopédie & Glossaire Cloud d\'Entreprise',
+      desc: '46 Termes Clés, Topologies Réseau Hybrides (AWS / Azure / GCP), Schémas ASCII et Matrice Comparative',
+      view: 'glossaire-cloud' as ViewMode,
     },
     {
       type: 'Simulateur',

@@ -21,6 +21,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems: { id: ViewMode; label: string; icon: string; badge?: string }[] = [
     { id: 'tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
     { id: 'flashcards', label: 'Flashcards & Mémos', icon: 'style', badge: 'SRS' },
+    { id: 'glossaire-cloud', label: 'Encyclopédie Cloud', icon: 'cloud_sync', badge: 'NEW' },
     { id: 'ateliers-et-labs', label: 'Ateliers & Labs', icon: 'science' },
     { id: 'parcours-certifications', label: 'Parcours & Certifications', icon: 'layers' },
     { id: 'simulateur-d-examen', label: "Simulateur d'Examen", icon: 'check_circle' },
@@ -35,22 +36,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Brand Header */}
         <div
           onClick={() => onSelectView('tableau-de-bord')}
-          className="h-16 flex items-center gap-3 px-6 cursor-pointer hover:opacity-90 transition-opacity border-b border-[#334155]/30"
+          className="h-16 flex items-center gap-3 px-5 cursor-pointer hover:opacity-95 transition-all border-b border-[#334155]/30 group"
         >
           <img
             alt="NetOps Academy Logo"
-            className="h-8 w-auto object-contain"
-            src="https://lh3.googleusercontent.com/aida/AEtjO1VG95JYQqk5LnjZppwpcEdY8eBzSSY6Kq2xHP2rseBeD8hbVFDl_rcwf8crFzQtmFJmy0mQLWtwrS-Py8r-2BsbDgbzEPGvHKrv0ZP4_7shtLCjMhfzJA27ReoZV3EJKgkxglWdFv2hZ949fQ7h2X7YD_JXifa7_R6voxufrWt8qc4EgVzrYHLpa4hPkdQhZZH3Phl3-x6__SsxE7Lt5lPR7JaCqPSxP_JjUhdMpJMU2R4s4-gkNdZfP5I"
+            className="h-9 w-9 rounded-xl object-cover ring-1 ring-[#00e5ff]/50 shadow-[0_0_12px_rgba(0,229,255,0.35)] group-hover:scale-105 transition-transform"
+            src="/src/assets/images/netops_logo_1790514169496.jpg"
+            referrerPolicy="no-referrer"
           />
           <div className="flex flex-col">
-            <span className="font-semibold text-base text-[#c3f5ff] tracking-tight leading-tight">
+            <span className="font-semibold text-sm text-[#c3f5ff] tracking-tight leading-tight group-hover:text-[#00e5ff] transition-colors">
               NetOps Academy
             </span>
-            <span className="text-[10px] tracking-wider text-[#bac9cc] uppercase font-mono">
+            <span className="text-[10px] tracking-wider text-[#00daf3] uppercase font-mono">
               Enterprise NOC Engine
             </span>
           </div>
         </div>
+
 
         {/* Navigation Menu */}
         <nav className="flex flex-col gap-1 px-3 mt-4">

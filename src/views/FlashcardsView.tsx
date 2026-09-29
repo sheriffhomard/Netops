@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { initialFlashcards, Flashcard } from '../data/workshopsData';
 import { ViewMode } from '../types';
+import { cloudGlossaryTerms } from '../data/cloudData';
+import { useAuth } from '../context/AuthContext';
+
 
 interface FlashcardsViewProps {
   onNavigate?: (view: ViewMode) => void;
+  initialSearchQuery?: string;
+  initialModule?: string;
+  onOpenCloudTerm?: (termId: string) => void;
+  onOpenCloudArticle?: (articleId: string) => void;
 }
 
 type DisplayMode = 'focus' | 'grid' | 'blitz' | 'create';
@@ -14,7 +21,15 @@ const LOCAL_STORAGE_KEY_MASTERED = 'netops_flashcards_mastered_ids';
 const LOCAL_STORAGE_KEY_REVIEW = 'netops_flashcards_review_ids';
 const LOCAL_STORAGE_KEY_FAVORITES = 'netops_flashcards_favorite_ids';
 
-export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) => {
+export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
+  onNavigate,
+  initialSearchQuery = '',
+  initialModule = 'all',
+  onOpenCloudTerm,
+  onOpenCloudArticle,
+}) => {
+  const { user, userFlashcards, createUserFlashcard } = useAuth();
+
   // Load initial cards merged with custom cards from localStorage
   const [cards, setCards] = useState<Flashcard[]>(() => {
     try {
@@ -28,6 +43,31 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     }
     return initialFlashcards;
   });
+
+  // Sync real-time Firestore flashcards
+  useEffect(() => {
+    if (userFlashcards && userFlashcards.length > 0) {
+      const firestoreCards: Flashcard[] = userFlashcards.map((uf) => ({
+        id: uf.id,
+        category: uf.certTrack || 'Perso (Firestore)',
+        moduleCode: uf.module,
+        moduleName: `Module ${uf.module}`,
+        difficulty: uf.difficulty === 'Facile' ? 'Fondamental' : uf.difficulty === 'Difficile' ? 'Avancé' : 'Intermédiaire',
+        frontTitle: uf.front.length > 50 ? uf.front.substring(0, 47) + '...' : uf.front,
+        frontPrompt: uf.front,
+        backTitle: 'Réponse / Spécification technique',
+        backContent: uf.back,
+        hint: uf.tags && uf.tags.length > 0 ? `Tags : ${uf.tags.join(', ')}` : 'Flashcard personnalisée sauvegardée sur Firestore',
+      }));
+
+      setCards((prev) => {
+        const firestoreIds = new Set(firestoreCards.map((c) => c.id));
+        const rest = prev.filter((c) => !firestoreIds.has(c.id));
+        return [...firestoreCards, ...rest];
+      });
+    }
+  }, [userFlashcards]);
+
 
   // Learning progress states
   const [masteredIds, setMasteredIds] = useState<Set<string>>(() => {
@@ -82,9 +122,23 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // View mode & filters
   const [displayMode, setDisplayMode] = useState<DisplayMode>('focus');
   const [vendorFilter, setVendorFilter] = useState<VendorFilter>('all');
-  const [selectedModule, setSelectedModule] = useState<string>('all');
+  const [selectedModule, setSelectedModule] = useState<string>(initialModule);
   const [statusFilter, setStatusFilter] = useState<'all' | 'review' | 'mastered' | 'favorites'>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
+
+  // Synchronize external props when navigated from Encyclopedia or Glossary
+  useEffect(() => {
+    if (initialSearchQuery !== undefined && initialSearchQuery !== '') {
+      setSearchQuery(initialSearchQuery);
+      setDisplayMode('focus');
+    }
+  }, [initialSearchQuery]);
+
+  useEffect(() => {
+    if (initialModule !== undefined && initialModule !== 'all') {
+      setSelectedModule(initialModule);
+    }
+  }, [initialModule]);
 
   // Active study state (Focus mode)
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -159,6 +213,54 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     });
   }, [cards, vendorFilter, selectedModule, statusFilter, searchQuery, reviewIds, masteredIds, favoriteIds]);
 
+  // Cards in currently selected module (independent of search query & status filter)
+  const cardsInSelectedModule = useMemo(() => {
+    return cards.filter((c) => {
+      if (vendorFilter === 'cisco') {
+        const isCisco =
+          c.moduleCode?.startsWith('CCNA') ||
+          c.moduleCode?.startsWith('ENCOR') ||
+          c.moduleCode?.startsWith('ENARSI') ||
+          c.moduleCode?.startsWith('SCOR');
+        if (!isCisco) return false;
+      } else if (vendorFilter === 'paloalto') {
+        if (!c.moduleCode?.startsWith('PCNSE')) return false;
+      } else if (vendorFilter === 'comptia') {
+        const isComptia = c.moduleCode?.startsWith('SECPLUS') || c.moduleCode?.startsWith('NETPLUS');
+        if (!isComptia) return false;
+      } else if (vendorFilter === 'juniper') {
+        if (!c.moduleCode?.startsWith('JNCIA')) return false;
+      }
+
+      if (selectedModule !== 'all' && c.moduleCode !== selectedModule) {
+        return false;
+      }
+      return true;
+    });
+  }, [cards, vendorFilter, selectedModule]);
+
+  // Intelligent module switcher: clears search query if it has 0 results in the newly selected module
+  const handleModuleChange = (newMod: string) => {
+    setSelectedModule(newMod);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const hasMatch = cards.some(
+        (c) =>
+          (newMod === 'all' || c.moduleCode === newMod) &&
+          (c.frontTitle.toLowerCase().includes(q) ||
+            c.backTitle.toLowerCase().includes(q) ||
+            c.frontPrompt.toLowerCase().includes(q) ||
+            c.backContent.toLowerCase().includes(q) ||
+            (c.moduleCode || '').toLowerCase().includes(q) ||
+            (c.category || '').toLowerCase().includes(q) ||
+            (c.rfcRef || '').toLowerCase().includes(q))
+      );
+      if (!hasMatch) {
+        setSearchQuery('');
+      }
+    }
+  };
+
   // Clamp current index when filter changes
   useEffect(() => {
     setCurrentIndex(0);
@@ -167,6 +269,25 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   }, [vendorFilter, selectedModule, statusFilter, searchQuery]);
 
   const activeCard: Flashcard | undefined = filteredCards[currentIndex] || filteredCards[0];
+
+  // Dynamically detect matching cloud glossary concepts for the active card
+  const matchedCloudTerms = useMemo(() => {
+    if (!activeCard) return [];
+    const textToScan = `${activeCard.frontTitle} ${activeCard.frontPrompt} ${activeCard.backTitle} ${activeCard.backContent} ${activeCard.category} ${activeCard.rfcRef || ''}`.toLowerCase();
+
+    return cloudGlossaryTerms.filter((gt) => {
+      // If acronym matches as a whole word
+      if (gt.acronym && gt.acronym.length >= 3) {
+        const regex = new RegExp(`\\b${gt.acronym.toLowerCase()}\\b`, 'i');
+        if (regex.test(textToScan)) return true;
+      }
+      // If primary term keyword matches
+      const mainWord = gt.term.split('(')[0].split('—')[0].trim().toLowerCase();
+      if (mainWord.length >= 4 && textToScan.includes(mainWord)) return true;
+      // If any tag matches
+      return gt.tags.some((tag) => tag.length >= 4 && textToScan.includes(tag.toLowerCase()));
+    }).slice(0, 3);
+  }, [activeCard]);
 
   // Keyboard navigation & shortcuts
   useEffect(() => {
@@ -368,7 +489,21 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     const updated = [created, ...cards];
     setCards(updated);
 
-    // Save custom cards in localStorage
+    // Save to Firestore if authenticated
+    if (user) {
+      createUserFlashcard({
+        front: newCard.frontPrompt,
+        back: newCard.backContent,
+        module: newCard.moduleCode,
+        certTrack: newCard.category,
+        difficulty: newCard.difficulty === 'Fondamental' ? 'Facile' : newCard.difficulty === 'Avancé' ? 'Difficile' : 'Moyen',
+        tags: [newCard.moduleCode, newCard.category],
+      })
+        .then(() => showToast('Flashcard enregistrée en temps réel sur Google Firestore !'))
+        .catch((err) => console.error('Error saving flashcard to Firestore:', err));
+    }
+
+    // Save custom cards in localStorage as well for offline resilience
     try {
       const saved = localStorage.getItem(LOCAL_STORAGE_KEY_CUSTOM_CARDS);
       const customList = saved ? JSON.parse(saved) : [];
@@ -377,6 +512,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
     } catch {}
 
     // Reset form
+
     setNewCard({
       moduleCode: 'CCNA-D1',
       moduleName: 'Cisco CCNA 200-301 - 1.0 Network Fundamentals',
@@ -409,16 +545,28 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
   // Module filter options
   const moduleOptions = [
     { id: 'all', label: 'Tous les modules' },
-    { id: 'CCNA-D1', label: 'Cisco CCNA-D1 : Network Fundamentals (27 Cartes)', vendor: 'cisco' },
-    { id: 'CCNA-D2', label: 'Cisco CCNA-D2 : Network Access (27 Cartes)', vendor: 'cisco' },
-    { id: 'CCNA-D3', label: 'Cisco CCNA-D3 : IP Connectivity (27 Cartes)', vendor: 'cisco' },
+    { id: 'CCNA-D1', label: 'Cisco CCNA-D1 : Network Fundamentals (100 Cartes)', vendor: 'cisco' },
+    { id: 'CCNA-D2', label: 'Cisco CCNA-D2 : Network Access (100 Cartes)', vendor: 'cisco' },
+    { id: 'CCNA-D3', label: 'Cisco CCNA-D3 : IP Connectivity (100 Cartes)', vendor: 'cisco' },
     { id: 'CCNA-D4', label: 'Cisco CCNA-D4 : IP Services (100 Cartes)', vendor: 'cisco' },
     { id: 'CCNA-D5', label: 'Cisco CCNA-D5 : Security Fundamentals (100 Cartes)', vendor: 'cisco' },
     { id: 'CCNA-D6', label: 'Cisco CCNA-D6 : Automation & Programmability (100 Cartes)', vendor: 'cisco' },
-    { id: 'ENCOR-D3', label: 'Cisco ENCOR-D3 : L3 Routing & LSA', vendor: 'cisco' },
-    { id: 'ENCOR-D6', label: 'Cisco ENCOR-D6 : Automation (RESTCONF/NETCONF)', vendor: 'cisco' },
-    { id: 'ENARSI-D1', label: 'Cisco ENARSI-D1 : BGP Path Selection', vendor: 'cisco' },
-    { id: 'SCOR-D2', label: 'Cisco SCOR-D2 : Security & IPsec DH', vendor: 'cisco' },
+    { id: 'ENCOR-D1', label: 'Cisco ENCOR-D1 : Architecture & Enterprise Design (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENCOR-D2', label: 'Cisco ENCOR-D2 : Virtualization, SD-Access & SD-WAN (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENCOR-D3', label: 'Cisco ENCOR-D3 : Infrastructure, Routing & Wireless (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENCOR-D4', label: 'Cisco ENCOR-D4 : Network Assurance & Diagnostics (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENCOR-D5', label: 'Cisco ENCOR-D5 : Security, AAA & Zero Trust (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENCOR-D6', label: 'Cisco ENCOR-D6 : Automation, Programmability & NetDevOps (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENARSI-D1', label: 'Cisco ENARSI-D1 : Layer 3 Technologies & Advanced Routing (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENARSI-D2', label: 'Cisco ENARSI-D2 : VPN Technologies & DMVPN (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENARSI-D3', label: 'Cisco ENARSI-D3 : Infrastructure Security & Hardening (100 Cartes)', vendor: 'cisco' },
+    { id: 'ENARSI-D4', label: 'Cisco ENARSI-D4 : Infrastructure Services & Diagnostics (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D1', label: 'Cisco SCOR-D1 : Security Concepts, Threat Defense & Cryptography (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D2', label: 'Cisco SCOR-D2 : Network Security, Firewalls & VPNs (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D3', label: 'Cisco SCOR-D3 : Securing the Cloud & SaaS Solutions (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D4', label: 'Cisco SCOR-D4 : Content Security (ESA, WSA, Umbrella) (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D5', label: 'Cisco SCOR-D5 : Endpoint Protection & Detection (Secure Endpoint, AnyConnect) (100 Cartes)', vendor: 'cisco' },
+    { id: 'SCOR-D6', label: 'Cisco SCOR-D6 : Secure Network Access, Visibility & ISE (100 Cartes)', vendor: 'cisco' },
     { id: 'PCNSE-D1', label: 'Palo Alto PCNSE-D1 : Architecture SP3', vendor: 'paloalto' },
     { id: 'PCNSE-D3', label: 'Palo Alto PCNSE-D3 : App-ID & Policies', vendor: 'paloalto' },
     { id: 'SECPLUS-D4', label: 'CompTIA SECPLUS-D4 : SAML, OAuth, OIDC', vendor: 'comptia' },
@@ -461,6 +609,15 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
 
         {/* Action buttons & mode switcher */}
         <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => onNavigate?.('glossaire-cloud')}
+            className="px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 bg-[#00363d]/70 hover:bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 shadow-[0_0_12px_rgba(0,229,255,0.2)]"
+            title="Consulter l'Encyclopédie et Glossaire Cloud"
+          >
+            <span className="material-symbols-outlined text-base">cloud_sync</span>
+            <span>Encyclopédie Cloud</span>
+          </button>
+
           <button
             onClick={() => setDisplayMode('focus')}
             className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
@@ -620,7 +777,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
             <span className="text-xs font-mono text-[#849396] uppercase shrink-0">Module :</span>
             <select
               value={selectedModule}
-              onChange={(e) => setSelectedModule(e.target.value)}
+              onChange={(e) => handleModuleChange(e.target.value)}
               className="bg-[#0f131c] border border-[#334155]/40 text-xs font-mono text-[#dfe2ee] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#00e5ff] max-w-xs"
             >
               {moduleOptions.map((opt) => (
@@ -678,6 +835,31 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
             </button>
           </div>
         </div>
+
+        {/* Active search banner if searchQuery is present */}
+        {searchQuery.trim() && (
+          <div className="flex items-center justify-between gap-2 px-3 py-2 bg-[#00363d]/50 border border-[#00e5ff]/40 rounded-xl text-xs font-mono">
+            <div className="flex items-center gap-2 text-[#00e5ff] overflow-hidden">
+              <span className="material-symbols-outlined text-sm shrink-0">filter_alt</span>
+              <span className="truncate">
+                Recherche active : <strong className="text-white">"{searchQuery}"</strong>
+                {selectedModule !== 'all' && (
+                  <span className="text-[#849396] ml-1">
+                    (dans {moduleOptions.find((m) => m.id === selectedModule)?.label.split(':')[0] || selectedModule})
+                  </span>
+                )}
+              </span>
+            </div>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="shrink-0 px-2.5 py-1 bg-[#00e5ff] text-[#00363d] font-bold rounded-lg hover:brightness-110 flex items-center gap-1 text-[11px]"
+              title="Effacer la recherche textuelle"
+            >
+              <span className="material-symbols-outlined text-xs">close</span>
+              <span>Effacer la recherche</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* =========================================================================
@@ -686,23 +868,61 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
       {displayMode === 'focus' && (
         <div className="flex flex-col gap-5">
           {filteredCards.length === 0 ? (
-            <div className="bg-[#181c24] border border-[#334155]/40 rounded-2xl p-12 text-center flex flex-col items-center justify-center gap-4">
-              <span className="material-symbols-outlined text-5xl text-[#849396]">style</span>
-              <h3 className="text-lg font-bold text-[#dfe2ee]">Aucune flashcard ne correspond aux filtres</h3>
-              <p className="text-xs text-[#bac9cc] max-w-md">
-                Essayez de réinitialiser vos critères de recherche ou sélectionnez un autre module pour explorer les questions disponibles.
+            <div className="bg-[#181c24] border border-[#334155]/40 rounded-2xl p-10 text-center flex flex-col items-center justify-center gap-4">
+              <span className="material-symbols-outlined text-5xl text-[#00e5ff]">
+                {searchQuery ? 'search_off' : 'style'}
+              </span>
+              <h3 className="text-lg font-bold text-[#dfe2ee]">
+                {searchQuery
+                  ? `Aucun résultat pour "${searchQuery}"`
+                  : 'Aucune flashcard ne correspond aux filtres'}
+              </h3>
+              <p className="text-xs text-[#bac9cc] max-w-md leading-relaxed">
+                {searchQuery ? (
+                  cardsInSelectedModule.length > 0 ? (
+                    <>
+                      Le module sélectionné (<strong>{moduleOptions.find((m) => m.id === selectedModule)?.label || selectedModule}</strong>) comprend <strong>{cardsInSelectedModule.length} flashcards</strong>, mais aucune ne contient le terme <em>"{searchQuery}"</em>.
+                    </>
+                  ) : (
+                    <>Aucune flashcard ne contient le terme <em>"{searchQuery}"</em> dans la sélection actuelle.</>
+                  )
+                ) : (
+                  <>Essayez de réinitialiser vos critères de recherche ou sélectionnez un autre module pour explorer les questions disponibles.</>
+                )}
               </p>
-              <button
-                onClick={() => {
-                  setVendorFilter('all');
-                  setSelectedModule('all');
-                  setStatusFilter('all');
-                  setSearchQuery('');
-                }}
-                className="px-4 py-2 bg-[#00e5ff] text-[#00363d] font-mono text-xs font-bold rounded-lg hover:brightness-110"
-              >
-                Réinitialiser les filtres
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-2.5 font-mono text-xs">
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="px-4 py-2 bg-[#00e5ff] text-[#00363d] font-bold rounded-lg hover:brightness-110 flex items-center gap-1.5 shadow-[0_0_14px_rgba(0,229,255,0.4)]"
+                  >
+                    <span className="material-symbols-outlined text-sm">clear</span>
+                    Effacer la recherche {cardsInSelectedModule.length > 0 ? `(Voir les ${cardsInSelectedModule.length} cartes)` : ''}
+                  </button>
+                )}
+                {searchQuery && selectedModule !== 'all' && (
+                  <button
+                    onClick={() => {
+                      setSelectedModule('all');
+                      setVendorFilter('all');
+                    }}
+                    className="px-3.5 py-2 bg-[#262a33] text-[#dfe2ee] font-semibold rounded-lg hover:bg-[#334155] border border-[#334155]"
+                  >
+                    Rechercher "{searchQuery}" dans tous les modules
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setVendorFilter('all');
+                    setSelectedModule('all');
+                    setStatusFilter('all');
+                    setSearchQuery('');
+                  }}
+                  className="px-3.5 py-2 bg-[#181c24] text-[#849396] hover:text-[#dfe2ee] rounded-lg hover:bg-[#262a33] border border-[#334155]/40"
+                >
+                  Réinitialiser tous les filtres
+                </button>
+              </div>
             </div>
           ) : (
             <>
@@ -873,6 +1093,35 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                             <span>Référence normative : <strong className="text-[#00daf3]">{activeCard.rfcRef}</strong></span>
                           </div>
                         )}
+
+                        {/* Interactive Cloud Glossary & Encyclopedia Bridge */}
+                        {matchedCloudTerms.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-[#00363d]/40 border border-[#00e5ff]/40 mt-2">
+                            <span className="text-[10px] font-mono font-bold text-[#00e5ff] uppercase flex items-center gap-1">
+                              <span className="material-symbols-outlined text-xs">cloud_sync</span>
+                              Liaison Glossaire &amp; Cloud :
+                            </span>
+                            {matchedCloudTerms.map((ct) => (
+                              <button
+                                key={ct.id}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (onOpenCloudTerm) {
+                                    onOpenCloudTerm(ct.id);
+                                  } else {
+                                    onNavigate?.('glossaire-cloud');
+                                  }
+                                }}
+                                className="px-2.5 py-1 rounded bg-[#0f131c] hover:bg-[#262a33] text-xs font-mono text-[#a8ffd2] hover:text-[#00e5ff] border border-[#334155] hover:border-[#00e5ff]/60 transition-all flex items-center gap-1.5 shadow-sm"
+                                title="Ouvrir la fiche complète dans le glossaire cloud"
+                              >
+                                <span className="material-symbols-outlined text-[13px]">dictionary</span>
+                                <span>{ct.acronym || ct.term.split('—')[0].trim()}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -941,81 +1190,142 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
           ========================================================================= */}
       {displayMode === 'grid' && (
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between text-xs font-mono text-[#849396]">
-            <span>Affichage de {filteredCards.length} cartes mémo répertoriées</span>
-            <span>Cliquez sur une carte pour lancer l'étude en plein écran</span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredCards.map((card, idx) => {
-              const isMastered = masteredIds.has(card.id);
-              const isReview = reviewIds.has(card.id);
-              const isFav = favoriteIds.has(card.id);
-
-              return (
-                <div
-                  key={card.id}
+          {filteredCards.length === 0 ? (
+            <div className="bg-[#181c24] border border-[#334155]/40 rounded-2xl p-10 text-center flex flex-col items-center justify-center gap-4">
+              <span className="material-symbols-outlined text-5xl text-[#00e5ff]">
+                {searchQuery ? 'search_off' : 'style'}
+              </span>
+              <h3 className="text-lg font-bold text-[#dfe2ee]">
+                {searchQuery
+                  ? `Aucun résultat pour "${searchQuery}"`
+                  : 'Aucune flashcard ne correspond aux filtres'}
+              </h3>
+              <p className="text-xs text-[#bac9cc] max-w-md leading-relaxed">
+                {searchQuery ? (
+                  cardsInSelectedModule.length > 0 ? (
+                    <>
+                      Le module sélectionné (<strong>{moduleOptions.find((m) => m.id === selectedModule)?.label || selectedModule}</strong>) comprend <strong>{cardsInSelectedModule.length} flashcards</strong>, mais aucune ne contient le terme <em>"{searchQuery}"</em>.
+                    </>
+                  ) : (
+                    <>Aucune flashcard ne contient le terme <em>"{searchQuery}"</em> dans la sélection actuelle.</>
+                  )
+                ) : (
+                  <>Essayez de réinitialiser vos critères de recherche ou sélectionnez un autre module pour explorer les questions disponibles.</>
+                )}
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2.5 font-mono text-xs">
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="px-4 py-2 bg-[#00e5ff] text-[#00363d] font-bold rounded-lg hover:brightness-110 flex items-center gap-1.5 shadow-[0_0_14px_rgba(0,229,255,0.4)]"
+                  >
+                    <span className="material-symbols-outlined text-sm">clear</span>
+                    Effacer la recherche {cardsInSelectedModule.length > 0 ? `(Voir les ${cardsInSelectedModule.length} cartes)` : ''}
+                  </button>
+                )}
+                {searchQuery && selectedModule !== 'all' && (
+                  <button
+                    onClick={() => {
+                      setSelectedModule('all');
+                      setVendorFilter('all');
+                    }}
+                    className="px-3.5 py-2 bg-[#262a33] text-[#dfe2ee] font-semibold rounded-lg hover:bg-[#334155] border border-[#334155]"
+                  >
+                    Rechercher "{searchQuery}" dans tous les modules
+                  </button>
+                )}
+                <button
                   onClick={() => {
-                    setCurrentIndex(idx);
-                    setDisplayMode('focus');
-                    setIsFlipped(false);
+                    setVendorFilter('all');
+                    setSelectedModule('all');
+                    setStatusFilter('all');
+                    setSearchQuery('');
                   }}
-                  className="bg-[#181c24] border border-[#334155]/40 hover:border-[#00e5ff] rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:shadow-xl group flex flex-col justify-between gap-3 relative"
+                  className="px-3.5 py-2 bg-[#181c24] text-[#849396] hover:text-[#dfe2ee] rounded-lg hover:bg-[#262a33] border border-[#334155]/40"
                 >
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5">
-                        {card.moduleCode && (
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40">
-                            {card.moduleCode}
-                          </span>
-                        )}
-                        <span className="text-[10px] font-mono text-[#849396] truncate max-w-[140px]">
-                          {card.category}
+                  Réinitialiser tous les filtres
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between text-xs font-mono text-[#849396]">
+                <span>Affichage de {filteredCards.length} cartes mémo répertoriées</span>
+                <span>Cliquez sur une carte pour lancer l'étude en plein écran</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredCards.map((card, idx) => {
+                  const isMastered = masteredIds.has(card.id);
+                  const isReview = reviewIds.has(card.id);
+                  const isFav = favoriteIds.has(card.id);
+
+                  return (
+                    <div
+                      key={card.id}
+                      onClick={() => {
+                        setCurrentIndex(idx);
+                        setDisplayMode('focus');
+                        setIsFlipped(false);
+                      }}
+                      className="bg-[#181c24] border border-[#334155]/40 hover:border-[#00e5ff] rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:shadow-xl group flex flex-col justify-between gap-3 relative"
+                    >
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            {card.moduleCode && (
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40">
+                                {card.moduleCode}
+                              </span>
+                            )}
+                            <span className="text-[10px] font-mono text-[#849396] truncate max-w-[140px]">
+                              {card.category}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={(e) => handleToggleFavorite(card.id, e)}
+                              className="text-[#849396] hover:text-[#ffcc00] p-1"
+                            >
+                              <span className="material-symbols-outlined text-base">
+                                {isFav ? 'star' : 'star_border'}
+                              </span>
+                            </button>
+                            {isMastered && (
+                              <span className="material-symbols-outlined text-sm text-[#4edea3]" title="Maîtrisée">
+                                verified
+                              </span>
+                            )}
+                            {isReview && (
+                              <span className="material-symbols-outlined text-sm text-[#ffb4ab]" title="À revoir">
+                                sync_problem
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <h4 className="text-sm font-bold text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors line-clamp-2">
+                          {card.frontTitle}
+                        </h4>
+
+                        <p className="text-xs text-[#bac9cc] line-clamp-3 leading-relaxed">
+                          {card.frontPrompt}
+                        </p>
+                      </div>
+
+                      <div className="pt-3 border-t border-[#334155]/30 flex items-center justify-between text-[10px] font-mono text-[#849396]">
+                        <span>{card.difficulty}</span>
+                        <span className="text-[#00e5ff] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                          Étudier <span className="material-symbols-outlined text-xs">arrow_forward</span>
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={(e) => handleToggleFavorite(card.id, e)}
-                          className="text-[#849396] hover:text-[#ffcc00] p-1"
-                        >
-                          <span className="material-symbols-outlined text-base">
-                            {isFav ? 'star' : 'star_border'}
-                          </span>
-                        </button>
-                        {isMastered && (
-                          <span className="material-symbols-outlined text-sm text-[#4edea3]" title="Maîtrisée">
-                            verified
-                          </span>
-                        )}
-                        {isReview && (
-                          <span className="material-symbols-outlined text-sm text-[#ffb4ab]" title="À revoir">
-                            sync_problem
-                          </span>
-                        )}
-                      </div>
                     </div>
-
-                    <h4 className="text-sm font-bold text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors line-clamp-2">
-                      {card.frontTitle}
-                    </h4>
-
-                    <p className="text-xs text-[#bac9cc] line-clamp-3 leading-relaxed">
-                      {card.frontPrompt}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-[#334155]/30 flex items-center justify-between text-[10px] font-mono text-[#849396]">
-                    <span>{card.difficulty}</span>
-                    <span className="text-[#00e5ff] group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-                      Étudier <span className="material-symbols-outlined text-xs">arrow_forward</span>
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
       )}
 
@@ -1185,7 +1495,21 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({ onNavigate }) =>
                   <option value="CCNA-D5">CCNA-D5 (Security Fundamentals)</option>
                   <option value="CCNA-D6">CCNA-D6 (Automation &amp; SDN)</option>
                   <option value="ENCOR-D1">ENCOR-D1 (Architecture)</option>
-                  <option value="ENCOR-D3">ENCOR-D3 (Infrastructure Routing)</option>
+                  <option value="ENCOR-D2">ENCOR-D2 (Virtualization &amp; SD-WAN)</option>
+                  <option value="ENCOR-D3">ENCOR-D3 (Infrastructure &amp; Wireless)</option>
+                  <option value="ENCOR-D4">ENCOR-D4 (Network Assurance)</option>
+                  <option value="ENCOR-D5">ENCOR-D5 (Security &amp; Zero Trust)</option>
+                  <option value="ENCOR-D6">ENCOR-D6 (Automation &amp; Programmability)</option>
+                  <option value="ENARSI-D1">ENARSI-D1 (Advanced Routing)</option>
+                  <option value="ENARSI-D2">ENARSI-D2 (VPN Technologies)</option>
+                  <option value="ENARSI-D3">ENARSI-D3 (Infrastructure Security)</option>
+                  <option value="ENARSI-D4">ENARSI-D4 (Infrastructure Services)</option>
+                  <option value="SCOR-D1">SCOR-D1 (Security Concepts &amp; Threats)</option>
+                  <option value="SCOR-D2">SCOR-D2 (Network Security &amp; Firewalls)</option>
+                  <option value="SCOR-D3">SCOR-D3 (Cloud Security &amp; SaaS)</option>
+                  <option value="SCOR-D4">SCOR-D4 (Content Security ESA/WSA/Umbrella)</option>
+                  <option value="SCOR-D5">SCOR-D5 (Endpoint Protection &amp; Detection)</option>
+                  <option value="SCOR-D6">SCOR-D6 (Network Access, Visibility &amp; ISE)</option>
                   <option value="PCNSE-D1">PCNSE-D1 (Palo Alto Architecture)</option>
                   <option value="SECPLUS-D1">SECPLUS-D1 (CompTIA Security+)</option>
                   <option value="JNCIA-D1">JNCIA-D1 (Juniper Junos)</option>

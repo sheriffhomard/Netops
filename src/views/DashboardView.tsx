@@ -1,6 +1,7 @@
 import React from 'react';
 import { ViewMode } from '../types';
 import { currentUser, dailyDrills, sessionHistory, weaknessRadar } from '../data/mockData';
+import { useAuth } from '../context/AuthContext';
 
 interface DashboardViewProps {
   onNavigate: (view: ViewMode) => void;
@@ -13,6 +14,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onStartDrill,
   onOpenSubnetCalc,
 }) => {
+  const { user, userProfile, examResults } = useAuth();
+
+  const studentName = userProfile?.displayName || user?.displayName || 'Alex';
+  const targetCert = userProfile?.targetExam || 'CCNP Enterprise (350-401 ENCOR)';
+  const streak = userProfile?.streakDays ?? 14;
+  const precision = userProfile?.precisionGlobal ?? 84.5;
+
   return (
     <div className="flex flex-col w-full">
       {/* Subtle ambient glow container */}
@@ -38,13 +46,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   HOST: <span className="text-[#00daf3]">noc-workstation-07</span>
                 </span>
                 <span className="text-[#3b494c]">•</span>
-                <span className="text-[11px] text-[#c0c1ff] tracking-widest uppercase font-mono">
-                  SYSTÈME TELEMETRY V3.4
+                <span className="text-[11px] text-[#5be9ad] tracking-widest uppercase font-mono flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5be9ad] animate-pulse" />
+                  FIRESTORE SYNC ACTIVE
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-semibold text-[#dfe2ee] mt-1 tracking-tight">
-                Station de contrôle Alex <span className="text-[#849396] font-normal">|</span>{' '}
-                <span className="text-[#00e5ff]">CCNP Enterprise (350-401 ENCOR)</span>
+                Station de contrôle {studentName} <span className="text-[#849396] font-normal">|</span>{' '}
+                <span className="text-[#00e5ff]">{targetCert}</span>
               </h1>
               <p className="text-sm text-[#bac9cc] max-w-xl leading-relaxed">
                 Niveau de préparation optimal atteint sur le routage sous-jacent. Focus recommandé
@@ -63,7 +72,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     STREAK &amp; CADENCE
                   </span>
                   <span className="font-mono text-xs text-[#dfe2ee] font-semibold">
-                    14 jours consécutifs • 1 420 questions
+                    {streak} jours consécutifs • Précision {precision}%
                   </span>
                 </div>
               </div>
@@ -254,8 +263,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* LEFT COLUMN (8 Columns) */}
           <div className="lg:col-span-8 flex flex-col gap-6">
-            {/* Quick Access Banners: Flashcards & Workshops */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Quick Access Banners: Flashcards, Cloud Encyclopedia & Workshops */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Flashcards Dedicated Screen */}
               <div
                 onClick={() => onNavigate('flashcards')}
@@ -271,19 +280,53 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         ÉCRAN DÉDIÉ
                       </span>
                       <span className="text-[11px] font-mono text-[#a8ffd2]">
-                        91 Mémos • SRS Leitner
+                        1900+ Cartes • SRS
                       </span>
                     </div>
                     <h3 className="text-sm font-bold text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors">
-                      Flashcards &amp; Répétition Espacée
+                      Flashcards Certifications
                     </h3>
                   </div>
                 </div>
                 <p className="text-xs text-[#bac9cc] line-clamp-2">
-                  Mode 3D flip, 81 fiches CCNA (D1, D2, D3), filtres par module (ENCOR, PCNSE, CompTIA, Junos), mode Chrono-Blitz et créateur de fiches.
+                  Mode 3D flip, 100 fiches/domaine SCOR (D1-D3), ENARSI (D1-D4), ENCOR (D1-D6), CCNA (D1-D6), PCNSE, CompTIA, JNCIA, chrono-blitz et liaison dynamique avec le Cloud.
                 </p>
                 <div className="flex items-center justify-between pt-2 border-t border-[#334155]/30 text-xs font-mono text-[#00e5ff] font-bold">
                   <span>Lancer les Flashcards</span>
+                  <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                  </span>
+                </div>
+              </div>
+
+              {/* Cloud Encyclopedia & Glossary */}
+              <div
+                onClick={() => onNavigate('glossaire-cloud')}
+                className="bg-gradient-to-br from-[#181c24] via-[#102a33] to-[#181c24] border border-[#00e5ff]/60 rounded-xl p-4 shadow-xl hover:border-[#4edea3] transition-all cursor-pointer group flex flex-col justify-between gap-3 relative overflow-hidden"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#003822] border border-[#4edea3]/50 flex items-center justify-center text-[#4edea3] shrink-0 group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(78,222,163,0.3)]">
+                    <span className="material-symbols-outlined text-xl">cloud_sync</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#4edea3] text-[#003822] font-bold">
+                        NOUVEAU
+                      </span>
+                      <span className="text-[11px] font-mono text-[#a8ffd2]">
+                        46 Termes • 7 Guides
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-bold text-[#dfe2ee] group-hover:text-[#4edea3] transition-colors">
+                      Encyclopédie &amp; Glossaire Cloud
+                    </h3>
+                  </div>
+                </div>
+                <p className="text-xs text-[#bac9cc] line-clamp-2">
+                  Topologies hybrides (Direct Connect, ExpressRoute, Cloud Interconnect), schémas ASCII, passerelles VPN IPsec et matrice comparative multi-cloud.
+                </p>
+                <div className="flex items-center justify-between pt-2 border-t border-[#334155]/30 text-xs font-mono text-[#4edea3] font-bold">
+                  <span>Explorer le Cloud</span>
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">
                     arrow_forward
                   </span>
@@ -635,30 +678,66 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#334155]/20">
-                    {sessionHistory.map((s) => (
-                      <tr key={s.id} className="hover:bg-[#262a33]/40 transition-colors">
-                        <td className="py-2 px-3 font-mono text-[#bac9cc]">{s.date}</td>
-                        <td className="py-2 px-3 text-[#dfe2ee] font-medium">{s.simulation}</td>
-                        <td
-                          className={`py-2 px-3 font-mono text-right font-bold ${
-                            s.status === 'PASS' ? 'text-[#a8ffd2]' : 'text-[#ffb4ab]'
-                          }`}
-                        >
-                          {s.score}%
-                        </td>
-                        <td className="py-2 px-3 text-center">
-                          <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-                              s.status === 'PASS'
-                                ? 'bg-[#a8ffd2]/20 text-[#a8ffd2]'
-                                : 'bg-[#ffb4ab]/20 text-[#ffb4ab]'
+                    {examResults.length > 0 ? (
+                      examResults.slice(0, 5).map((r) => (
+                        <tr key={r.id} className="hover:bg-[#262a33]/40 transition-colors">
+                          <td className="py-2 px-3 font-mono text-[#bac9cc]">
+                            {new Date(r.completedAt).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="py-2 px-3 text-[#dfe2ee] font-medium">
+                            <span className="flex items-center gap-1.5">
+                              {r.examCode}
+                              <span className="text-[9px] px-1 rounded bg-[#00363d] text-[#00daf3] font-mono">
+                                Cloud
+                              </span>
+                            </span>
+                          </td>
+                          <td
+                            className={`py-2 px-3 font-mono text-right font-bold ${
+                              r.passed ? 'text-[#a8ffd2]' : 'text-[#ffb4ab]'
                             }`}
                           >
-                            {s.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                            {Math.round((r.score / (r.maxScore || 1000)) * 100)}%
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                                r.passed
+                                  ? 'bg-[#a8ffd2]/20 text-[#a8ffd2]'
+                                  : 'bg-[#ffb4ab]/20 text-[#ffb4ab]'
+                              }`}
+                            >
+                              {r.passed ? 'PASS' : 'FAIL'}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      sessionHistory.map((s) => (
+                        <tr key={s.id} className="hover:bg-[#262a33]/40 transition-colors">
+                          <td className="py-2 px-3 font-mono text-[#bac9cc]">{s.date}</td>
+                          <td className="py-2 px-3 text-[#dfe2ee] font-medium">{s.simulation}</td>
+                          <td
+                            className={`py-2 px-3 font-mono text-right font-bold ${
+                              s.status === 'PASS' ? 'text-[#a8ffd2]' : 'text-[#ffb4ab]'
+                            }`}
+                          >
+                            {s.score}%
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                                s.status === 'PASS'
+                                  ? 'bg-[#a8ffd2]/20 text-[#a8ffd2]'
+                                  : 'bg-[#ffb4ab]/20 text-[#ffb4ab]'
+                              }`}
+                            >
+                              {s.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>

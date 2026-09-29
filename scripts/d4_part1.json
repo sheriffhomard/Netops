@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "cat": "Syslog & Network Logging",
+    "diff": "Fondamental",
+    "ft": "Niveaux de Gravité Syslog (Severity Levels 0 à 7)",
+    "fp": "Quels sont les 8 niveaux de sévérité Syslog (RFC 5424) et quel est l'acronyme mnémotechnique classique pour s'en souvenir ?",
+    "bt": "Hiérarchie des 8 Niveaux Syslog Cisco",
+    "bc": "• Niveaux Syslog de 0 à 7 :\n  0. Emergency (System unusable) - Panne totale immédiate\n  1. Alert (Action must be taken immediately)\n  2. Critical (Critical conditions)\n  3. Error (Error conditions)\n  4. Warning (Warning conditions)\n  5. Notification (Normal but significant condition - ex: interface UP/DOWN)\n  6. Informational (Informational messages - ex: commande passée)\n  7. Debugging (Debug-level output)\n\n• Mnémotechnique standard :\n  'Every Animal Can Eat Watermelon Nutritious In Diet'\n  (Emergency, Alert, Critical, Error, Warning, Notice, Info, Debug).",
+    "rfc": "RFC 5424 (The Syslog Protocol)",
+    "cli": "Router(config)# logging trap warnings  ! Envoie niveaux 0 à 4 au serveur distant",
+    "hint": "0 est le plus critique (Emergency), 7 est le plus verbeux (Debug). Le niveau 5 (Notification) est le standard d'opération normale."
+  },
+  {
+    "id": 2,
+    "cat": "Syslog & Network Logging",
+    "diff": "Intermédiaire",
+    "ft": "Destinations de Journalisation Syslog Cisco IOS XE",
+    "fp": "Quelles sont les 4 destinations principales pour les messages Syslog sur Cisco IOS XE et leurs commandes associées ?",
+    "bt": "Destinations Syslog et Mécanismes de Buffer",
+    "bc": "• Destinations principales :\n  1. Logging Buffer : Mémoire RAM interne du routeur (`logging buffered <bytes> <level>`). Accessible via `show logging`. Ne surcharge pas le CPU.\n  2. Console : Port console physique (`logging console <level>`). Fort impact CPU à proscrire en production pour le debug.\n  3. Terminal Monitor / VTY : Lignes SSH/Telnet actives (`terminal monitor` en mode privilège EXEC).\n  4. Syslog Daemon (Host distant) : Serveur externe UDP 514 ou TCP 514 (`logging host <ip>`).\n\n• Bonne pratique de production :\n  Désactiver ou brider le logging console à warning (`logging console warnings`) et utiliser un buffer circulaire généreux.",
+    "rfc": "Cisco IOS XE System Message Guide",
+    "cli": "Switch(config)# logging buffered 128000 debugging\nSwitch(config)# logging host 10.10.10.50\nSwitch(config)# logging trap informational\nSwitch(config)# logging source-interface Loopback0",
+    "hint": "Console, Buffer (RAM), Monitor (VTY), et Host (serveur distant)."
+  },
+  {
+    "id": 3,
+    "cat": "Syslog & Network Logging",
+    "diff": "Intermédiaire",
+    "ft": "Horodatage Haute Précision et Synchronisation Syslog",
+    "fp": "Pourquoi la commande 'service timestamps log datetime msec show-timezone' est-elle indispensable pour l'observabilité réseau ?",
+    "bt": "Alignement Temporel et Analyse Forensique",
+    "bc": "• Rôle de l'horodatage précis :\n  - Par défaut, les logs affichent l'uptime du routeur (ex: '*Mar  1 00:02:15') au lieu de l'heure calendaire réelle.\n  - `service timestamps log datetime msec show-timezone` associe chaque log à l'heure NTP exacte au milliseconde près avec fuseau horaire.\n\n• Intérêt opérationnel :\n  - Corrélation indispensable des événements distribués entre plusieurs routeurs, pare-feu et serveurs SIEM/Splunk.\n  - Sans horodatage absolu NTP synchronisé, l'analyse d'incident (Root Cause Analysis) est impossible.",
+    "rfc": "RFC 5905 (Network Time Protocol v4)",
+    "cli": "Router(config)# service timestamps log datetime msec show-timezone\nRouter(config)# service timestamps debug datetime msec show-timezone\nRouter(config)# ntp server 10.1.1.1",
+    "hint": "Remplace l'uptime par l'heure réelle en millisecondes synchronisée avec NTP."
+  },
+  {
+    "id": 4,
+    "cat": "Syslog & Network Logging",
+    "diff": "Fondamental",
+    "ft": "Structure d'un Message Syslog Cisco IOS XE",
+    "fp": "Décomposez et analysez la syntaxe d'un log Cisco typique : '%LINK-3-UPDOWN: Interface GigabitEthernet0/1, changed state to up'.",
+    "bt": "Anatomie d'un Message Syslog Cisco",
+    "bc": "• Format type : `%FACILITY-SEVERITY-MNEMONIC: Description`\n  1. Facility (`LINK`) : Sous-système matériel ou logiciel ayant généré l'événement (ex: OSPF, BGP, SYS, SEC, LINEPROTO).\n  2. Severity (`3`) : Chiffre de 0 à 7 indiquant le niveau d'urgence (ici 3 = Error condition).\n  3. Mnemonic (`UPDOWN`) : Identifiant court unique de l'événement.\n  4. Description textuelle : Détail de l'interface et du nouvel état.",
+    "rfc": "Cisco IOS XE Diagnostic System Guide",
+    "cli": "Router# show logging | include %LINK-3-UPDOWN",
+    "hint": "Structure en 3 blocs préfixés par '%' : Sous-système (Facility), Niveau (0-7), Mnémonique court."
+  },
+  {
+    "id": 5,
+    "cat": "Syslog & Network Logging",
+    "diff": "Avancé",
+    "ft": "Syslog Sécurisé sur TLS (RFC 5425) vs UDP Classique",
+    "fp": "Quelles sont les faiblesses du Syslog classique UDP 514 et comment le transport TCP/TLS (RFC 5425) y remédie-t-il ?",
+    "bt": "Sécurisation et Fiabilité du Transport Syslog",
+    "bc": "• Faiblesses du Syslog UDP 514 classique :\n  - Non fiable : Aucune confirmation de réception (perte de paquets en cas de saturation du réseau).\n  - Texte clair : Les messages de log peuvent contenir des adresses IP, noms d'utilisateurs ou alertes de sécurité exploitables par écoute passive.\n  - Usurpation d'identité (Spoofing) : Tout attaquant peut injecter de faux logs UDP au serveur SIEM.\n\n• Solution RFC 5425 (Syslog over TLS) :\n  - Utilise TCP port 6514 avec chiffrement TLS et certificats X.509.\n  - Chiffrement bout en bout, authentification mutuelle et garantie de livraison.",
+    "rfc": "RFC 5425 (TLS Transport Mapping for Syslog)",
+    "cli": "Switch(config)# logging host 192.168.10.100 transport tcp port 6514 tls",
+    "hint": "UDP 514 est sans acquittement et en clair ; TLS sur TCP 6514 apporte chiffrement, intégrité et garantie d'arrivée."
+  }
+]

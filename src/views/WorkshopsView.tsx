@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode } from '../types';
+import { initialFlashcards } from '../data/workshopsData';
 import { FlashcardsModule } from './workshops/FlashcardsModule';
 import { ExactTypingModule } from './workshops/ExactTypingModule';
 import { TroubleshootingModule } from './workshops/TroubleshootingModule';
@@ -34,7 +35,7 @@ export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
       label: 'Flashcards',
       sublabel: 'Cartes Mémo & Répétition Espacée',
       icon: 'style',
-      badgeCount: '91 Cartes',
+      badgeCount: `${initialFlashcards.length} Cartes`,
     },
     {
       id: 'exact-typing',

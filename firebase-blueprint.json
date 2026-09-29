@@ -1,0 +1,251 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with study statistics and certification progress",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Firebase Auth UID matching the document ID",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 254
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User display name",
+          "maxLength": 100
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User avatar photo URL",
+          "maxLength": 1000
+        },
+        "role": {
+          "type": "string",
+          "description": "Professional engineering title or role",
+          "maxLength": 100
+        },
+        "streakDays": {
+          "type": "number",
+          "description": "Consecutive days of study"
+        },
+        "lastStudyDate": {
+          "type": "string",
+          "description": "Date of last study session in YYYY-MM-DD",
+          "maxLength": 10
+        },
+        "precisionGlobal": {
+          "type": "number",
+          "description": "Global precision percentage 0-100"
+        },
+        "labsCompleted": {
+          "type": "number",
+          "description": "Count of successfully completed lab workshops"
+        },
+        "targetExam": {
+          "type": "string",
+          "description": "Primary targeted certification exam",
+          "maxLength": 100
+        },
+        "studyHoursTotal": {
+          "type": "number",
+          "description": "Total accrued hours of active study"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was initialized"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was last updated"
+        }
+      },
+      "required": ["id", "email", "displayName", "createdAt", "updatedAt"]
+    },
+    "UserFlashcard": {
+      "title": "UserFlashcard",
+      "description": "Custom or saved flashcard created by the student",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the flashcard",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the owner",
+          "maxLength": 128
+        },
+        "front": {
+          "type": "string",
+          "description": "Question or prompt on the card",
+          "maxLength": 2000
+        },
+        "back": {
+          "type": "string",
+          "description": "Answer or explanation on the card",
+          "maxLength": 4000
+        },
+        "module": {
+          "type": "string",
+          "description": "Certification module code (e.g. ENCOR-D1, CCNA-D1)",
+          "maxLength": 50
+        },
+        "certTrack": {
+          "type": "string",
+          "description": "Certification track (e.g. Cisco, Cloud, Security)",
+          "maxLength": 50
+        },
+        "tags": {
+          "type": "array",
+          "description": "Keywords or topic tags (up to 10 tags)"
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Perceived difficulty level",
+          "enum": ["Facile", "Moyen", "Difficile"],
+          "maxLength": 20
+        },
+        "state": {
+          "type": "string",
+          "description": "SRS mastery state",
+          "enum": ["new", "learning", "mastered"],
+          "maxLength": 20
+        },
+        "reviewCount": {
+          "type": "number",
+          "description": "Number of times reviewed"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of card creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of last modification"
+        }
+      },
+      "required": ["id", "userId", "front", "back", "module", "createdAt", "updatedAt"]
+    },
+    "ExamResult": {
+      "title": "ExamResult",
+      "description": "Historical record of an exam simulation session",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the exam attempt",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the candidate",
+          "maxLength": 128
+        },
+        "examCode": {
+          "type": "string",
+          "description": "Certification exam code (e.g. 350-401 ENCOR)",
+          "maxLength": 100
+        },
+        "score": {
+          "type": "number",
+          "description": "Final score obtained"
+        },
+        "maxScore": {
+          "type": "number",
+          "description": "Maximum possible score"
+        },
+        "passingScore": {
+          "type": "number",
+          "description": "Passing threshold score"
+        },
+        "passed": {
+          "type": "boolean",
+          "description": "Whether candidate passed the benchmark"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "description": "Time taken in seconds"
+        },
+        "totalQuestions": {
+          "type": "number",
+          "description": "Total number of exam questions answered"
+        },
+        "correctAnswers": {
+          "type": "number",
+          "description": "Number of correctly answered questions"
+        },
+        "completedAt": {
+          "type": "string",
+          "description": "Timestamp when the exam was submitted"
+        }
+      },
+      "required": ["id", "userId", "examCode", "score", "passed", "completedAt"]
+    },
+    "UserStudyNote": {
+      "title": "UserStudyNote",
+      "description": "User notes, CLI snippets, and topology observations",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the note",
+          "maxLength": 128
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the owner",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "description": "Note title or RFC reference",
+          "maxLength": 200
+        },
+        "content": {
+          "type": "string",
+          "description": "Markdown or plain text notes",
+          "maxLength": 10000
+        },
+        "category": {
+          "type": "string",
+          "description": "Topic category",
+          "maxLength": 50
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of note creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of note update"
+        }
+      },
+      "required": ["id", "userId", "title", "content", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user account telemetry, streak, and profile settings"
+    },
+    "/users/{userId}/flashcards/{flashcardId}": {
+      "schema": "UserFlashcard",
+      "description": "User created and mastered flashcards"
+    },
+    "/users/{userId}/examResults/{resultId}": {
+      "schema": "ExamResult",
+      "description": "User exam simulation records and scores"
+    },
+    "/users/{userId}/notes/{noteId}": {
+      "schema": "UserStudyNote",
+      "description": "Student engineering field notes and cheat sheets"
+    }
+  }
+}

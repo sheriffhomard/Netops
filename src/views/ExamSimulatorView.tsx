@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ExamQuestion, ViewMode } from '../types';
 import { generateFullExamQuestions } from '../data/mockData';
 import { SubnetCalculatorModal } from '../components/SubnetCalculatorModal';
+import { useAuth } from '../context/AuthContext';
 import confetti from 'canvas-confetti';
 
 interface ExamSimulatorViewProps {
@@ -13,7 +14,9 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   onNavigate,
   examCode = '350-401 ENCOR',
 }) => {
+  const { user, saveExamResult } = useAuth();
   const [questions, setQuestions] = useState<ExamQuestion[]>(() => generateFullExamQuestions());
+
   const [currentIndex, setCurrentIndex] = useState<number>(33); // Index 33 corresponds to Question 34
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({
     34: 'A',
@@ -31,6 +34,7 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   const [isExamCompleted, setIsExamCompleted] = useState<boolean>(false);
   const [finalScore, setFinalScore] = useState<number>(0);
+  const [hasSavedToFirestore, setHasSavedToFirestore] = useState<boolean>(false);
 
   // Timer: 1h 24m 11s = 5051 seconds
   const [secondsLeft, setSecondsLeft] = useState<number>(5051);
@@ -83,6 +87,21 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
     setFinalScore(scaledScore);
     setIsExamCompleted(true);
     setShowSubmitModal(false);
+
+    if (user) {
+      saveExamResult({
+        examCode,
+        score: scaledScore,
+        maxScore: 1000,
+        passingScore: 825,
+        passed: scaledScore >= 825,
+        durationSeconds: 7200 - secondsLeft,
+        totalQuestions: questions.length,
+        correctAnswers: correct,
+      })
+        .then(() => setHasSavedToFirestore(true))
+        .catch((err) => console.error('Failed to save exam result to Firestore:', err));
+    }
 
     if (scaledScore >= 825) {
       confetti({
@@ -228,7 +247,20 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
             </div>
           </div>
 
+          {hasSavedToFirestore ? (
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#00363d]/70 border border-[#00e5ff]/40 text-xs font-mono text-[#a8ffd2]">
+              <span className="material-symbols-outlined text-base text-[#00e5ff]">cloud_done</span>
+              <span>Résultat officiel synchronisé avec votre base Google Firestore</span>
+            </div>
+          ) : !user ? (
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#262a33]/60 border border-[#334155] text-xs font-mono text-[#bac9cc]">
+              <span className="material-symbols-outlined text-base text-[#eab308]">cloud_off</span>
+              <span>Connectez-vous avec Google pour enregistrer ce résultat en base</span>
+            </div>
+          ) : null}
+
           <div className="flex gap-4">
+
             <button
               onClick={() => setIsExamCompleted(false)}
               className="px-6 py-2.5 rounded-lg bg-[#262a33] text-[#dfe2ee] font-mono text-sm hover:bg-[#31353e] border border-[#334155]"
