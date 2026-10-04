@@ -258,10 +258,10 @@ export const certificationsList: CertificationItem[] = [
     blueprintVersion: 'FortiOS 7.4',
     readinessPct: 62,
     domains: [
-      { name: 'System & Network Configuration', percentage: 25 },
-      { name: 'Security Profiles & UTM Filtering', percentage: 30 },
-      { name: 'Authentication & IPsec VPN', percentage: 25 },
-      { name: 'High Availability & Diagnostics', percentage: 20 },
+      { name: '1.0 System & Network Configuration', percentage: 25 },
+      { name: '2.0 Firewall Policies & Security Profiles', percentage: 30 },
+      { name: '3.0 Authentication, ZTNA & IPsec VPN', percentage: 25 },
+      { name: '4.0 High Availability & Diagnostics', percentage: 20 },
     ],
   },
   {
@@ -280,11 +280,12 @@ export const certificationsList: CertificationItem[] = [
     isEnrolled: true,
     enrolledProgress: 45,
     domains: [
-      { name: 'Planning & Core Architecture', percentage: 16 },
-      { name: 'Deploy & Configure Security Features', percentage: 23 },
-      { name: 'Deploy & Configure Interfaces & Networks', percentage: 20 },
-      { name: 'Manage & Troubleshoot Security Policies', percentage: 23 },
-      { name: 'Manage HA, Panorama & Profiles', percentage: 18 },
+      { name: '1.0 Planning & Core Architecture', percentage: 16 },
+      { name: '2.0 Deploy & Configure Core Components', percentage: 20 },
+      { name: '3.0 Deploy & Configure Security & NAT Policies', percentage: 22 },
+      { name: '4.0 Configure GlobalProtect & User-ID', percentage: 18 },
+      { name: '5.0 Manage & Troubleshoot', percentage: 14 },
+      { name: '6.0 Panorama & Centralized Management', percentage: 10 },
     ],
   },
 

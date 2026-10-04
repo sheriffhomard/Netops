@@ -14,7 +14,7 @@ interface FlashcardsViewProps {
 }
 
 type DisplayMode = 'focus' | 'grid' | 'blitz' | 'create';
-type VendorFilter = 'all' | 'cisco' | 'paloalto' | 'comptia' | 'juniper';
+type VendorFilter = 'all' | 'cisco' | 'paloalto' | 'fortinet' | 'comptia' | 'juniper';
 
 const LOCAL_STORAGE_KEY_CUSTOM_CARDS = 'netops_custom_flashcards_v1';
 const LOCAL_STORAGE_KEY_MASTERED = 'netops_flashcards_mastered_ids';
@@ -182,6 +182,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         if (!isCisco) return false;
       } else if (vendorFilter === 'paloalto') {
         if (!c.moduleCode?.startsWith('PCNSE')) return false;
+      } else if (vendorFilter === 'fortinet') {
+        if (!c.moduleCode?.startsWith('FCP')) return false;
       } else if (vendorFilter === 'comptia') {
         const isComptia = c.moduleCode?.startsWith('SECPLUS') || c.moduleCode?.startsWith('NETPLUS');
         if (!isComptia) return false;
@@ -225,6 +227,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         if (!isCisco) return false;
       } else if (vendorFilter === 'paloalto') {
         if (!c.moduleCode?.startsWith('PCNSE')) return false;
+      } else if (vendorFilter === 'fortinet') {
+        if (!c.moduleCode?.startsWith('FCP')) return false;
       } else if (vendorFilter === 'comptia') {
         const isComptia = c.moduleCode?.startsWith('SECPLUS') || c.moduleCode?.startsWith('NETPLUS');
         if (!isComptia) return false;
@@ -567,8 +571,16 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
     { id: 'SCOR-D4', label: 'Cisco SCOR-D4 : Content Security (ESA, WSA, Umbrella) (100 Cartes)', vendor: 'cisco' },
     { id: 'SCOR-D5', label: 'Cisco SCOR-D5 : Endpoint Protection & Detection (Secure Endpoint, AnyConnect) (100 Cartes)', vendor: 'cisco' },
     { id: 'SCOR-D6', label: 'Cisco SCOR-D6 : Secure Network Access, Visibility & ISE (100 Cartes)', vendor: 'cisco' },
-    { id: 'PCNSE-D1', label: 'Palo Alto PCNSE-D1 : Architecture SP3', vendor: 'paloalto' },
-    { id: 'PCNSE-D3', label: 'Palo Alto PCNSE-D3 : App-ID & Policies', vendor: 'paloalto' },
+    { id: 'PCNSE-D1', label: 'Palo Alto PCNSE-D1 : Planning & Core Architecture (100 Cartes)', vendor: 'paloalto' },
+    { id: 'PCNSE-D2', label: 'Palo Alto PCNSE-D2 : Deploy & Configure Core Components (100 Cartes)', vendor: 'paloalto' },
+    { id: 'PCNSE-D3', label: 'Palo Alto PCNSE-D3 : Deploy & Configure Security & NAT Policies (100 Cartes)', vendor: 'paloalto' },
+    { id: 'PCNSE-D4', label: 'Palo Alto PCNSE-D4 : Configure GlobalProtect & User-ID (100 Cartes)', vendor: 'paloalto' },
+    { id: 'PCNSE-D5', label: 'Palo Alto PCNSE-D5 : Manage & Troubleshoot (100 Cartes)', vendor: 'paloalto' },
+    { id: 'PCNSE-D6', label: 'Palo Alto PCNSE-D6 : Panorama & Centralized Management (100 Cartes)', vendor: 'paloalto' },
+    { id: 'FCP-D1', label: 'Fortinet FCP-D1 : System & Network Configuration (25 Cartes)', vendor: 'fortinet' },
+    { id: 'FCP-D2', label: 'Fortinet FCP-D2 : Firewall Policies & Security Profiles (25 Cartes)', vendor: 'fortinet' },
+    { id: 'FCP-D3', label: 'Fortinet FCP-D3 : Authentication, ZTNA & IPsec VPN (25 Cartes)', vendor: 'fortinet' },
+    { id: 'FCP-D4', label: 'Fortinet FCP-D4 : High Availability & Diagnostics (25 Cartes)', vendor: 'fortinet' },
     { id: 'SECPLUS-D4', label: 'CompTIA SECPLUS-D4 : SAML, OAuth, OIDC', vendor: 'comptia' },
     { id: 'NETPLUS-D1', label: 'CompTIA NETPLUS-D1 : Transport & Ports', vendor: 'comptia' },
     { id: 'JNCIA-D1', label: 'Juniper JNCIA-D1 : RE vs PFE Engine', vendor: 'juniper' },
@@ -726,6 +738,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                 { id: 'all', label: 'Tous' },
                 { id: 'cisco', label: 'Cisco (CCNA/CCNP)' },
                 { id: 'paloalto', label: 'Palo Alto (PCNSE)' },
+                { id: 'fortinet', label: 'Fortinet (FCP FortiGate)' },
                 { id: 'comptia', label: 'CompTIA (Sec+/Net+)' },
                 { id: 'juniper', label: 'Juniper (JNCIA)' },
               ] as { id: VendorFilter; label: string }[]
@@ -1510,7 +1523,16 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                   <option value="SCOR-D4">SCOR-D4 (Content Security ESA/WSA/Umbrella)</option>
                   <option value="SCOR-D5">SCOR-D5 (Endpoint Protection &amp; Detection)</option>
                   <option value="SCOR-D6">SCOR-D6 (Network Access, Visibility &amp; ISE)</option>
-                  <option value="PCNSE-D1">PCNSE-D1 (Palo Alto Architecture)</option>
+                  <option value="PCNSE-D1">PCNSE-D1 (Planning &amp; Core Architecture)</option>
+                  <option value="PCNSE-D2">PCNSE-D2 (Deploy &amp; Configure Core Components)</option>
+                  <option value="PCNSE-D3">PCNSE-D3 (Security &amp; NAT Policies)</option>
+                  <option value="PCNSE-D4">PCNSE-D4 (GlobalProtect &amp; User-ID)</option>
+                  <option value="PCNSE-D5">PCNSE-D5 (Manage &amp; Troubleshoot)</option>
+                  <option value="PCNSE-D6">PCNSE-D6 (Panorama &amp; Centralized Mgmt)</option>
+                  <option value="FCP-D1">FCP-D1 (Fortinet System &amp; Network)</option>
+                  <option value="FCP-D2">FCP-D2 (Fortinet Security Profiles &amp; Policies)</option>
+                  <option value="FCP-D3">FCP-D3 (Fortinet Auth, ZTNA &amp; IPsec)</option>
+                  <option value="FCP-D4">FCP-D4 (Fortinet HA &amp; Diagnostics)</option>
                   <option value="SECPLUS-D1">SECPLUS-D1 (CompTIA Security+)</option>
                   <option value="JNCIA-D1">JNCIA-D1 (Juniper Junos)</option>
                 </select>
