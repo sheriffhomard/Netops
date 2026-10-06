@@ -4,9 +4,14 @@ import { useAuth } from '../context/AuthContext';
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenLegalDisclaimer?: () => void;
 }
 
-export const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onClose }) => {
+export const UserProfileModal: React.FC<UserProfileModalProps> = ({
+  isOpen,
+  onClose,
+  onOpenLegalDisclaimer,
+}) => {
   const { user, userProfile, signIn, signOut, updateProfile, examResults, userFlashcards } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(userProfile?.displayName || '');
@@ -288,6 +293,26 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({ isOpen, onCl
                   <span className="text-[#dfe2ee]">Pilliers Zéro-Trust Actifs</span>
                 </div>
               </div>
+
+              {/* Legal Disclaimer Link */}
+              {onOpenLegalDisclaimer && (
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#181c24] border border-[#334155]/40 text-xs">
+                  <span className="text-[#849396] font-mono flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
+                    Cadre Légal &amp; Indépendance
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onOpenLegalDisclaimer();
+                    }}
+                    className="text-[#00e5ff] hover:underline font-mono text-[11px] font-semibold"
+                  >
+                    Consulter
+                  </button>
+                </div>
+              )}
 
               {/* Sign out button */}
               <div className="flex items-center justify-between pt-2 border-t border-[#334155]/50">

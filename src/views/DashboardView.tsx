@@ -7,12 +7,14 @@ interface DashboardViewProps {
   onNavigate: (view: ViewMode) => void;
   onStartDrill?: (drillTitle: string) => void;
   onOpenSubnetCalc?: () => void;
+  onOpenLegalDisclaimer?: () => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
   onStartDrill,
   onOpenSubnetCalc,
+  onOpenLegalDisclaimer,
 }) => {
   const { user, userProfile, examResults } = useAuth();
 
@@ -809,6 +811,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="text-[#00daf3]">NETOPS CONSOLE READY</span>
           </div>
         </footer>
+
+        {/* Legal Disclaimer & Independence Note */}
+        <div className="mt-3 pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] text-[#849396] px-1 font-sans border-t border-[#334155]/20 pt-3">
+          <p className="leading-relaxed">
+            © NetOps Academy — Plateforme d'entraînement indépendante. Aucun lien d'affiliation, partenariat ou accréditation avec Cisco Systems, Palo Alto Networks, Fortinet, CompTIA ou Juniper Networks.
+          </p>
+          {onOpenLegalDisclaimer && (
+            <button
+              onClick={onOpenLegalDisclaimer}
+              className="text-[#00e5ff] hover:underline font-mono text-[11px] shrink-0 flex items-center gap-1 self-start sm:self-auto"
+            >
+              <span className="material-symbols-outlined text-xs">gavel</span>
+              <span>Mentions Légales &amp; Indépendance</span>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

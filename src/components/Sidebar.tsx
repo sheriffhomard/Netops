@@ -8,6 +8,7 @@ interface SidebarProps {
   onToggleNocMode: () => void;
   sessionTime?: string;
   globalReadiness?: string;
+  onOpenLegalDisclaimer?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -17,6 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleNocMode,
   sessionTime = '1h 42m',
   globalReadiness = '84.5%',
+  onOpenLegalDisclaimer,
 }) => {
   const navItems: { id: ViewMode; label: string; icon: string; badge?: string }[] = [
     { id: 'tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
@@ -134,6 +136,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
             />
           </div>
         </div>
+
+        {/* Mentions Légales & Indépendance Button */}
+        {onOpenLegalDisclaimer && (
+          <button
+            onClick={onOpenLegalDisclaimer}
+            className="flex items-center justify-between px-2 py-1.5 rounded text-[11px] font-mono text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33]/40 transition-colors w-full text-left border-t border-[#334155]/20 pt-2"
+            title="Consulter les mentions légales et l'avertissement d'indépendance (Cisco, Palo Alto, Fortinet...)"
+          >
+            <span className="flex items-center gap-1.5 truncate">
+              <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
+              Mentions Légales &amp; Indépendance
+            </span>
+            <span className="material-symbols-outlined text-xs shrink-0">open_in_new</span>
+          </button>
+        )}
       </div>
     </aside>
   );

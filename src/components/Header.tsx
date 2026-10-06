@@ -7,9 +7,15 @@ interface HeaderProps {
   user: UserProfile;
   onOpenSearch: () => void;
   onOpenSubnetCalc?: () => void;
+  onOpenLegalDisclaimer?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user: fallbackUser, onOpenSearch, onOpenSubnetCalc }) => {
+export const Header: React.FC<HeaderProps> = ({
+  user: fallbackUser,
+  onOpenSearch,
+  onOpenSubnetCalc,
+  onOpenLegalDisclaimer,
+}) => {
   const { user: authUser, userProfile, signIn, signOut } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -233,6 +239,18 @@ export const Header: React.FC<HeaderProps> = ({ user: fallbackUser, onOpenSearch
                       <span className="material-symbols-outlined text-sm">settings</span>
                       Gérer mon profil & Sync
                     </button>
+                    {onOpenLegalDisclaimer && (
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          onOpenLegalDisclaimer();
+                        }}
+                        className="w-full py-1.5 rounded bg-[#181c24] text-xs text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors font-mono flex items-center justify-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-sm">gavel</span>
+                        Mentions Légales &amp; Indépendance
+                      </button>
+                    )}
                     <button
                       onClick={async () => {
                         setShowProfileMenu(false);
@@ -255,6 +273,7 @@ export const Header: React.FC<HeaderProps> = ({ user: fallbackUser, onOpenSearch
       <UserProfileModal
         isOpen={showProfileModal}
         onClose={() => setShowProfileModal(false)}
+        onOpenLegalDisclaimer={onOpenLegalDisclaimer}
       />
     </>
   );

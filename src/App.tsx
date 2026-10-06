@@ -7,6 +7,7 @@ import { Header } from './components/Header';
 import { UserProfileModal } from './components/UserProfileModal';
 import { CommandPaletteModal } from './components/CommandPaletteModal';
 import { SubnetCalculatorModal } from './components/SubnetCalculatorModal';
+import { OnboardingModal } from './components/OnboardingModal';
 import { DashboardView } from './views/DashboardView';
 import { CertificationsView } from './views/CertificationsView';
 import { ExamSimulatorView } from './views/ExamSimulatorView';
@@ -26,6 +27,21 @@ export function App() {
   const [isSubnetCalcOpen, setIsSubnetCalcOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+
+  // Onboarding & Legal Disclaimer acknowledgment state
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('netops_legal_disclaimer_accepted_v1') !== 'true';
+    } catch {
+      return true;
+    }
+  });
+  const [onboardingInitialStep, setOnboardingInitialStep] = useState<number>(1);
+
+  const handleOpenLegalDisclaimer = () => {
+    setOnboardingInitialStep(2); // Open directly to Step 2: Mentions Légales
+    setIsOnboardingOpen(true);
+  };
 
 
   // Cross-linking state between Flashcards and Cloud Knowledge base
@@ -165,6 +181,7 @@ export function App() {
           onToggleNocMode={() => setNocMode(!nocMode)}
           sessionTime={formatSessionTime(sessionSeconds)}
           globalReadiness="84.5%"
+          onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
         />
       </div>
 
@@ -176,6 +193,7 @@ export function App() {
             user={currentUser}
             onOpenSearch={() => setIsSearchOpen(true)}
             onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
+            onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
           />
         </div>
 
@@ -186,6 +204,7 @@ export function App() {
               onNavigate={handleNavigate}
               onStartDrill={() => handleNavigate('simulateur-d-examen')}
               onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
+              onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
             />
           )}
 
@@ -259,6 +278,13 @@ export function App() {
       <UserProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
+        onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+      />
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={() => setIsOnboardingOpen(false)}
+        initialStep={onboardingInitialStep}
       />
     </div>
   );
