@@ -4,6 +4,7 @@ import { currentUser } from './data/mockData';
 import { useAuth } from './context/AuthContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { UserProfileModal } from './components/UserProfileModal';
 import { CommandPaletteModal } from './components/CommandPaletteModal';
 import { SubnetCalculatorModal } from './components/SubnetCalculatorModal';
@@ -28,6 +29,27 @@ export function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
 
+  // Desktop sidebar collapse state
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('netops_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleToggleSidebarCollapse = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('netops_sidebar_collapsed', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
   // Onboarding & Legal Disclaimer acknowledgment state
   const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(() => {
     try {
@@ -42,7 +64,6 @@ export function App() {
     setOnboardingInitialStep(2); // Open directly to Step 2: Mentions Légales
     setIsOnboardingOpen(true);
   };
-
 
   // Cross-linking state between Flashcards and Cloud Knowledge base
   const [cloudInitialTab, setCloudInitialTab] = useState<'glossaire' | 'encyclopedie' | 'matrice'>('encyclopedie');
@@ -121,35 +142,43 @@ export function App() {
       }`}
     >
       {/* Mobile Top Header (for < 1024px) */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#181c24] border-b border-[#334155] z-50 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1.5 rounded-lg text-[#bac9cc] hover:bg-[#262a33]"
-          >
-            <span className="material-symbols-outlined">
-              {isMobileMenuOpen ? 'close' : 'menu'}
-            </span>
-          </button>
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#12151c]/95 backdrop-blur-xl border-b border-[#334155]/60 z-40 flex items-center justify-between px-4">
+        <div
+          onClick={() => handleNavigate('tableau-de-bord')}
+          className="flex items-center gap-2.5 cursor-pointer"
+        >
           <img
             alt="NetOps Logo"
             className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#00e5ff]/50"
             src="/src/assets/images/netops_logo_1790514169496.jpg"
             referrerPolicy="no-referrer"
           />
-          <span className="font-semibold text-sm text-[#00e5ff] font-mono">NetOps Academy</span>
+          <span className="font-semibold text-sm text-[#00e5ff] font-mono">NetOps</span>
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Quick Subnet Calc trigger on mobile */}
+          <button
+            onClick={() => setIsSubnetCalcOpen(true)}
+            className="p-1.5 rounded-lg text-[#00daf3] hover:bg-[#262a33] transition-colors"
+            title="Calculateur CIDR"
+          >
+            <span className="material-symbols-outlined text-xl">calculate</span>
+          </button>
+
+          {/* Quick search button */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="p-1.5 rounded-lg text-[#00daf3] hover:bg-[#262a33]"
+            className="p-1.5 rounded-lg text-[#00daf3] hover:bg-[#262a33] transition-colors"
+            title="Recherche globale (Ctrl+K)"
           >
             <span className="material-symbols-outlined text-xl">search</span>
           </button>
+
+          {/* User profile avatar */}
           <button
             onClick={() => setIsProfileModalOpen(true)}
-            className="flex items-center"
+            className="flex items-center ml-1 cursor-pointer"
             title="Profil & Connexion"
           >
             <img
@@ -159,18 +188,18 @@ export function App() {
             />
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Sidebar for Desktop & Mobile drawer */}
       <div
-        className={`fixed inset-0 z-50 lg:static lg:z-auto transition-transform ${
+        className={`fixed inset-0 z-50 lg:static lg:z-auto transition-transform duration-300 ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Mobile backdrop */}
         {isMobileMenuOpen && (
           <div
-            className="fixed inset-0 bg-black/60 lg:hidden"
+            className="fixed inset-0 bg-black/70 lg:hidden backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           />
         )}
@@ -182,22 +211,33 @@ export function App() {
           sessionTime={formatSessionTime(sessionSeconds)}
           globalReadiness="84.5%"
           onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={handleToggleSidebarCollapse}
+          onCloseMobile={() => setIsMobileMenuOpen(false)}
         />
       </div>
 
-      {/* Main Layout Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-72 pt-14 lg:pt-16">
+      {/* Main Layout Area with responsive left padding for collapsed/expanded sidebar */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 pt-14 lg:pt-16 ${
+          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* Desktop Header */}
         <div className="hidden lg:block">
           <Header
             user={currentUser}
+            currentView={currentView}
+            onNavigate={handleNavigate}
             onOpenSearch={() => setIsSearchOpen(true)}
             onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
             onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+            isSidebarCollapsed={isSidebarCollapsed}
+            onToggleSidebarCollapse={handleToggleSidebarCollapse}
           />
         </div>
 
-        {/* View Switcher */}
+        {/* View Switcher Container */}
         <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col">
           {currentView === 'tableau-de-bord' && (
             <DashboardView
@@ -263,6 +303,14 @@ export function App() {
         </main>
       </div>
 
+      {/* Mobile Bottom Navigation Bar (for < 1024px) */}
+      <MobileBottomNav
+        currentView={currentView}
+        onSelectView={handleNavigate}
+        onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        isMenuOpen={isMobileMenuOpen}
+      />
+
       {/* Modals */}
       <CommandPaletteModal
         isOpen={isSearchOpen}
@@ -289,6 +337,5 @@ export function App() {
     </div>
   );
 }
-
 
 export default App;

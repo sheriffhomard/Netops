@@ -52,7 +52,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
   };
 
   return (
-    <div className="flex flex-col w-full px-6 py-6 gap-6">
+    <div className="flex flex-col w-full px-4 sm:px-6 py-6 pb-20 lg:pb-8 gap-6">
       {/* 1. Header Banner with Platform Metrics */}
       <section className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-[#334155]/40">
         <div className="flex flex-col gap-2 max-w-3xl">

@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ViewMode } from '../types';
 
 interface CommandPaletteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (view: ViewMode) => void;
-  onSelectCert?: (certId: string) => void;
+}
+
+interface PaletteItem {
+  id: string;
+  category: 'Pages' | 'Certifications' | 'Outils Réseau' | 'Flashcards & SRS';
+  title: string;
+  desc: string;
+  icon: string;
+  view: ViewMode;
+  badge?: string;
 }
 
 export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
@@ -14,164 +23,366 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
   onNavigate,
 }) => {
   const [search, setSearch] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        // toggle handled by parent or opened
-      }
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  const items: PaletteItem[] = [
+    // Navigation / Pages
+    {
+      id: 'page-dashboard',
+      category: 'Pages',
+      title: 'Tableau de bord',
+      desc: 'Vue d\'ensemble, activité en cours, objectifs et métriques clés',
+      icon: 'dashboard',
+      view: 'tableau-de-bord',
+    },
+    {
+      id: 'page-flashcards',
+      category: 'Pages',
+      title: 'Flashcards & Mémos (SRS)',
+      desc: '2 900+ fiches de révision active avec répétition espacée Leitner',
+      icon: 'style',
+      view: 'flashcards',
+      badge: '2900+',
+    },
+    {
+      id: 'page-cloud',
+      category: 'Pages',
+      title: 'Encyclopédie Cloud & Glossaire',
+      desc: 'Topologies Direct Connect / ExpressRoute, schémas ASCII et comparatif',
+      icon: 'cloud_sync',
+      view: 'glossaire-cloud',
+      badge: 'NEW',
+    },
+    {
+      id: 'page-simulator',
+      category: 'Pages',
+      title: 'Simulateur d\'Examen',
+      desc: 'Entraînement proctorisé chronométré avec notation conforme au score réel',
+      icon: 'check_circle',
+      view: 'simulateur-d-examen',
+    },
+    {
+      id: 'page-workshops',
+      category: 'Pages',
+      title: 'Ateliers & Labs Pratiques',
+      desc: 'Saisie exacte de commandes IOS, dépannage avec injection de pannes',
+      icon: 'science',
+      view: 'ateliers-et-labs',
+    },
+    {
+      id: 'page-terminal',
+      category: 'Pages',
+      title: 'Terminal & Lab Virtuel',
+      desc: 'Console Cisco IOS-XE interactive avec auto-complétion TAB',
+      icon: 'terminal',
+      view: 'terminal-lab-virtuel',
+    },
+    {
+      id: 'page-questions',
+      category: 'Pages',
+      title: 'Banque de Questions',
+      desc: 'QCM commentés, filtres par domaine de certification et explications',
+      icon: 'database',
+      view: 'banque-de-questions',
+    },
+    {
+      id: 'page-analytics',
+      category: 'Pages',
+      title: 'Analytiques de Réussite',
+      desc: 'Radar des faiblesses, historique des scores et courbe de progression',
+      icon: 'monitoring',
+      view: 'analytiques-de-reussite',
+    },
 
-  if (!isOpen) return null;
-
-  const quickItems = [
+    // Certifications
     {
-      type: 'Certification',
-      title: 'Cisco CCNA 200-301',
-      desc: 'Implementing and Administering Cisco Solutions (v1.1 Actif)',
-      view: 'parcours-certifications' as ViewMode,
+      id: 'cert-ccna',
+      category: 'Certifications',
+      title: 'Cisco CCNA 200-301 v1.1',
+      desc: '6 domaines complets : Network Fundamentals, IP Connectivity, Security, Automation',
+      icon: 'school',
+      view: 'parcours-certifications',
     },
     {
-      type: 'Certification',
-      title: 'CCNP Enterprise 350-401 ENCOR',
-      desc: 'Core Routing BGP/OSPF, SDN Catalyst Center, SD-WAN',
-      view: 'parcours-certifications' as ViewMode,
+      id: 'cert-encor',
+      category: 'Certifications',
+      title: 'Cisco CCNP Enterprise 350-401 ENCOR',
+      desc: 'Architecture, Virtualisation, Routage avancé BGP/OSPF, Sécurité d\'infrastructure',
+      icon: 'school',
+      view: 'parcours-certifications',
     },
     {
-      type: 'Lab Virtuel',
-      title: 'Lab 08 : Router-on-a-Stick (802.1Q Inter-VLAN)',
-      desc: 'Sub-interfaces fa0/0.10, fa0/0.20 & Catalyst Trunk Fa0/24',
-      view: 'terminal-lab-virtuel' as ViewMode,
-    },
-    {
-      type: 'Atelier & Lab',
-      title: 'Ateliers & Labs : Entraînement Technique Interactif',
-      desc: 'Saisie exacte de commandes, Dépannage, Ordonnancement, Appariement et Mini-Labs',
-      view: 'ateliers-et-labs' as ViewMode,
-    },
-    {
-      type: 'Flashcards',
-      title: 'Flashcards & Mémos (SRS Répétition Espacée)',
-      desc: '1900+ Cartes d\'entraînement : Cisco CCNA (D1-D6), ENCOR (D1-D6), ENARSI (D1-D4), SCOR (D1-D3), Palo Alto, CompTIA, Juniper',
-      view: 'flashcards' as ViewMode,
-    },
-    {
-      type: 'Certification',
+      id: 'cert-scor',
+      category: 'Certifications',
       title: 'Cisco CCNP Security 350-701 SCOR',
-      desc: 'Security Concepts, Network Security Firewalls/VPN, Securing Cloud & SaaS (300 Cartes Flashcards)',
-      view: 'flashcards' as ViewMode,
+      desc: 'Security Concepts, Network Security, Cloud Security, Content Security (600 Flashcards)',
+      icon: 'shield',
+      view: 'parcours-certifications',
+      badge: '600 cartes',
     },
     {
-      type: 'Cloud',
-      title: 'Encyclopédie & Glossaire Cloud d\'Entreprise',
-      desc: '46 Termes Clés, Topologies Réseau Hybrides (AWS / Azure / GCP), Schémas ASCII et Matrice Comparative',
-      view: 'glossaire-cloud' as ViewMode,
+      id: 'cert-pcnse',
+      category: 'Certifications',
+      title: 'Palo Alto Networks PCNSE (PAN-OS 11.x)',
+      desc: 'Plan, Deploy, Configure, Manage, Troubleshoot NGFW & Prisma Access (600 Flashcards)',
+      icon: 'security',
+      view: 'parcours-certifications',
+      badge: '600 cartes',
     },
     {
-      type: 'Simulateur',
-      title: 'Examen Blanc Officiel ENCOR #4',
-      desc: '102 Questions chronométrées, télémétrie LSDB Type-5 OSPF',
-      view: 'simulateur-d-examen' as ViewMode,
+      id: 'cert-fortinet',
+      category: 'Certifications',
+      title: 'Fortinet FCP FortiGate 7.4',
+      desc: 'FortiOS 7.4, Firewall Policies, SSL Inspection, IPsec VPN, HA Cluster (100 Flashcards)',
+      icon: 'vpn_lock',
+      view: 'parcours-certifications',
+      badge: '100 cartes',
     },
     {
-      type: 'RFC & Protocole',
-      title: 'RFC 2328 - OSPF Version 2 (Type-5 External LSA)',
-      desc: 'Calcul de Forward Address et compatibilité métriques E1/E2',
-      view: 'banque-de-questions' as ViewMode,
+      id: 'cert-comptia-sec',
+      category: 'Certifications',
+      title: 'CompTIA Security+ SY0-701',
+      desc: 'General Security Concepts, Threats & Vulnerabilities, Security Architecture, Operations',
+      icon: 'verified_user',
+      view: 'parcours-certifications',
     },
     {
-      type: 'Commande IOS',
-      title: 'show ip ospf database external',
-      desc: 'Diagnostic des routes externes et de la Forward Address',
-      view: 'terminal-lab-virtuel' as ViewMode,
+      id: 'cert-jncia',
+      category: 'Certifications',
+      title: 'Juniper Networks JNCIA-Junos (JN0-105)',
+      desc: 'Junos OS Fundamentals, User Interfaces, Routing Policy, Firewall Filters',
+      icon: 'hub',
+      view: 'parcours-certifications',
+    },
+
+    // Outils Réseau
+    {
+      id: 'tool-cidr',
+      category: 'Outils Réseau',
+      title: 'Calculateur CIDR / VLSM',
+      desc: 'Découpage de sous-réseaux IPv4, masques /24 à /30, adresses réseau et broadcast',
+      icon: 'calculate',
+      view: 'tableau-de-bord',
     },
     {
-      type: 'Analytique',
-      title: 'Radar des Faiblesses & STP Analysis',
-      desc: 'Spanning-tree 61%, VXLAN 68%, Routage BGP 92%',
-      view: 'analytiques-de-reussite' as ViewMode,
+      id: 'tool-terminal-bgp',
+      category: 'Outils Réseau',
+      title: 'Simulation BGP Multi-homing',
+      desc: 'Validation des sessions eBGP, AS-Path prepending et attributs Local-Preference',
+      icon: 'terminal',
+      view: 'terminal-lab-virtuel',
+    },
+    {
+      id: 'tool-cloud-matrix',
+      category: 'Outils Réseau',
+      title: 'Matrice Comparative Multi-Cloud',
+      desc: 'Correspondance des services réseau AWS vs Azure vs Google Cloud vs CNCF',
+      icon: 'compare_arrows',
+      view: 'glossaire-cloud',
+    },
+
+    // Flashcards & SRS
+    {
+      id: 'flash-blitz',
+      category: 'Flashcards & SRS',
+      title: 'Défi Chrono Blitz (2 minutes)',
+      desc: 'Session intensive chronométrée pour stimuler la mémorisation réflexe',
+      icon: 'timer',
+      view: 'flashcards',
+    },
+    {
+      id: 'flash-due',
+      category: 'Flashcards & SRS',
+      title: 'Révisions espacées du jour (SRS)',
+      desc: 'Cartes à revoir prioritaires déterminées par l\'algorithme d\'espacement',
+      icon: 'psychology',
+      view: 'flashcards',
     },
   ];
 
-  const filtered = quickItems.filter(
-    (item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.desc.toLowerCase().includes(search.toLowerCase()) ||
-      item.type.toLowerCase().includes(search.toLowerCase())
-  );
+  const categories = ['all', 'Pages', 'Certifications', 'Outils Réseau', 'Flashcards & SRS'];
+
+  const filtered = items.filter((item) => {
+    const matchCategory = activeCategory === 'all' || item.category === activeCategory;
+    const query = search.toLowerCase().trim();
+    if (!query) return matchCategory;
+    const matchText =
+      item.title.toLowerCase().includes(query) ||
+      item.desc.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query);
+    return matchCategory && matchText;
+  });
+
+  // Reset selected index when search or filter changes
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [search, activeCategory]);
+
+  // Focus input on open
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [isOpen]);
+
+  // Keyboard navigation: ArrowUp, ArrowDown, Enter, Escape
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev + 1 < filtered.length ? prev + 1 : 0));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedIndex((prev) => (prev - 1 >= 0 ? prev - 1 : filtered.length - 1));
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filtered[selectedIndex]) {
+          onNavigate(filtered[selectedIndex].view);
+          onClose();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, filtered, selectedIndex, onNavigate, onClose]);
+
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-[#0f131c]/80 backdrop-blur-md z-50 flex items-start justify-center pt-24 p-4">
-      <div
-        className="fixed inset-0"
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-2xl bg-[#181c24] border border-[#334155] rounded-xl shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150">
-        {/* Input Header */}
+    <div className="fixed inset-0 bg-[#0f131c]/80 backdrop-blur-md z-50 flex items-start justify-center pt-16 sm:pt-24 p-4">
+      {/* Backdrop click */}
+      <div className="fixed inset-0" onClick={onClose} />
+
+      <div className="relative w-full max-w-2xl bg-[#181c24] border border-[#334155] rounded-2xl shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[85vh]">
+        {/* Search Header Bar */}
         <div className="flex items-center px-4 py-3 border-b border-[#334155] gap-3 bg-[#1c2028]">
           <span className="material-symbols-outlined text-[#00e5ff] text-xl">search</span>
           <input
-            autoFocus
+            ref={inputRef}
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher certif (200-301, 350-401), RFC, commande IOS ou lab..."
+            placeholder="Rechercher certif (CCNA, PCNSE, FCP), commande IOS, lab..."
             className="w-full bg-transparent border-none outline-none font-mono text-sm text-[#dfe2ee] placeholder:text-[#849396] focus:ring-0"
           />
-          <kbd className="bg-[#262a33] text-[#849396] px-2 py-0.5 rounded text-xs font-mono">
-            ESC
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="p-1 rounded text-[#849396] hover:text-[#dfe2ee]"
+              title="Effacer"
+            >
+              <span className="material-symbols-outlined text-sm">close</span>
+            </button>
+          )}
+          <kbd className="bg-[#262a33] text-[#849396] px-2 py-0.5 rounded text-xs font-mono shrink-0">
+            ÉCHAP
           </kbd>
         </div>
 
+        {/* Category Filters */}
+        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-[#334155]/40 bg-[#12151c]/60 overflow-x-auto scrollbar-none">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-2.5 py-1 rounded text-xs font-mono transition-colors whitespace-nowrap cursor-pointer ${
+                activeCategory === cat
+                  ? 'bg-[#00e5ff] text-[#00363d] font-semibold'
+                  : 'text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33]'
+              }`}
+            >
+              {cat === 'all' ? 'Tout' : cat}
+            </button>
+          ))}
+        </div>
+
         {/* Results List */}
-        <div className="max-h-96 overflow-y-auto p-2 divide-y divide-[#334155]/30 font-sans">
+        <div className="overflow-y-auto p-2 divide-y divide-[#334155]/20 font-sans flex-1">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-sm text-[#849396] font-mono">
-              Aucun résultat télémétrique pour &quot;{search}&quot;
+            <div className="py-12 text-center text-sm text-[#849396] font-mono flex flex-col items-center gap-2">
+              <span className="material-symbols-outlined text-3xl text-[#3b494c]">manage_search</span>
+              <span>Aucun résultat trouvé pour &quot;{search}&quot;</span>
+              <span className="text-xs text-[#849396]">Essayez avec un mot-clé comme &quot;CCNA&quot;, &quot;PCNSE&quot;, &quot;BGP&quot; ou &quot;Flashcards&quot;</span>
             </div>
           ) : (
-            filtered.map((item, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  onNavigate(item.view);
-                  onClose();
-                }}
-                className="w-full text-left p-3 rounded-lg hover:bg-[#262a33] transition-colors flex items-center justify-between group"
-              >
-                <div className="flex flex-col gap-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-[#31353e] text-[#00daf3]">
-                      {item.type}
-                    </span>
-                    <span className="text-sm font-medium text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors">
-                      {item.title}
-                    </span>
+            filtered.map((item, idx) => {
+              const isSelected = idx === selectedIndex;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onNavigate(item.view);
+                    onClose();
+                  }}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  className={`w-full text-left p-3 rounded-lg transition-colors flex items-center justify-between group cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#262a33] border-l-2 border-[#00e5ff]'
+                      : 'hover:bg-[#262a33]/60'
+                  }`}
+                >
+                  <div className="flex items-start gap-3 min-w-0">
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
+                        isSelected
+                          ? 'bg-[#00363d] text-[#00e5ff]'
+                          : 'bg-[#181c24] text-[#849396]'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-lg">{item.icon}</span>
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-[#1c2028] text-[#849396]">
+                          {item.category}
+                        </span>
+                        <span
+                          className={`text-sm font-medium transition-colors truncate ${
+                            isSelected ? 'text-[#00e5ff]' : 'text-[#dfe2ee]'
+                          }`}
+                        >
+                          {item.title}
+                        </span>
+                        {item.badge && (
+                          <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#00363d] text-[#00e5ff]">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-[#bac9cc] truncate mt-0.5">
+                        {item.desc}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-xs text-[#bac9cc]">{item.desc}</span>
-                </div>
-                <span className="material-symbols-outlined text-sm text-[#849396] opacity-0 group-hover:opacity-100 transition-opacity">
-                  arrow_forward
-                </span>
-              </button>
-            ))
+
+                  <span
+                    className={`material-symbols-outlined text-sm transition-opacity shrink-0 ml-2 ${
+                      isSelected ? 'text-[#00e5ff] opacity-100' : 'text-[#849396] opacity-0 group-hover:opacity-100'
+                    }`}
+                  >
+                    arrow_forward
+                  </span>
+                </button>
+              );
+            })
           )}
         </div>
 
         {/* Footer shortcuts */}
-        <div className="px-4 py-2 bg-[#0f131c] border-t border-[#334155]/40 flex items-center justify-between text-[11px] font-mono text-[#849396]">
-          <span>NetOps Quick Navigation</span>
-          <div className="flex items-center gap-3">
-            <span>↑↓ Navigation</span>
-            <span>↵ Sélectionner</span>
-            <span>ESC Quitter</span>
+        <div className="px-4 py-2 bg-[#0f131c] border-t border-[#334155]/40 flex items-center justify-between text-[11px] font-mono text-[#849396] shrink-0">
+          <span className="truncate">Palette de commandes NetOps</span>
+          <div className="flex items-center gap-3 shrink-0">
+            <span>↑↓ Déplacer</span>
+            <span>↵ Ouvrir</span>
+            <span>ÉCHAP Quitter</span>
           </div>
         </div>
       </div>

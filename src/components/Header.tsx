@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
-import { UserProfile } from '../types';
+import { UserProfile, ViewMode } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { UserProfileModal } from './UserProfileModal';
+import { Breadcrumbs } from './Breadcrumbs';
 
 interface HeaderProps {
   user: UserProfile;
+  currentView: ViewMode;
+  onNavigate: (view: ViewMode) => void;
   onOpenSearch: () => void;
   onOpenSubnetCalc?: () => void;
   onOpenLegalDisclaimer?: () => void;
+  isSidebarCollapsed?: boolean;
+  onToggleSidebarCollapse?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   user: fallbackUser,
+  currentView,
+  onNavigate,
   onOpenSearch,
   onOpenSubnetCalc,
   onOpenLegalDisclaimer,
+  isSidebarCollapsed = false,
+  onToggleSidebarCollapse,
 }) => {
   const { user: authUser, userProfile, signIn, signOut } = useAuth();
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -29,132 +37,69 @@ export const Header: React.FC<HeaderProps> = ({
   const precision = userProfile?.precisionGlobal ?? fallbackUser.precisionGlobal;
   const targetExam = userProfile?.targetExam || 'ENCOR 350-401';
 
-  const notifications = [
-    {
-      id: 1,
-      title: 'Lab RoAS v3.4 Déployé',
-      time: 'Il y a 10m',
-      desc: 'Topologie Cisco 2911 & Catalyst 3650 prête pour validation ICMP.',
-      unread: true,
-    },
-    {
-      id: 2,
-      title: 'Examen Blanc J-18',
-      time: 'Il y a 2h',
-      desc: 'CCNP 350-401 ENCOR session programmée pour samedi 14h00.',
-      unread: true,
-    },
-    {
-      id: 3,
-      title: 'Mise à jour Blueprint Cisco',
-      time: 'Hier',
-      desc: '15% de questions sur les modèles YANG et RESTCONF ajoutées.',
-      unread: false,
-    },
-  ];
-
   return (
     <>
-      <header className="fixed top-0 left-72 right-0 h-16 bg-[#0a0e16]/85 backdrop-blur-xl z-40 flex items-center justify-between px-6 border-b border-[#334155]/30 shadow-[0_1px_8px_rgba(0,0,0,0.4)] select-none">
-        {/* Search Input Bar with Ctrl+K */}
-        <div className="flex items-center gap-4 flex-1 max-w-xl">
-          <button
-            onClick={onOpenSearch}
-            className="flex items-center gap-3 bg-[#181c24] hover:bg-[#262a33] px-4 py-2 rounded-lg w-full text-[#bac9cc] border border-[#334155]/50 transition-all text-left group"
-          >
-            <span className="material-symbols-outlined text-lg text-[#849396] group-hover:text-[#00e5ff] transition-colors">
-              search
-            </span>
-            <span className="text-xs sm:text-sm flex-1 truncate text-[#bac9cc]">
-              Rechercher certif, RFC, commande IOS...
-            </span>
-            <kbd className="bg-[#262a33] border border-[#3b494c] px-2 py-0.5 rounded text-[10px] font-mono text-[#00daf3] shadow-sm">
-              Ctrl+K
-            </kbd>
-          </button>
-        </div>
-
-        {/* Right Telemetry Strip & User Section */}
-        <div className="flex items-center gap-3 md:gap-4">
-          {/* Cloud Firestore Status Badge */}
-          <div className="hidden xl:flex items-center gap-2 bg-[#181c24] px-3 py-1.5 rounded-lg border border-[#334155]/30">
-            <span className={`w-2 h-2 rounded-full ${authUser ? 'bg-[#5be9ad] animate-pulse shadow-[0_0_8px_rgba(91,233,173,0.8)]' : 'bg-[#eab308]'}`} />
-            <span className="font-mono text-xs text-[#a8ffd2] font-semibold">
-              {authUser ? 'FIRESTORE: CONNECTÉ' : 'FIRESTORE: LOCAL'}
-            </span>
-            <span className="font-mono text-xs text-[#3b494c]">|</span>
-            <span className="font-mono text-xs text-[#bac9cc]">12ms</span>
-          </div>
-
-          {/* Exam Countdown Badge */}
-          <div className="hidden md:flex items-center gap-2 bg-[#3131c0]/30 border border-[#c0c1ff]/30 px-3 py-1.5 rounded-lg text-[#c0c1ff]">
-            <span className="material-symbols-outlined text-base">timer</span>
-            <span className="font-mono text-xs font-medium">{targetExam} : J-18</span>
-          </div>
-
-          {/* Subnet Calc Quick Button if provided */}
-          {onOpenSubnetCalc && (
+      <header
+        className={`fixed top-0 right-0 h-16 bg-[#0a0e16]/90 backdrop-blur-xl z-40 flex items-center justify-between px-6 border-b border-[#334155]/30 shadow-[0_1px_8px_rgba(0,0,0,0.4)] select-none transition-all duration-300 ${
+          isSidebarCollapsed ? 'left-20' : 'left-72'
+        }`}
+      >
+        {/* Left: Sidebar Collapse Button & Breadcrumbs */}
+        <div className="flex items-center gap-3 min-w-0">
+          {onToggleSidebarCollapse && (
             <button
-              onClick={onOpenSubnetCalc}
-              title="Calculatrice de sous-réseaux IP / CIDR"
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 text-xs font-mono transition-all"
+              onClick={onToggleSidebarCollapse}
+              className="p-1.5 rounded-lg text-[#849396] hover:text-[#00e5ff] hover:bg-[#181c24] border border-[#334155]/30 transition-colors shrink-0"
+              title={isSidebarCollapsed ? "Développer le menu latéral" : "Réduire le menu latéral"}
+              aria-label="Basculer le menu latéral"
             >
-              <span className="material-symbols-outlined text-sm">calculate</span>
-              <span className="hidden lg:inline">CIDR</span>
+              <span className="material-symbols-outlined text-base">
+                {isSidebarCollapsed ? 'menu' : 'menu_open'}
+              </span>
             </button>
           )}
 
-          {/* Notification Bell */}
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2 rounded-lg text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] transition-all"
-              title="Notifications réseau"
-            >
-              <span className="material-symbols-outlined text-xl">notifications</span>
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#ffb4ab] shadow-[0_0_6px_#ffb4ab]"></span>
-            </button>
-
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#181c24] border border-[#334155] rounded-xl shadow-2xl p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#334155]/50">
-                  <span className="text-xs font-semibold text-[#00daf3] uppercase font-mono tracking-wider">
-                    Journal Télémétrique
-                  </span>
-                  <span className="text-[10px] text-[#a8ffd2] font-mono">2 NOUVELLES</span>
-                </div>
-                <div className="flex flex-col gap-2">
-                  {notifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className={`p-2 rounded-lg text-left transition-colors ${
-                        n.unread ? 'bg-[#262a33]/60' : 'bg-transparent'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-[#dfe2ee]">{n.title}</span>
-                        <span className="text-[10px] text-[#849396] font-mono">{n.time}</span>
-                      </div>
-                      <p className="text-[11px] text-[#bac9cc] mt-0.5 leading-snug">{n.desc}</p>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowNotifications(false)}
-                  className="w-full mt-3 py-1.5 text-center text-xs font-mono text-[#00daf3] hover:underline"
-                >
-                  Fermer
-                </button>
-              </div>
-            )}
+          <div className="min-w-0">
+            <Breadcrumbs currentView={currentView} onNavigate={onNavigate} />
           </div>
+        </div>
+
+        {/* Center/Right: Quick Search Trigger */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onOpenSearch}
+            className="hidden md:flex items-center gap-2.5 bg-[#181c24] hover:bg-[#262a33] px-3.5 py-1.5 rounded-lg text-[#bac9cc] border border-[#334155]/50 transition-all text-left group cursor-pointer"
+            title="Rechercher rapidement une certification, une RFC ou une commande"
+          >
+            <span className="material-symbols-outlined text-base text-[#849396] group-hover:text-[#00e5ff] transition-colors">
+              search
+            </span>
+            <span className="text-xs text-[#bac9cc] truncate">
+              Rechercher...
+            </span>
+            <kbd className="bg-[#262a33] border border-[#3b494c] px-1.5 py-0.5 rounded text-[10px] font-mono text-[#00daf3] shadow-sm ml-2">
+              Ctrl+K
+            </kbd>
+          </button>
+
+          {/* Subnet Calc Quick Button */}
+          {onOpenSubnetCalc && (
+            <button
+              onClick={onOpenSubnetCalc}
+              title="Calculatrice de sous-réseaux IP & VLSM"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 text-xs font-mono transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-sm">calculate</span>
+              <span className="hidden xl:inline">Calculateur CIDR</span>
+            </button>
+          )}
 
           {/* User Auth & Profile Trigger */}
           {!authUser ? (
             /* Google Sign-in button */
             <button
               onClick={() => signIn()}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-100 text-neutral-900 font-semibold text-xs transition-all shadow-md active:scale-95"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-100 text-neutral-900 font-semibold text-xs transition-all shadow-md active:scale-95 cursor-pointer"
             >
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                 <path
@@ -179,36 +124,38 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             /* Authenticated Profile Card */
             <div className="relative">
-              <div
+              <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center gap-2.5 pl-2 cursor-pointer group"
+                className="flex items-center gap-2 pl-2 cursor-pointer group rounded-lg hover:bg-[#181c24] py-1 pr-2 transition-colors"
+                aria-expanded={showProfileMenu}
+                aria-haspopup="true"
               >
                 <img
                   alt="Profile"
-                  className="w-8 h-8 rounded-full object-cover ring-2 ring-[#00e5ff]/50 group-hover:ring-[#00e5ff] transition-all"
+                  className="w-8 h-8 rounded-full object-cover ring-1 ring-[#00e5ff]/50 group-hover:ring-[#00e5ff] transition-all"
                   src={avatarUrl}
                 />
                 <div className="hidden lg:flex flex-col text-left">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-semibold text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors truncate max-w-[120px]">
-                      {displayName}
-                    </span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#a8ffd2] shadow-[0_0_5px_#a8ffd2]"></span>
-                  </div>
-                  <span className="text-[10px] text-[#bac9cc] font-mono leading-none truncate max-w-[130px]">
+                  <span className="text-xs font-semibold text-[#dfe2ee] group-hover:text-[#00e5ff] transition-colors truncate max-w-[120px]">
+                    {displayName}
+                  </span>
+                  <span className="text-[10px] text-[#849396] font-mono leading-none truncate max-w-[120px]">
                     {roleTitle}
                   </span>
                 </div>
-              </div>
+                <span className="material-symbols-outlined text-xs text-[#849396] group-hover:text-[#dfe2ee]">
+                  expand_more
+                </span>
+              </button>
 
               {showProfileMenu && (
                 <div className="absolute right-0 mt-2 w-72 bg-[#181c24] border border-[#334155] rounded-xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="flex items-center gap-3 pb-3 border-b border-[#334155]">
-                    <img alt="Avatar" className="w-12 h-12 rounded-full object-cover ring-1 ring-[#00e5ff]" src={avatarUrl} />
+                    <img alt="Avatar" className="w-11 h-11 rounded-full object-cover ring-1 ring-[#00e5ff]" src={avatarUrl} />
                     <div className="min-w-0">
                       <h4 className="text-sm font-semibold text-[#dfe2ee] truncate">{displayName}</h4>
                       <p className="text-[11px] text-[#00daf3] font-mono truncate">{authUser.email}</p>
-                      <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded bg-[#00363d] text-[9px] text-[#5be9ad] font-mono">
+                      <span className="text-[10px] text-[#a8ffd2] font-mono">
                         Firestore Sync Actif
                       </span>
                     </div>
@@ -234,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setShowProfileMenu(false);
                         setShowProfileModal(true);
                       }}
-                      className="w-full py-1.5 rounded bg-[#262a33] text-xs text-[#00e5ff] hover:bg-[#31353e] transition-colors font-mono flex items-center justify-center gap-1.5"
+                      className="w-full py-1.5 rounded bg-[#262a33] text-xs text-[#00e5ff] hover:bg-[#31353e] transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-sm">settings</span>
                       Gérer mon profil & Sync
@@ -245,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                           setShowProfileMenu(false);
                           onOpenLegalDisclaimer();
                         }}
-                        className="w-full py-1.5 rounded bg-[#181c24] text-xs text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors font-mono flex items-center justify-center gap-1.5"
+                        className="w-full py-1.5 rounded bg-[#181c24] text-xs text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-sm">gavel</span>
                         Mentions Légales &amp; Indépendance
@@ -256,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({
                         setShowProfileMenu(false);
                         await signOut();
                       }}
-                      className="w-full py-1.5 rounded bg-[#ffb4ab]/10 text-xs text-[#ffb4ab] hover:bg-[#ffb4ab]/20 transition-colors font-mono flex items-center justify-center gap-1.5"
+                      className="w-full py-1.5 rounded bg-[#ffb4ab]/10 text-xs text-[#ffb4ab] hover:bg-[#ffb4ab]/20 transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-sm">logout</span>
                       Déconnexion
@@ -278,4 +225,3 @@ export const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
-

@@ -111,7 +111,7 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
   const activeQ = bankQuestions.find((q) => q.id === activeQuestionId) || bankQuestions[0];
 
   return (
-    <div className="flex flex-col w-full px-6 py-6 gap-6">
+    <div className="flex flex-col w-full px-4 sm:px-6 py-6 pb-20 lg:pb-8 gap-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#334155]/40">
         <div className="flex flex-col gap-1">

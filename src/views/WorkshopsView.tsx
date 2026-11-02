@@ -75,7 +75,7 @@ export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 pb-20 lg:pb-8 px-4 sm:px-6 py-6">
       {/* Top Banner Header */}
       <div className="bg-[#181c24] border border-[#334155]/60 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         {/* Background decorative glow */}

@@ -155,7 +155,7 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto select-none">
+    <div className="w-full flex flex-col gap-6 py-6 pb-20 lg:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto select-none">
       {/* 1. Header Banner */}
       <section className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 pb-6 border-b border-[#334155]/40">
         <div className="flex flex-col gap-2 max-w-3xl">

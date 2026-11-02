@@ -171,6 +171,19 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
           >
             <span className="material-symbols-outlined text-lg">help</span>
           </button>
+
+          <button
+            onClick={() => {
+              if (window.confirm('Voulez-vous interrompre cette simulation d\'examen et revenir au tableau de bord ?')) {
+                onNavigate('tableau-de-bord');
+              }
+            }}
+            className="p-1.5 rounded-lg bg-[#262a33] text-[#ffb4ab] hover:bg-[#93000a]/40 border border-[#334155] transition-colors cursor-pointer"
+            title="Quitter la simulation"
+            aria-label="Quitter la simulation"
+          >
+            <span className="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
       </header>
 
@@ -577,7 +590,7 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
       )}
 
       {/* 4. Bottom Action Bar */}
-      <footer className="sticky bottom-0 z-30 bg-[#181c24]/95 backdrop-blur-md border-t border-[#334155]/50 px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
+      <footer className="sticky bottom-14 lg:bottom-0 z-30 bg-[#181c24]/95 backdrop-blur-md border-t border-[#334155]/50 px-4 sm:px-6 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
         <button
           onClick={() => {
             if (currentIndex > 0) {

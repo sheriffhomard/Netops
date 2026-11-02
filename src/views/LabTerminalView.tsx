@@ -7,7 +7,7 @@ interface LabTerminalViewProps {
   onNavigate: (view: ViewMode) => void;
 }
 
-export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate: _onNavigate }) => {
+export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) => {
   const [activeDevice, setActiveDevice] = useState<'R1' | 'SW1' | 'PCA' | 'SVR1'>('R1');
   const [terminalInput, setTerminalInput] = useState('');
   const [tasks, setTasks] = useState(lab08Scenario.tasks);
@@ -166,7 +166,7 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate: _o
   const completedCount = tasks.filter((t) => t.isValidated).length;
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#0f131c]">
+    <div className="flex flex-col w-full min-h-screen bg-[#0f131c] pb-20 lg:pb-8">
       {/* 1. Header Bar with UID & Progress */}
       <div className="sticky top-0 z-30 bg-[#181c24]/95 backdrop-blur-md border-b border-[#334155]/50 px-6 py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 select-none">
         <div className="flex flex-col gap-1.5">
@@ -236,9 +236,17 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate: _o
             </button>
             <button
               onClick={handleValidateLab}
-              className="px-4 py-2 rounded-lg bg-[#00e5ff] hover:brightness-110 text-[#00363d] font-bold text-xs font-mono shadow-[0_0_12px_rgba(0,229,255,0.3)] transition-all"
+              className="px-4 py-2 rounded-lg bg-[#00e5ff] hover:brightness-110 text-[#00363d] font-bold text-xs font-mono shadow-[0_0_12px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
             >
               Valider le Lab
+            </button>
+            <button
+              onClick={() => onNavigate('ateliers-et-labs')}
+              className="p-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#ffb4ab] border border-[#334155] transition-colors cursor-pointer"
+              title="Quitter le lab et revenir aux ateliers"
+              aria-label="Quitter le lab"
+            >
+              <span className="material-symbols-outlined text-base">close</span>
             </button>
           </div>
         </div>

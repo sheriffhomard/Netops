@@ -590,7 +590,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
   const masteryPercent = cards.length > 0 ? Math.round((masteredIds.size / cards.length) * 100) : 0;
 
   return (
-    <div className="w-full flex flex-col gap-6 py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto select-none">
+    <div className="w-full flex flex-col gap-6 py-6 pb-20 lg:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto select-none">
       {/* Toast notification */}
       {showSuccessToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#00363d] border border-[#00e5ff] text-[#00e5ff] px-4 py-2.5 rounded-xl shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center gap-2 font-mono text-xs animate-bounce">
