@@ -7,11 +7,11 @@ export interface NavItemConfig {
   icon: string;
   badge?: string;
   description: string;
-  category: 'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'progression';
+  category: 'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'evaluer';
 }
 
 export interface NavCategoryConfig {
-  id: 'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'progression';
+  id: 'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'evaluer';
   label: string;
   icon: string;
   items: NavItemConfig[];
@@ -47,7 +47,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     category: 'apprendre',
   },
 
-  // Réviser & Mémoriser
+  // Réviser
   {
     id: 'flashcards',
     label: 'Flashcards & Mémos',
@@ -66,15 +66,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     category: 'reviser',
   },
 
-  // Pratique & Évaluation
-  {
-    id: 'simulateur-d-examen',
-    label: 'Simulateur d\'Examen',
-    shortLabel: 'Examens',
-    icon: 'check_circle',
-    description: 'Conditions réelles proctorisées avec chronomètre et notation',
-    category: 'pratique',
-  },
+  // Pratiquer (Ingénierie Réseau & Ateliers)
   {
     id: 'ateliers-et-labs',
     label: 'Ateliers & Labs',
@@ -92,21 +84,29 @@ export const NAV_ITEMS: NavItemConfig[] = [
     category: 'pratique',
   },
 
-  // Progression
+  // Évaluer & Mesurer
+  {
+    id: 'simulateur-d-examen',
+    label: 'Simulateur d\'Examen',
+    shortLabel: 'Examens',
+    icon: 'check_circle',
+    description: 'Conditions réelles proctorisées avec chronomètre et notation',
+    category: 'evaluer',
+  },
   {
     id: 'analytiques-de-reussite',
     label: 'Analytiques de Réussite',
     shortLabel: 'Analytiques',
     icon: 'monitoring',
     description: 'Radar des faiblesses, historique des scores et prédiction d\'examen',
-    category: 'progression',
+    category: 'evaluer',
   },
 ];
 
 export const NAV_CATEGORIES: NavCategoryConfig[] = [
   {
     id: 'accueil',
-    label: 'Vue Générale',
+    label: 'Accueil',
     icon: 'home',
     items: NAV_ITEMS.filter((i) => i.category === 'accueil'),
   },
@@ -118,21 +118,21 @@ export const NAV_CATEGORIES: NavCategoryConfig[] = [
   },
   {
     id: 'reviser',
-    label: 'Réviser & Mémoriser',
+    label: 'Réviser',
     icon: 'psychology',
     items: NAV_ITEMS.filter((i) => i.category === 'reviser'),
   },
   {
     id: 'pratique',
-    label: 'Pratique & Évaluation',
+    label: 'Pratiquer (Ingénierie)',
     icon: 'build',
     items: NAV_ITEMS.filter((i) => i.category === 'pratique'),
   },
   {
-    id: 'progression',
-    label: 'Performance',
-    icon: 'trending_up',
-    items: NAV_ITEMS.filter((i) => i.category === 'progression'),
+    id: 'evaluer',
+    label: 'Évaluer & Mesurer',
+    icon: 'verified',
+    items: NAV_ITEMS.filter((i) => i.category === 'evaluer'),
   },
 ];
 

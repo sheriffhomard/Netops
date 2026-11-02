@@ -142,18 +142,31 @@ export function App() {
       }`}
     >
       {/* Mobile Top Header (for < 1024px) */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#12151c]/95 backdrop-blur-xl border-b border-[#334155]/60 z-40 flex items-center justify-between px-4">
-        <div
-          onClick={() => handleNavigate('tableau-de-bord')}
-          className="flex items-center gap-2.5 cursor-pointer"
-        >
-          <img
-            alt="NetOps Logo"
-            className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#00e5ff]/50"
-            src="/src/assets/images/netops_logo_1790514169496.jpg"
-            referrerPolicy="no-referrer"
-          />
-          <span className="font-semibold text-sm text-[#00e5ff] font-mono">NetOps</span>
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#12151c]/95 backdrop-blur-xl border-b border-[#334155]/60 z-40 flex items-center justify-between px-3">
+        <div className="flex items-center gap-2 min-w-0">
+          {currentView !== 'tableau-de-bord' && (
+            <button
+              onClick={() => handleNavigate('tableau-de-bord')}
+              className="p-1 rounded-lg bg-[#181c24] text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#262a33] border border-[#334155]/40 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+              title="Retour au tableau de bord"
+              aria-label="Retour au tableau de bord"
+            >
+              <span className="material-symbols-outlined text-lg">arrow_back</span>
+            </button>
+          )}
+
+          <div
+            onClick={() => handleNavigate('tableau-de-bord')}
+            className="flex items-center gap-2 cursor-pointer truncate"
+          >
+            <img
+              alt="NetOps Logo"
+              className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#00e5ff]/50 shrink-0"
+              src="/src/assets/images/netops_logo_1790514169496.jpg"
+              referrerPolicy="no-referrer"
+            />
+            <span className="font-semibold text-sm text-[#00e5ff] font-mono truncate">NetOps</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -248,7 +261,8 @@ export function App() {
             />
           )}
 
-          {currentView === 'flashcards' && (
+          {/* Flashcards View: retained in DOM to preserve Leitner session, search queries & card filters */}
+          <div className={currentView === 'flashcards' ? 'flex flex-col flex-1 w-full' : 'hidden'}>
             <FlashcardsView
               onNavigate={handleNavigate}
               initialSearchQuery={flashcardSearchQuery}
@@ -256,9 +270,10 @@ export function App() {
               onOpenCloudTerm={handleOpenCloudTerm}
               onOpenCloudArticle={handleOpenCloudArticle}
             />
-          )}
+          </div>
 
-          {currentView === 'glossaire-cloud' && (
+          {/* Cloud Encyclopedia: retained in DOM to preserve reading position, article history & filters */}
+          <div className={currentView === 'glossaire-cloud' ? 'flex flex-col flex-1 w-full' : 'hidden'}>
             <CloudEncyclopediaView
               onNavigate={handleNavigate}
               onNavigateToFlashcards={handleNavigateToFlashcards}
@@ -266,7 +281,7 @@ export function App() {
               initialTermId={cloudInitialTermId}
               initialArticleId={cloudInitialArticleId}
             />
-          )}
+          </div>
 
           {currentView === 'ateliers-et-labs' && (
             <WorkshopsView onNavigate={handleNavigate} />
@@ -279,16 +294,18 @@ export function App() {
             />
           )}
 
-          {currentView === 'simulateur-d-examen' && (
+          {/* Exam Simulator: strictly retained to prevent wiping running timer, answers and scratchpad */}
+          <div className={currentView === 'simulateur-d-examen' ? 'flex flex-col flex-1 w-full' : 'hidden'}>
             <ExamSimulatorView
               onNavigate={handleNavigate}
               examCode={selectedExamCode}
             />
-          )}
+          </div>
 
-          {currentView === 'terminal-lab-virtuel' && (
+          {/* Lab Virtual Terminal: strictly retained to prevent wiping active CLI commands, topology & logs */}
+          <div className={currentView === 'terminal-lab-virtuel' ? 'flex flex-col flex-1 w-full' : 'hidden'}>
             <LabTerminalView onNavigate={handleNavigate} />
-          )}
+          </div>
 
           {currentView === 'banque-de-questions' && (
             <QuestionBankView
