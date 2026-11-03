@@ -3,6 +3,7 @@ import { ExamQuestion, ViewMode } from '../types';
 import { generateFullExamQuestions } from '../data/mockData';
 import { SubnetCalculatorModal } from '../components/SubnetCalculatorModal';
 import { useAuth } from '../context/AuthContext';
+import { Tooltip } from '../components/Tooltip';
 import confetti from 'canvas-confetti';
 
 interface ExamSimulatorViewProps {
@@ -164,13 +165,14 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
             </span>
           </button>
 
-          <button
-            onClick={() => alert('Guide officiel du simulateur : Répondez aux questions, naviguez via la palette de droite et soumettez à la fin du temps imparti.')}
-            className="p-1.5 rounded-lg bg-[#262a33] text-[#bac9cc] hover:text-[#dfe2ee] hover:bg-[#31353e] border border-[#334155] transition-colors"
-            title="Aide & Directives"
-          >
-            <span className="material-symbols-outlined text-lg">help</span>
-          </button>
+          <Tooltip content="Consignes de la simulation : 100 questions, 120 minutes. Utilisez le bouton Marquer pour réviser ultérieurement. Seuil d'admission officiel fixé à 825 / 1000 points.">
+            <button
+              className="p-1.5 rounded-lg bg-[#262a33] text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#31353e] border border-[#334155] transition-colors cursor-help"
+              title="Aide & Directives"
+            >
+              <span className="material-symbols-outlined text-lg">help</span>
+            </button>
+          </Tooltip>
 
           <button
             onClick={() => {

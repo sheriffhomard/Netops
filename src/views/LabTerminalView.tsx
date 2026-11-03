@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ViewMode } from '../types';
 import { lab08Scenario } from '../data/mockData';
+import { Tooltip } from '../components/Tooltip';
 import confetti from 'canvas-confetti';
 
 interface LabTerminalViewProps {
@@ -459,28 +460,42 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
               </span>
             </div>
 
-            {/* Device Switcher Tabs */}
+            {/* Device Switcher Tabs with Tooltip */}
             <div className="flex items-center gap-1 font-mono text-xs">
               {(['R1', 'SW1', 'PCA', 'SVR1'] as const).map((dev) => (
-                <button
+                <Tooltip
                   key={dev}
-                  onClick={() => setActiveDevice(dev)}
-                  className={`px-2.5 py-1 rounded transition-colors ${
-                    activeDevice === dev
-                      ? 'bg-[#00e5ff] text-[#00363d] font-bold'
-                      : 'text-[#bac9cc] hover:bg-[#262a33]'
-                  }`}
+                  content={
+                    dev === 'R1'
+                      ? 'Routeur Cisco 2900 (Routage inter-VLAN / Sub-interfaces)'
+                      : dev === 'SW1'
+                      ? 'Commutateur Catalyst 3650 (Trunk 802.1Q & VLANs)'
+                      : dev === 'PCA'
+                      ? 'Poste client Windows VLAN 10 (IP: 192.168.10.10)'
+                      : 'Serveur Linux Intranet VLAN 20 (IP: 192.168.20.50)'
+                  }
                 >
-                  {dev}
-                </button>
+                  <button
+                    onClick={() => setActiveDevice(dev)}
+                    className={`px-2.5 py-1 rounded transition-colors cursor-pointer ${
+                      activeDevice === dev
+                        ? 'bg-[#00e5ff] text-[#00363d] font-bold'
+                        : 'text-[#bac9cc] hover:bg-[#262a33]'
+                    }`}
+                  >
+                    {dev}
+                  </button>
+                </Tooltip>
               ))}
-              <button
-                onClick={() => executeCommand('clear')}
-                className="p-1 text-[#849396] hover:text-[#dfe2ee] ml-2"
-                title="Effacer l'écran"
-              >
-                <span className="material-symbols-outlined text-sm">cleaning_services</span>
-              </button>
+              <Tooltip content="Effacer le contenu de l'écran du terminal">
+                <button
+                  onClick={() => executeCommand('clear')}
+                  className="p-1 text-[#849396] hover:text-[#dfe2ee] ml-2 cursor-pointer"
+                  title="Effacer l'écran"
+                >
+                  <span className="material-symbols-outlined text-sm">cleaning_services</span>
+                </button>
+              </Tooltip>
             </div>
           </div>
 

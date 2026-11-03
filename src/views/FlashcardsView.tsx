@@ -3,6 +3,7 @@ import { initialFlashcards, Flashcard } from '../data/workshopsData';
 import { ViewMode } from '../types';
 import { cloudGlossaryTerms } from '../data/cloudData';
 import { useAuth } from '../context/AuthContext';
+import { Tooltip } from '../components/Tooltip';
 
 
 interface FlashcardsViewProps {
@@ -630,53 +631,61 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             <span>Encyclopédie Cloud</span>
           </button>
 
-          <button
-            onClick={() => setDisplayMode('focus')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
-              displayMode === 'focus'
-                ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_14px_rgba(0,229,255,0.4)]'
-                : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] border border-[#334155]/40'
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">flip</span>
-            <span>Mode Focus 3D</span>
-          </button>
+          <Tooltip content="Affichage immersif carte par carte avec retournement 3D, chronomètre et notation Leitner.">
+            <button
+              onClick={() => setDisplayMode('focus')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                displayMode === 'focus'
+                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_14px_rgba(0,229,255,0.4)]'
+                  : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] border border-[#334155]/40'
+              }`}
+            >
+              <span className="material-symbols-outlined text-base">flip</span>
+              <span>Mode Focus 3D</span>
+            </button>
+          </Tooltip>
 
-          <button
-            onClick={() => setDisplayMode('grid')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
-              displayMode === 'grid'
-                ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_14px_rgba(0,229,255,0.4)]'
-                : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] border border-[#334155]/40'
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">grid_view</span>
-            <span>Répertoire ({cards.length})</span>
-          </button>
+          <Tooltip content="Vue d'ensemble en grille de toutes les fiches avec filtres par fournisseur et domaine.">
+            <button
+              onClick={() => setDisplayMode('grid')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                displayMode === 'grid'
+                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_14px_rgba(0,229,255,0.4)]'
+                  : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] border border-[#334155]/40'
+              }`}
+            >
+              <span className="material-symbols-outlined text-base">grid_view</span>
+              <span>Répertoire ({cards.length})</span>
+            </button>
+          </Tooltip>
 
-          <button
-            onClick={handleStartBlitz}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
-              displayMode === 'blitz'
-                ? 'bg-[#ffb4ab] text-[#690005] shadow-[0_0_14px_rgba(255,180,171,0.4)]'
-                : 'bg-[#181c24] text-[#ffb4ab] hover:bg-[#262a33] border border-[#ffb4ab]/30'
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">bolt</span>
-            <span>Chrono-Blitz 2 min</span>
-          </button>
+          <Tooltip content="Défi intensif de 120 secondes chrono pour tester votre réactivité sur un maximum de questions.">
+            <button
+              onClick={handleStartBlitz}
+              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                displayMode === 'blitz'
+                  ? 'bg-[#ffb4ab] text-[#690005] shadow-[0_0_14px_rgba(255,180,171,0.4)]'
+                  : 'bg-[#181c24] text-[#ffb4ab] hover:bg-[#262a33] border border-[#ffb4ab]/30'
+              }`}
+            >
+              <span className="material-symbols-outlined text-base">bolt</span>
+              <span>Chrono-Blitz 2 min</span>
+            </button>
+          </Tooltip>
 
-          <button
-            onClick={() => setDisplayMode('create')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
-              displayMode === 'create'
-                ? 'bg-[#4edea3] text-[#003822] shadow-[0_0_14px_rgba(78,222,163,0.4)]'
-                : 'bg-[#181c24] text-[#4edea3] hover:bg-[#262a33] border border-[#4edea3]/30'
-            }`}
-          >
-            <span className="material-symbols-outlined text-base">add_card</span>
-            <span>Créer Carte</span>
-          </button>
+          <Tooltip content="Rédigez et ajoutez vos propres fiches mémo personnalisées avec synchronisation cloud.">
+            <button
+              onClick={() => setDisplayMode('create')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                displayMode === 'create'
+                  ? 'bg-[#4edea3] text-[#003822] shadow-[0_0_14px_rgba(78,222,163,0.4)]'
+                  : 'bg-[#181c24] text-[#4edea3] hover:bg-[#262a33] border border-[#4edea3]/30'
+              }`}
+            >
+              <span className="material-symbols-outlined text-base">add_card</span>
+              <span>Créer Carte</span>
+            </button>
+          </Tooltip>
         </div>
       </div>
 
@@ -1166,31 +1175,37 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                   </button>
                 </div>
 
-                {/* Rating Level buttons */}
+                {/* Rating Level buttons with Tooltips */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <button
-                    onClick={() => handleRate('review')}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#3d1214] hover:bg-[#521b1e] text-[#ffb4ab] border border-[#ffb4ab]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-[#ffb4ab]" />
-                    <span>[1] À revoir (10 min)</span>
-                  </button>
+                  <Tooltip content="Boîte Leitner 1 : La notion sera replacée dans la file d'attente pour être révisée dans 10 minutes.">
+                    <button
+                      onClick={() => handleRate('review')}
+                      className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#3d1214] hover:bg-[#521b1e] text-[#ffb4ab] border border-[#ffb4ab]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-[#ffb4ab]" />
+                      <span>[1] À revoir (10 min)</span>
+                    </button>
+                  </Tooltip>
 
-                  <button
-                    onClick={() => handleRate('good')}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#2e2600] hover:bg-[#3d3300] text-[#ffcc00] border border-[#ffcc00]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-[#ffcc00]" />
-                    <span>[2] Correct (Demain)</span>
-                  </button>
+                  <Tooltip content="Boîte Leitner 2 : Réponse correcte mais hésitante. La carte sera représentée demain.">
+                    <button
+                      onClick={() => handleRate('good')}
+                      className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#2e2600] hover:bg-[#3d3300] text-[#ffcc00] border border-[#ffcc00]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-[#ffcc00]" />
+                      <span>[2] Correct (Demain)</span>
+                    </button>
+                  </Tooltip>
 
-                  <button
-                    onClick={() => handleRate('mastered')}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#003822] hover:bg-[#004d2f] text-[#4edea3] border border-[#4edea3]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(78,222,163,0.3)]"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-[#4edea3]" />
-                    <span>[3] Maîtrisé (4 jours)</span>
-                  </button>
+                  <Tooltip content="Boîte Leitner 3-5 : Réponse réflexe parfaite ! L'intervalle de révision passe à 4 jours pour un ancrage définitif.">
+                    <button
+                      onClick={() => handleRate('mastered')}
+                      className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#003822] hover:bg-[#004d2f] text-[#4edea3] border border-[#4edea3]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(78,222,163,0.3)] cursor-pointer"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-[#4edea3]" />
+                      <span>[3] Maîtrisé (4 jours)</span>
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             </>

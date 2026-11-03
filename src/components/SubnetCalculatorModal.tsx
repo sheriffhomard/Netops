@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Tooltip, FieldHelper } from './Tooltip';
 
 interface SubnetCalculatorModalProps {
   isOpen: boolean;
@@ -71,13 +72,18 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
         <div className="flex items-center justify-between pb-4 border-b border-[#334155]">
           <div className="flex items-center gap-2 text-[#00daf3]">
             <span className="material-symbols-outlined text-2xl">calculate</span>
-            <h3 className="font-semibold text-lg text-[#dfe2ee]">
-              Calculatrice de Sous-Réseaux CIDR &amp; VLSM
-            </h3>
+            <div>
+              <h3 className="font-semibold text-lg text-[#dfe2ee]">
+                Calculatrice de Sous-Réseaux CIDR &amp; VLSM
+              </h3>
+              <p className="text-[11px] text-[#849396]">
+                Survolez les icônes d'aide (?) pour comprendre chaque paramètre réseau
+              </p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-[#849396] hover:text-[#dfe2ee] transition-colors p-1"
+            className="text-[#849396] hover:text-[#dfe2ee] transition-colors p-1 cursor-pointer"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
@@ -86,9 +92,11 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
         {/* Form Inputs */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4 font-mono">
           <div>
-            <label className="text-xs uppercase text-[#bac9cc] block mb-1">
-              Adresse IP IPv4
-            </label>
+            <FieldHelper
+              label="Adresse IP IPv4"
+              helpText="Format standard 4 octets de 0 à 255 séparés par des points (ex: 192.168.1.1 ou 10.0.0.1)."
+              className="mb-1"
+            />
             <input
               type="text"
               value={ip}
@@ -98,48 +106,68 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
             />
           </div>
           <div>
-            <label className="text-xs uppercase text-[#bac9cc] block mb-1">
-              Masque CIDR (/{cidr})
-            </label>
+            <FieldHelper
+              label={`Préfixe CIDR (/${cidr})`}
+              helpText="Nombre de bits à 1 dans le masque réseau. /24 = 254 hôtes, /30 = 2 hôtes pour liaisons point-à-point."
+              className="mb-1"
+            />
             <select
               value={cidr}
               onChange={(e) => setCidr(Number(e.target.value))}
-              className="w-full bg-[#0a0e16] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#00daf3] focus:border-[#00e5ff] focus:outline-none"
+              className="w-full bg-[#0a0e16] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#00daf3] focus:border-[#00e5ff] focus:outline-none cursor-pointer"
             >
               {Array.from({ length: 25 }, (_, i) => i + 8).map((bit) => (
                 <option key={bit} value={bit}>
-                  /{bit}
+                  /{bit} — {Math.pow(2, 32 - bit) - 2 > 0 ? Math.pow(2, 32 - bit) - 2 : (bit === 31 ? 2 : 1)} hôtes
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* Results Matrix */}
+        {/* Results Matrix with Tooltips */}
         {results ? (
           <div className="bg-[#0a0e16] rounded-lg p-4 font-mono text-xs flex flex-col gap-2.5 border border-[#334155]/60">
-            <div className="flex justify-between py-1 border-b border-[#334155]/40">
-              <span className="text-[#849396]">Masque Décimal :</span>
+            <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Masque Décimal :</span>
+                <Tooltip content="Masque de sous-réseau en notation décimale équivalente au préfixe CIDR sélectionné." />
+              </span>
               <span className="text-[#00e5ff] font-semibold">{results.maskStr}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-[#334155]/40">
-              <span className="text-[#849396]">Masque Inversé (Wildcard) :</span>
+            <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Masque Inversé (Wildcard) :</span>
+                <Tooltip content="Masque inversé utilisé dans les ACL Cisco et les déclarations de réseaux OSPF (255.255.255.255 - Masque)." />
+              </span>
               <span className="text-[#a8ffd2] font-semibold">{results.wildcardStr}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-[#334155]/40">
-              <span className="text-[#849396]">Adresse Réseau (Subnet ID) :</span>
+            <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Adresse Réseau (Subnet ID) :</span>
+                <Tooltip content="Première adresse du bloc IP représentant le sous-réseau lui-même. Non attribuable à un équipement terminal." />
+              </span>
               <span className="text-[#dfe2ee] font-semibold">{results.networkStr} /{cidr}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-[#334155]/40">
-              <span className="text-[#849396]">Adresse de Diffusion (Broadcast) :</span>
+            <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Adresse de Diffusion (Broadcast) :</span>
+                <Tooltip content="Dernière adresse du bloc IP permettant d'envoyer un paquet à tous les hôtes du sous-réseau." />
+              </span>
               <span className="text-[#ffb4ab] font-semibold">{results.broadcastStr}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-[#334155]/40">
-              <span className="text-[#849396]">Plage d&apos;Hôtes Utilisables :</span>
+            <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Plage d'Hôtes Utilisables :</span>
+                <Tooltip content="Intervalle d'adresses IP pouvant être attribuées aux interfaces, routeurs, serveurs et postes clients." />
+              </span>
               <span className="text-[#c0c1ff] font-semibold">{results.hostRangeStr}</span>
             </div>
-            <div className="flex justify-between pt-1">
-              <span className="text-[#849396]">Nombre d&apos;Hôtes Utilisables :</span>
+            <div className="flex justify-between items-center pt-1">
+              <span className="text-[#849396] flex items-center gap-1.5">
+                <span>Nombre d'Hôtes Utilisables :</span>
+                <Tooltip content="Nombre total d'adresses (2^(32-CIDR)) moins l'adresse réseau et l'adresse de diffusion (-2)." />
+              </span>
               <span className="text-[#5be9ad] font-bold text-sm">
                 {results.usableHosts.toLocaleString()}
               </span>

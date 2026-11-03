@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { ViewMode } from './types';
 import { currentUser } from './data/mockData';
 import { useAuth } from './context/AuthContext';
+import { useTheme } from './context/ThemeContext';
+import { useUpdate } from './context/UpdateContext';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { MobileBottomNav } from './components/MobileBottomNav';
@@ -9,6 +11,9 @@ import { UserProfileModal } from './components/UserProfileModal';
 import { CommandPaletteModal } from './components/CommandPaletteModal';
 import { SubnetCalculatorModal } from './components/SubnetCalculatorModal';
 import { OnboardingModal } from './components/OnboardingModal';
+import { HamburgerMenuModal } from './components/HamburgerMenuModal';
+import { SystemSettingsModal } from './components/SystemSettingsModal';
+import { InstallInstructionModal } from './components/InstallAppButton';
 import { DashboardView } from './views/DashboardView';
 import { CertificationsView } from './views/CertificationsView';
 import { ExamSimulatorView } from './views/ExamSimulatorView';
@@ -21,6 +26,8 @@ import { CloudEncyclopediaView } from './views/CloudEncyclopediaView';
 
 export function App() {
   const { user, userProfile } = useAuth();
+  const { isLight, toggleTheme } = useTheme();
+  const { updateAvailable } = useUpdate();
   const [currentView, setCurrentView] = useState<ViewMode>('tableau-de-bord');
   const [selectedExamCode, setSelectedExamCode] = useState<string>('350-401 ENCOR');
   const [nocMode, setNocMode] = useState<boolean>(true);
@@ -28,6 +35,8 @@ export function App() {
   const [isSubnetCalcOpen, setIsSubnetCalcOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
+  const [isSystemSettingsOpen, setIsSystemSettingsOpen] = useState<boolean>(false);
 
   // Desktop sidebar collapse state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
@@ -143,7 +152,17 @@ export function App() {
     >
       {/* Mobile Top Header (for < 1024px) */}
       <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#12151c]/95 backdrop-blur-xl border-b border-[#334155]/60 z-40 flex items-center justify-between px-3">
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {/* Hamburger Menu trigger button */}
+          <button
+            onClick={() => setIsHamburgerOpen(true)}
+            className="p-1.5 rounded-lg text-[#00e5ff] hover:bg-[#262a33] transition-colors shrink-0 cursor-pointer"
+            title="Menu complet des fonctionnalités par catégorie"
+            aria-label="Menu principal"
+          >
+            <span className="material-symbols-outlined text-xl">menu</span>
+          </button>
+
           {currentView !== 'tableau-de-bord' && (
             <button
               onClick={() => handleNavigate('tableau-de-bord')}
@@ -162,14 +181,14 @@ export function App() {
             <img
               alt="NetOps Logo"
               className="w-7 h-7 rounded-lg object-cover ring-1 ring-[#00e5ff]/50 shrink-0"
-              src="/src/assets/images/netops_logo_1790514169496.jpg"
+              src="/logo.jpg"
               referrerPolicy="no-referrer"
             />
             <span className="font-semibold text-sm text-[#00e5ff] font-mono truncate">NetOps</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {/* Quick Subnet Calc trigger on mobile */}
           <button
             onClick={() => setIsSubnetCalcOpen(true)}
@@ -177,6 +196,29 @@ export function App() {
             title="Calculateur CIDR"
           >
             <span className="material-symbols-outlined text-xl">calculate</span>
+          </button>
+
+          {/* Theme Toggle Mobile */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg text-[#ffd700] hover:bg-[#262a33] transition-colors"
+            title={isLight ? "Basculer en Mode Sombre NOC" : "Basculer en Thème Clair"}
+          >
+            <span className="material-symbols-outlined text-xl">
+              {isLight ? 'dark_mode' : 'light_mode'}
+            </span>
+          </button>
+
+          {/* System Settings & Updates Trigger */}
+          <button
+            onClick={() => setIsSystemSettingsOpen(true)}
+            className="relative p-1.5 rounded-lg text-[#00daf3] hover:bg-[#262a33] transition-colors"
+            title="Paramètres Système & Mises à jour"
+          >
+            <span className="material-symbols-outlined text-xl">settings_suggest</span>
+            {updateAvailable && (
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#00e5ff] animate-ping" />
+            )}
           </button>
 
           {/* Quick search button */}
@@ -191,7 +233,7 @@ export function App() {
           {/* User profile avatar */}
           <button
             onClick={() => setIsProfileModalOpen(true)}
-            className="flex items-center ml-1 cursor-pointer"
+            className="flex items-center ml-0.5 cursor-pointer"
             title="Profil & Connexion"
           >
             <img
@@ -224,6 +266,7 @@ export function App() {
           sessionTime={formatSessionTime(sessionSeconds)}
           globalReadiness="84.5%"
           onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+          onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={handleToggleSidebarCollapse}
           onCloseMobile={() => setIsMobileMenuOpen(false)}
@@ -245,6 +288,8 @@ export function App() {
             onOpenSearch={() => setIsSearchOpen(true)}
             onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
             onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+            onOpenHamburgerMenu={() => setIsHamburgerOpen(true)}
+            onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
             isSidebarCollapsed={isSidebarCollapsed}
             onToggleSidebarCollapse={handleToggleSidebarCollapse}
           />
@@ -324,8 +369,8 @@ export function App() {
       <MobileBottomNav
         currentView={currentView}
         onSelectView={handleNavigate}
-        onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        isMenuOpen={isMobileMenuOpen}
+        onToggleMenu={() => setIsHamburgerOpen((prev) => !prev)}
+        isMenuOpen={isHamburgerOpen}
       />
 
       {/* Modals */}
@@ -351,6 +396,24 @@ export function App() {
         onClose={() => setIsOnboardingOpen(false)}
         initialStep={onboardingInitialStep}
       />
+
+      <HamburgerMenuModal
+        isOpen={isHamburgerOpen}
+        onClose={() => setIsHamburgerOpen(false)}
+        currentView={currentView}
+        onSelectView={handleNavigate}
+        onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
+        onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
+        onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+      />
+
+      <SystemSettingsModal
+        isOpen={isSystemSettingsOpen}
+        onClose={() => setIsSystemSettingsOpen(false)}
+        onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+      />
+
+      <InstallInstructionModal />
     </div>
   );
 }

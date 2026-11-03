@@ -2,6 +2,7 @@ import React from 'react';
 import { ViewMode } from '../types';
 import { currentUser, dailyDrills, sessionHistory, weaknessRadar } from '../data/mockData';
 import { useAuth } from '../context/AuthContext';
+import { Tooltip } from '../components/Tooltip';
 
 interface DashboardViewProps {
   onNavigate: (view: ViewMode) => void;
@@ -82,7 +83,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col justify-between gap-4 shadow-sm hover:border-[#00daf3]/50 transition-all">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs font-mono text-[#849396] uppercase">Répétition espacée (SRS)</span>
+                <span className="text-xs font-mono text-[#849396] uppercase flex items-center gap-1.5">
+                  <span>Répétition espacée (SRS)</span>
+                  <Tooltip content="Algorithme Leitner : les cartes échouées sont revues rapidement, les cartes maîtrisées s'espacent dans le temps pour ancrer durablement la mémoire." />
+                </span>
                 <h2 id="section-revisions" className="text-base font-semibold text-[#dfe2ee]">Fiches prêtes à revoir</h2>
               </div>
               <div className="w-9 h-9 rounded-lg bg-[#00363d]/60 text-[#00e5ff] flex items-center justify-center">
@@ -113,7 +117,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col justify-between gap-4 shadow-sm hover:border-[#00daf3]/50 transition-all">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs font-mono text-[#849396] uppercase">Sprint d'ancrage réflexe</span>
+                <span className="text-xs font-mono text-[#849396] uppercase flex items-center gap-1.5">
+                  <span>Sprint d'ancrage réflexe</span>
+                  <Tooltip content="Défi sous chronomètre de 2 minutes pour habituer le cerveau à la rapidité requise en examen officiel (1 min par question)." />
+                </span>
                 <h3 className="text-base font-semibold text-[#dfe2ee]">Défi Chrono Blitz</h3>
               </div>
               <div className="w-9 h-9 rounded-lg bg-[#3131c0]/20 text-[#c0c1ff] flex items-center justify-center">
@@ -144,7 +151,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col justify-between gap-4 shadow-sm hover:border-[#4edea3]/50 transition-all">
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-0.5">
-                <span className="text-xs font-mono text-[#849396] uppercase">Documentation &amp; Fiches</span>
+                <span className="text-xs font-mono text-[#849396] uppercase flex items-center gap-1.5">
+                  <span>Documentation &amp; Fiches</span>
+                  <Tooltip content="Répertoire exhaustif des concepts cloud hybrides et matrice d'équivalence comparative AWS / Azure / GCP." />
+                </span>
                 <h3 className="text-base font-semibold text-[#dfe2ee]">Encyclopédie Cloud</h3>
               </div>
               <div className="w-9 h-9 rounded-lg bg-[#003822]/40 text-[#4edea3] flex items-center justify-center">

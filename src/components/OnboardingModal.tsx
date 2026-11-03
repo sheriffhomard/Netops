@@ -222,9 +222,20 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 </div>
 
                 <div className="pt-2 border-t border-[#334155]/40">
+                  <h5 className="font-bold text-[#ffb4ab] font-mono text-[11px] uppercase flex items-center gap-1.5 mb-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ffb4ab]" />
+                    4. Exonération totale de responsabilité quant aux données fournies
+                  </h5>
+                  <p className="text-[#dfe2ee] text-[11px] leading-relaxed bg-[#ffb4ab]/10 p-3 rounded-lg border border-[#ffb4ab]/30">
+                    <strong>Avis de non-responsabilité formel :</strong> L'auteur et créateur de NetOps Academy <strong>décline expressément toute responsabilité</strong> concernant l'exactitude, la validité, l'exhaustivité, l'actualité ou les conséquences de l'utilisation des données, configurations techniques, topologies, commandes CLI, questions d'examens, corrigés et fiches fournis dans cette application.
+                    Toutes les informations sont livrées « en l'état » (<em>AS IS</em>) à visée exclusivement didactique et d'entraînement personnel. L'auteur ne saurait être tenu pour responsable d'éventuelles erreurs, pannes de réseaux de production, dysfonctionnements matériels ou échecs à des examens officiels découlant de l'usage des données fournies.
+                  </p>
+                </div>
+
+                <div className="pt-2 border-t border-[#334155]/40">
                   <h5 className="font-bold text-[#00e5ff] font-mono text-[11px] uppercase flex items-center gap-1.5 mb-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff]" />
-                    4. Limitation de responsabilité
+                    5. Absence de garantie d'obtention des certifications
                   </h5>
                   <p className="text-[#bac9cc] text-[11px] leading-relaxed">
                     La réussite aux simulations ou la mémorisation des fiches sur cette plateforme ne constitue en aucun cas une garantie de réussite aux examens réels des éditeurs et ne confère aucun diplôme officiel. L'utilisateur est seul responsable de sa préparation.
@@ -326,18 +337,27 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                 </div>
               </div>
 
-              {/* Mandatory Checkbox */}
-              <label className="flex items-start gap-3 p-3.5 rounded-xl bg-[#181c24] border border-[#334155] cursor-pointer hover:border-[#00e5ff]/60 transition-colors">
-                <input
-                  type="checkbox"
-                  checked={hasAcknowledged}
-                  onChange={(e) => setHasAcknowledged(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-[#00e5ff] bg-[#0f131c] border-[#334155] focus:ring-0 focus:outline-none cursor-pointer"
-                />
-                <span className="text-xs text-[#dfe2ee] leading-relaxed">
-                  <strong>Engagement & Décharge légale :</strong> Je confirme avoir lu et compris les mentions d'indépendance. Je reconnais que NetOps Academy est un outil éducatif autonome sans lien officiel, parrainage ni affiliation avec Cisco Systems, Palo Alto Networks, Fortinet, CompTIA, Juniper ou tout autre constructeur cité.
-                </span>
-              </label>
+              {/* Mandatory Checkboxes */}
+              <div className="flex flex-col gap-2.5">
+                <label className="flex items-start gap-3 p-3.5 rounded-xl bg-[#181c24] border border-[#334155] cursor-pointer hover:border-[#00e5ff]/60 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={hasAcknowledged}
+                    onChange={(e) => setHasAcknowledged(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded text-[#00e5ff] bg-[#0f131c] border-[#334155] focus:ring-0 focus:outline-none cursor-pointer"
+                  />
+                  <span className="text-xs text-[#dfe2ee] leading-relaxed">
+                    <strong>Décharge légale & Non-affiliation :</strong> Je confirme que NetOps Academy est un outil éducatif indépendant sans lien officiel ni affiliation avec Cisco Systems, Palo Alto Networks, Fortinet, CompTIA, Juniper ou tout autre constructeur cité.
+                  </span>
+                </label>
+
+                <div className="p-3 rounded-xl bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-start gap-2.5 text-xs text-[#dfe2ee]">
+                  <span className="material-symbols-outlined text-base text-[#ffb4ab] shrink-0 mt-0.5">verified_user</span>
+                  <span>
+                    <strong>Exonération formelle de responsabilité :</strong> L'auteur et l'application ne sont pas responsables des données techniques, questions, commandes ou configurations fournies dans l'application. Celles-ci sont fournies à titre indicatif et éducatif uniquement.
+                  </span>
+                </div>
+              </div>
 
               <div className="text-[11px] text-[#849396] flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-sm text-[#4edea3]">verified</span>

@@ -60,6 +60,70 @@
   }
 }
 
+/* Light Mode Overrides */
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light .bg-\[\#0f131c\],
+html.light .bg-\[\#0f131c\]\/60,
+html.light .bg-\[\#0f131c\]\/80 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-\[\#0a0e16\],
+html.light .bg-\[\#0a0e16\]\/80,
+html.light .bg-\[\#0a0e16\]\/90 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light .bg-\[\#12151c\]\/95,
+html.light .bg-\[\#121620\] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light .bg-\[\#181c24\],
+html.light .bg-\[\#181c24\]\/80,
+html.light .bg-\[\#181c24\]\/95 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+html.light .bg-\[\#1c2028\],
+html.light .bg-\[\#262a33\] {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light .text-\[\#dfe2ee\],
+html.light .text-\[\#dfe2ee\]\/90 {
+  color: #0f172a !important;
+}
+
+html.light .text-\[\#bac9cc\] {
+  color: #334155 !important;
+}
+
+html.light .text-\[\#849396\] {
+  color: #64748b !important;
+}
+
+html.light .border-\[\#334155\],
+html.light .border-\[\#334155\]\/30,
+html.light .border-\[\#334155\]\/40,
+html.light .border-\[\#334155\]\/50,
+html.light .border-\[\#334155\]\/60 {
+  border-color: #cbd5e1 !important;
+}
+
+html.light .shadow-2xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
 /* Custom scrollbar for CLI and questions palette */
 ::-webkit-scrollbar {
   width: 6px;
@@ -70,11 +134,23 @@
   background: #0a0e16;
 }
 
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #262a33;
   border-radius: 3px;
 }
 
+html.light ::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #3b494c;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }

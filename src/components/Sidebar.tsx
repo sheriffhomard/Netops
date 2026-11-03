@@ -1,6 +1,8 @@
 import React from 'react';
 import { ViewMode } from '../types';
 import { NAV_CATEGORIES } from '../utils/navigationConfig';
+import { useUpdate } from '../context/UpdateContext';
+import { InstallAppButton } from './InstallAppButton';
 
 interface SidebarProps {
   currentView: ViewMode;
@@ -10,6 +12,7 @@ interface SidebarProps {
   sessionTime?: string;
   globalReadiness?: string;
   onOpenLegalDisclaimer?: () => void;
+  onOpenSystemSettings?: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   onCloseMobile?: () => void;
@@ -23,10 +26,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   sessionTime = '1h 42m',
   globalReadiness = '84.5%',
   onOpenLegalDisclaimer,
+  onOpenSystemSettings,
   isCollapsed = false,
   onToggleCollapse,
   onCloseMobile,
 }) => {
+  const { currentVersion, updateAvailable } = useUpdate();
   return (
     <aside
       className={`fixed left-0 top-0 h-full bg-[#181c24]/95 backdrop-blur-xl z-50 flex flex-col justify-between border-r border-[#334155]/40 shadow-[0_1px_16px_rgba(0,0,0,0.6)] select-none transition-all duration-300 ${
@@ -217,11 +222,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
+        {/* System Settings & Updates */}
+        {onOpenSystemSettings && (
+          <button
+            onClick={onOpenSystemSettings}
+            className={`flex items-center rounded text-[11px] font-mono text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#262a33]/60 transition-colors py-1 cursor-pointer ${
+              isCollapsed ? 'justify-center p-2' : 'justify-between px-2'
+            }`}
+            title="Paramètres Système & Gestion des Mises à jour"
+          >
+            <span className="flex items-center gap-1.5 truncate">
+              <span className="material-symbols-outlined text-sm text-[#00daf3]">settings_suggest</span>
+              {!isCollapsed && <span className="truncate">Paramètres v{currentVersion}</span>}
+            </span>
+            {!isCollapsed && updateAvailable && (
+              <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] animate-pulse" />
+            )}
+          </button>
+        )}
+
         {/* Mentions Légales & Indépendance Button */}
         {onOpenLegalDisclaimer && (
           <button
             onClick={onOpenLegalDisclaimer}
-            className={`flex items-center rounded text-[11px] font-mono text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33]/40 transition-colors border-t border-[#334155]/20 pt-2 cursor-pointer ${
+            className={`flex items-center rounded text-[11px] font-mono text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33]/40 transition-colors border-t border-[#334155]/20 pt-1.5 cursor-pointer ${
               isCollapsed ? 'justify-center p-2' : 'justify-between px-2 py-1'
             }`}
             title="Consulter les mentions légales et l'avertissement d'indépendance (Cisco, Palo Alto, Fortinet...)"
@@ -234,6 +258,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="material-symbols-outlined text-xs shrink-0">open_in_new</span>
             )}
           </button>
+        )}
+
+        {/* PWA Install Button in sidebar (when expanded) */}
+        {!isCollapsed && (
+          <div className="pt-1">
+            <InstallAppButton variant="sidebar" />
+          </div>
         )}
       </div>
     </aside>

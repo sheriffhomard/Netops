@@ -1,0 +1,15 @@
+{
+  "version": "2.5.0",
+  "buildId": "netops-20261102-v250",
+  "releaseDate": "2 novembre 2026",
+  "title": "NetOps Academy v2.5.0 (Enterprise NOC)",
+  "features": [
+    "Menu Hamburger catégorisé multi-niveaux",
+    "Thème Clair haute visibilité & Mode Sombre NOC",
+    "Mises à jour automatiques transparentes en arrière-plan",
+    "Onboarding légal renforcé avec clause d'exonération de responsabilité",
+    "Infobulles contextuelles pour guidage des utilisateurs novices",
+    "Installation PWA 1-clic mobile et bureau"
+  ],
+  "minIntervalMinutes": 15
+}

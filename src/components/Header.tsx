@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { UserProfile, ViewMode } from '../types';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useUpdate } from '../context/UpdateContext';
+import { InstallAppButton } from './InstallAppButton';
 import { UserProfileModal } from './UserProfileModal';
 import { Breadcrumbs } from './Breadcrumbs';
 
@@ -11,6 +14,8 @@ interface HeaderProps {
   onOpenSearch: () => void;
   onOpenSubnetCalc?: () => void;
   onOpenLegalDisclaimer?: () => void;
+  onOpenHamburgerMenu?: () => void;
+  onOpenSystemSettings?: () => void;
   isSidebarCollapsed?: boolean;
   onToggleSidebarCollapse?: () => void;
 }
@@ -22,10 +27,14 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   onOpenSubnetCalc,
   onOpenLegalDisclaimer,
+  onOpenHamburgerMenu,
+  onOpenSystemSettings,
   isSidebarCollapsed = false,
   onToggleSidebarCollapse,
 }) => {
   const { user: authUser, userProfile, signIn, signOut } = useAuth();
+  const { theme, toggleTheme, isLight } = useTheme();
+  const { updateAvailable } = useUpdate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -46,6 +55,18 @@ export const Header: React.FC<HeaderProps> = ({
       >
         {/* Left: Sidebar Collapse Button & Breadcrumbs */}
         <div className="flex items-center gap-3 min-w-0">
+          {onOpenHamburgerMenu && (
+            <button
+              onClick={onOpenHamburgerMenu}
+              className="p-1.5 rounded-lg text-[#00e5ff] bg-[#00363d]/40 hover:bg-[#00363d]/80 border border-[#00e5ff]/40 transition-colors shrink-0 flex items-center gap-1.5 px-2.5 font-mono text-xs cursor-pointer shadow-sm"
+              title="Ouvrir le menu catégorisé complet (Hamburger)"
+              aria-label="Menu principal"
+            >
+              <span className="material-symbols-outlined text-base">menu</span>
+              <span className="hidden xl:inline font-bold">Menu</span>
+            </button>
+          )}
+
           {onToggleSidebarCollapse && (
             <button
               onClick={onToggleSidebarCollapse}
@@ -54,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label="Basculer le menu latéral"
             >
               <span className="material-symbols-outlined text-base">
-                {isSidebarCollapsed ? 'menu' : 'menu_open'}
+                {isSidebarCollapsed ? 'first_page' : 'menu_open'}
               </span>
             </button>
           )}
@@ -64,11 +85,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Center/Right: Quick Search Trigger */}
-        <div className="flex items-center gap-3">
+        {/* Center/Right: Action Group */}
+        <div className="flex items-center gap-2.5">
+          {/* Quick Search Trigger */}
           <button
             onClick={onOpenSearch}
-            className="hidden md:flex items-center gap-2.5 bg-[#181c24] hover:bg-[#262a33] px-3.5 py-1.5 rounded-lg text-[#bac9cc] border border-[#334155]/50 transition-all text-left group cursor-pointer"
+            className="hidden md:flex items-center gap-2 bg-[#181c24] hover:bg-[#262a33] px-3 py-1.5 rounded-lg text-[#bac9cc] border border-[#334155]/50 transition-all text-left group cursor-pointer"
             title="Rechercher rapidement une certification, une RFC ou une commande"
           >
             <span className="material-symbols-outlined text-base text-[#849396] group-hover:text-[#00e5ff] transition-colors">
@@ -77,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="text-xs text-[#bac9cc] truncate">
               Rechercher...
             </span>
-            <kbd className="bg-[#262a33] border border-[#3b494c] px-1.5 py-0.5 rounded text-[10px] font-mono text-[#00daf3] shadow-sm ml-2">
+            <kbd className="bg-[#262a33] border border-[#3b494c] px-1.5 py-0.5 rounded text-[10px] font-mono text-[#00daf3] shadow-sm ml-1.5">
               Ctrl+K
             </kbd>
           </button>
@@ -87,10 +109,40 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenSubnetCalc}
               title="Calculatrice de sous-réseaux IP & VLSM"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 text-xs font-mono transition-all cursor-pointer"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 text-xs font-mono transition-all cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">calculate</span>
               <span className="hidden xl:inline">Calculateur CIDR</span>
+            </button>
+          )}
+
+          {/* Install App Button (PWA) */}
+          <InstallAppButton variant="header" />
+
+          {/* Theme Toggle (Dark / Light) */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#ffd700] border border-[#334155]/40 transition-colors cursor-pointer shrink-0"
+            title={isLight ? "Basculer en Mode Sombre NOC" : "Basculer en Thème Clair"}
+            aria-label="Basculer le thème clair ou sombre"
+          >
+            <span className="material-symbols-outlined text-base">
+              {isLight ? 'dark_mode' : 'light_mode'}
+            </span>
+          </button>
+
+          {/* System Settings & Updates Trigger */}
+          {onOpenSystemSettings && (
+            <button
+              onClick={onOpenSystemSettings}
+              className="relative p-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 transition-colors cursor-pointer shrink-0"
+              title="Paramètres Système & Mises à jour"
+              aria-label="Paramètres Système"
+            >
+              <span className="material-symbols-outlined text-base">settings_suggest</span>
+              {updateAvailable && (
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] animate-pulse" />
+              )}
             </button>
           )}
 
