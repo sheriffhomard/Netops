@@ -9,7 +9,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-v2.5.0--PROD-00e5ff?style=for-the-badge&logo=fastapi&logoColor=black" alt="Version 2.5.0" />
+  <img src="https://img.shields.io/badge/Version-v2.6.0--PROD-00e5ff?style=for-the-badge&logo=fastapi&logoColor=black" alt="Version 2.6.0" />
+  <img src="https://img.shields.io/badge/Langues-FR%20%F0%9F%87%AB%F0%9F%87%B7%20%7C%20EN%20%F0%9F%87%AC%F0%9F%87%A7-00daf3?style=for-the-badge&logo=google-translate&logoColor=black" alt="Bilingual FR EN" />
   <img src="https://img.shields.io/badge/PWA-Installable-4edea3?style=for-the-badge&logo=pwa&logoColor=black" alt="PWA Ready" />
   <img src="https://img.shields.io/badge/Theme-Dark%20%7C%20Light-ffd700?style=for-the-badge&logo=color-switch&logoColor=black" alt="Dark and Light Theme" />
   <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
@@ -31,6 +32,7 @@
 ## 📑 Sommaire
 
 - [🌟 Présentation Générale](#-présentation-générale)
+- [🌍 Nouveautés v2.6.0 : Internationalisation Bilingue Intégrale (FR / EN)](#-nouveautés-v260--internationalisation-bilingue-intégrale-fr--en)
 - [📱 Nouveautés v2.5.0 : Ergonomie & Mises à Jour](#-nouveautés-v250--ergonomie--mises-à-jour)
 - [📦 Installation PWA 1-Clic](#-installation-pwa-1-clic)
 - [✨ Architecture & Navigation Catégorisée](#-architecture--navigation-catégorisée)
@@ -50,6 +52,44 @@
 L'application allie deux vocations complémentaires :
 1. **Console Opérationnelle NOC (Network Operations Center)** : télémétrie en direct, radar des faiblesses techniques, métriques de session et simulateur CLI interactif Cisco IOS-XE.
 2. **Moteur Pédagogique Avancé** : 2 900+ flashcards haute fidélité avec algorithme de répétition espacée (SRS Leitner), simulateurs d'examens proctorisés et matrice comparative multi-cloud (AWS vs Azure vs GCP vs On-Prem).
+
+---
+
+## 🌍 Nouveautés v2.6.0 : Internationalisation Bilingue Intégrale (FR / EN)
+
+NetOps Academy est désormais **entièrement bilingue** (Français 🇫🇷 et Anglais 🇬🇧) à travers l'ensemble de ses modules, sans compromis sur l'expérience technique ni sur la rigueur opérationnelle.
+
+### 1. 🔄 Basculement Instantané Réactif (Zero-Reload)
+- **Préservation intégrale des états de travail** : Changer de langue ne recharge pas la page et n'interrompt jamais :
+  - Le chronomètre d'examen officiel et les réponses cochées.
+  - Le bloc-notes d'examen (scratchpad).
+  - La session CLI interactive du terminal Cisco IOS-XE.
+  - La position actuelle dans la pile de flashcards SRS Leitner.
+- **Sélecteur de langue unifié** (`LanguageSwitcher.tsx`) :
+  - Accessible directement dans la barre d'en-tête supérieure (Header).
+  - Accessible dans la barre latérale rétractable (Sidebar).
+  - Accessible dans le menu hamburger catégorisé (HamburgerMenu).
+  - Accessible dans les paramètres système (SystemSettings) et la gestion de profil ingénieur.
+- **Persistance locale** : Choix mémorisé dans `localStorage` (`netops_lang`) avec synchronisation automatique de `<html lang="...">`.
+
+### 2. 📚 Architecture des Espaces de Noms i18n
+Le système repose sur `i18next` et `react-i18next` avec 10 dictionnaires modulaires distincts par langue (`/src/i18n/locales/{fr,en}/`) :
+- `common.json` : Actions universelles, statuts, niveaux de certification, métriques d'unités, thèmes et PWA.
+- `navigation.json` : Catégories hiérarchiques, labels de modules, descriptions et fil d'Ariane.
+- `dashboard.json` : Métriques de session, radar de faiblesse, boîtes Leitner et défi Chrono Blitz.
+- `flashcards.json` : Modes d'étude 3D, filtres de maîtrise, lecteur audio TTS et algorithme d'espacement.
+- `exams.json` : Proctorat, chronomètre, validation de questions et diagnostic de score officiel.
+- `labs.json` : Validation syntaxique, étapes séquentielles et console de dépannage.
+- `terminal.json` : Invites de commande, statuts de session et aides d'auto-complétion TAB.
+- `encyclopedia.json` : Topologies hybrides, schémas ASCII et comparatif multi-cloud.
+- `settings.json` : Paramètres système, mentions légales en 5 clauses et calculateur CIDR/VLSM.
+- `errors.json` : Diagnostic réseau et codes d'erreur RFC.
+
+### 3. 🎯 Précision Opérationnelle & Données Techniques
+- **Commandes CLI inchangées** : Les syntaxes exactes Cisco IOS-XE (`show ip interface brief`, `ip route 0.0.0.0 0.0.0.0`, `ping`), Palo Alto PAN-OS et Fortinet FortiOS restent strictement conformes aux normes industrielles dans les deux langues.
+- **Stabilité absolue des identifiants (IDs)** : Les identifiants des 2 900+ flashcards, des questions et des topologies restent immuables pour garantir l'intégrité de la persistance Firestore et de l'algorithme Leitner.
+- **Formatage localisé des nombres et dates** : Utilisation systématique de `Intl.NumberFormat` et `Intl.DateTimeFormat` (`fr-FR` et `en-US`).
+- **Synthèse Vocale Adaptative (TTS)** : L'énonciation audio des flashcards configure automatiquement `utterance.lang = 'en-US'` en anglais et `'fr-FR'` en français.
 
 ---
 

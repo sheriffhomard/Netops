@@ -4,6 +4,27 @@ Toutes les modifications notables apportées au projet sont documentées dans ce
 
 ---
 
+## [2.6.0] — 2026-11-03
+
+### 🌍 Internationalisation Intégrale Bilingue Français / Anglais
+- **Moteur d'Internationalisation Moderne** (`i18next`, `react-i18next`, `/src/i18n/index.ts`) :
+  - Support natif complet du Français (`fr`, langue par défaut) et de l'Anglais (`en`).
+  - Basculement instantané sans rechargement de page (`zero page reload`) préservant le chronomètre des examens proctorisés, le bloc-notes, le terminal Cisco IOS-XE et la position des cartes SRS.
+  - Persistance automatique du choix de langue dans `localStorage` (`netops_lang`) et mise à jour de `<html lang="...">`.
+- **10 Espaces de Noms Modulaires Bilingues** (`/src/i18n/locales/{fr,en}/`) :
+  - `common.json`, `navigation.json`, `dashboard.json`, `flashcards.json`, `exams.json`, `labs.json`, `terminal.json`, `encyclopedia.json`, `settings.json`, `errors.json`.
+- **Composant Sélecteur de Langue Dédié** (`LanguageSwitcher.tsx`) :
+  - 4 variantes ergonomiques (`header`, `menu`, `settings`, `compact`) intégrées dans l'en-tête, la barre latérale, le menu hamburger, les paramètres système, l'onboarding et le profil ingénieur.
+- **Rigueur Technique & Données Réseau Inaltérées** :
+  - Les commandes CLI exactes (`show ip interface brief`, `ping`, `ip route`, etc.) demeurent inchangées en français comme en anglais.
+  - Stabilité absolue des identifiants (IDs) des 2 900+ flashcards, questions et ateliers, préservant la synchronisation Firestore et les boîtes Leitner.
+  - Synthèse vocale adaptative (`utterance.lang = 'en-US'` en anglais et `'fr-FR'` en français).
+  - Formatage localisé des dates et nombres avec `Intl.NumberFormat` et `Intl.DateTimeFormat`.
+- **Localisation Complète des Composants & Vues** :
+  - Fil d'Ariane (`Breadcrumbs.tsx`), barre latérale, palette de commandes (`Ctrl+K`), mentions légales complètes en 5 clauses, onboarding, simulateur d'examen et catalogue des certifications.
+
+---
+
 ## [2.5.0] — 2026-11-02
 
 ### ✨ Ajouts Majeurs & Fonctionnalités Système

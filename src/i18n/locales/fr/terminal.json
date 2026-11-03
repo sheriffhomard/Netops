@@ -1,0 +1,21 @@
+{
+  "title": "Terminal & Console CLI Réseau",
+  "subtitle": "Simulateur d'équipement Cisco IOS-XE avec invite de commande interactive, historique des commandes et diagnostic.",
+  "devices": {
+    "R1": "Routeur de Bordure R1",
+    "SW1": "Commutateur Cœur SW1",
+    "PCA": "Station Admin PCA",
+    "SVR1": "Serveur Intranet SVR1"
+  },
+  "statusConnected": "Connecté via Console Série (9600 8N1)",
+  "clearTerminal": "Effacer la console",
+  "sendPacket": "Injecter paquet de test",
+  "showRunningConfig": "Afficher running-config",
+  "autoCompleteHint": "Appuyez sur 'Tab' pour l'auto-complétion ou '?' pour l'aide contextuelle",
+  "shortcuts": {
+    "tab": "Tab : Complétion",
+    "help": "? : Aide contextuelle",
+    "history": "↑ / ↓ : Historique des commandes",
+    "clear": "clear : Nettoyer l'écran"
+  }
+}

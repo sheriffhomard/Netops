@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 
 interface MobileBottomNavProps {
@@ -14,6 +15,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   onToggleMenu,
   isMenuOpen,
 }) => {
+  const { t } = useTranslation(['navigation']);
   const items: {
     id: ViewMode | 'menu';
     label: string;
@@ -21,16 +23,16 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     isMenuToggle?: boolean;
     badge?: string;
   }[] = [
-    { id: 'tableau-de-bord', label: 'Accueil', icon: 'dashboard' },
-    { id: 'flashcards', label: 'Flashcards', icon: 'style', badge: 'SRS' },
-    { id: 'simulateur-d-examen', label: 'Examens', icon: 'check_circle' },
-    { id: 'ateliers-et-labs', label: 'Labs', icon: 'science' },
-    { id: 'menu', label: 'Menu', icon: isMenuOpen ? 'close' : 'grid_view', isMenuToggle: true },
+    { id: 'tableau-de-bord', label: t('navigation:items.dashboard.shortLabel'), icon: 'dashboard' },
+    { id: 'flashcards', label: t('navigation:items.flashcards.shortLabel'), icon: 'style', badge: 'SRS' },
+    { id: 'simulateur-d-examen', label: t('navigation:items.simulator.shortLabel'), icon: 'check_circle' },
+    { id: 'ateliers-et-labs', label: t('navigation:items.labs.shortLabel'), icon: 'science' },
+    { id: 'menu', label: t('navigation:menu'), icon: isMenuOpen ? 'close' : 'grid_view', isMenuToggle: true },
   ];
 
   return (
     <nav
-      aria-label="Navigation principale mobile"
+      aria-label={t('navigation:mobile.navAria')}
       className="lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-[#12151c]/95 backdrop-blur-xl border-t border-[#334155]/60 z-40 flex items-stretch justify-around px-2 shadow-[0_-4px_16px_rgba(0,0,0,0.5)] select-none pb-[env(safe-area-inset-bottom)]"
     >
       {items.map((item) => {

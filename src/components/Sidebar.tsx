@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
-import { NAV_CATEGORIES } from '../utils/navigationConfig';
+import { getLocalizedNavCategories } from '../utils/navigationConfig';
 import { useUpdate } from '../context/UpdateContext';
 import { InstallAppButton } from './InstallAppButton';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface SidebarProps {
   currentView: ViewMode;
@@ -31,7 +33,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
   onCloseMobile,
 }) => {
+  const { t } = useTranslation(['common', 'navigation']);
   const { currentVersion, updateAvailable } = useUpdate();
+  const localizedCategories = getLocalizedNavCategories(t);
+
   return (
     <aside
       className={`fixed left-0 top-0 h-full bg-[#181c24]/95 backdrop-blur-xl z-50 flex flex-col justify-between border-r border-[#334155]/40 shadow-[0_1px_16px_rgba(0,0,0,0.6)] select-none transition-all duration-300 ${
@@ -46,7 +51,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`flex items-center gap-3 cursor-pointer transition-all ${
               isCollapsed ? 'justify-center w-full' : ''
             }`}
-            title="NetOps Academy - Tableau de bord"
+            title="NetOps Academy"
           >
             <img
               alt="NetOps Academy Logo"
@@ -60,7 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   NetOps Academy
                 </span>
                 <span className="text-[10px] tracking-wider text-[#00daf3] uppercase font-mono truncate">
-                  Enterprise NOC
+                  {t('navigation:enterpriseNoc')}
                 </span>
               </div>
             )}
@@ -73,8 +78,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className={`hidden lg:flex p-1.5 rounded-lg text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors ${
                 isCollapsed ? 'hidden' : ''
               }`}
-              title="Replier la barre latérale"
-              aria-label="Replier la barre latérale"
+              title={t('navigation:collapseSidebar')}
+              aria-label={t('navigation:collapseSidebar')}
             >
               <span className="material-symbols-outlined text-base">first_page</span>
             </button>
@@ -85,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={onCloseMobile}
               className="lg:hidden p-1.5 rounded-lg text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33]"
-              title="Fermer le menu"
+              title={t('navigation:closeMenu')}
             >
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
@@ -98,8 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={onToggleCollapse}
               className="p-1.5 rounded-lg text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors"
-              title="Développer la barre latérale"
-              aria-label="Développer la barre latérale"
+              title={t('navigation:expandSidebar')}
+              aria-label={t('navigation:expandSidebar')}
             >
               <span className="material-symbols-outlined text-base">last_page</span>
             </button>
@@ -108,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Categorized Navigation Menu */}
         <nav className="flex flex-col gap-4 px-3 py-4">
-          {NAV_CATEGORIES.map((category) => (
+          {localizedCategories.map((category) => (
             <div key={category.id} className="flex flex-col gap-1">
               {/* Category Header Label (only when expanded) */}
               {!isCollapsed ? (
@@ -164,9 +169,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       </span>
                     )}
 
-                    {/* Small active badge for collapsed mode */}
+                    {/* Active Indicator Bar on collapsed view */}
                     {isCollapsed && isActive && (
-                      <span className="absolute right-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#00363d]" />
+                      <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[#00363d] rounded-r" />
                     )}
                   </button>
                 );
@@ -176,18 +181,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Footer Info & NOC Switch */}
-      <div className="p-3 flex flex-col gap-2 border-t border-[#334155]/30 bg-[#0f131c]/60 shrink-0">
+      {/* Footer System Status & Controls */}
+      <div className="p-3 border-t border-[#334155]/30 flex flex-col gap-2 shrink-0 bg-[#12151c]/90">
+        {/* Live Metrics (only visible when expanded) */}
         {!isCollapsed && (
-          <div className="bg-[#0a0e16]/80 rounded-lg p-2.5 flex flex-col gap-1.5 border border-[#334155]/40 font-mono text-[11px]">
-            <div className="flex items-center justify-between text-[#bac9cc]">
-              <span className="text-[10px] uppercase font-sans tracking-wider">Session</span>
-              <span className="text-[#a8ffd2] font-semibold">{sessionTime}</span>
+          <div className="flex flex-col gap-1.5 px-2 py-1.5 rounded-lg bg-[#181c24] border border-[#334155]/30">
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[#849396]">{t('navigation:sessionDuration')}</span>
+              <span className="text-[#00e5ff] font-semibold tabular-nums">{sessionTime}</span>
             </div>
-            <div className="flex items-center justify-between text-[#bac9cc]">
-              <span className="text-[10px] uppercase font-sans tracking-wider">Readiness</span>
-              <span className="text-[#00e5ff] font-semibold">{globalReadiness}</span>
+            <div className="flex items-center justify-between text-[11px] font-mono">
+              <span className="text-[#849396]">{t('navigation:globalReadiness')}</span>
+              <span className="text-[#4edea3] font-semibold tabular-nums">{globalReadiness}</span>
             </div>
+          </div>
+        )}
+
+        {/* Language Switcher in sidebar */}
+        {!isCollapsed ? (
+          <div className="px-1 py-0.5 flex items-center justify-between">
+            <span className="text-[11px] font-mono text-[#849396]">{t('common:language.select')}</span>
+            <LanguageSwitcher variant="menu" className="w-28" />
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <LanguageSwitcher variant="compact" />
           </div>
         )}
 
@@ -197,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           className={`flex items-center rounded cursor-pointer hover:bg-[#262a33]/60 transition-colors py-1.5 ${
             isCollapsed ? 'justify-center' : 'justify-between px-2'
           }`}
-          title="Basculer le mode contraste élevé NOC"
+          title="NOC Mode"
         >
           <span
             className={`text-[11px] font-mono text-[#bac9cc] flex items-center gap-1.5 uppercase ${
@@ -229,11 +247,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`flex items-center rounded text-[11px] font-mono text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#262a33]/60 transition-colors py-1 cursor-pointer ${
               isCollapsed ? 'justify-center p-2' : 'justify-between px-2'
             }`}
-            title="Paramètres Système & Gestion des Mises à jour"
+            title={t('navigation:systemSettings')}
           >
             <span className="flex items-center gap-1.5 truncate">
               <span className="material-symbols-outlined text-sm text-[#00daf3]">settings_suggest</span>
-              {!isCollapsed && <span className="truncate">Paramètres v{currentVersion}</span>}
+              {!isCollapsed && <span className="truncate">v{currentVersion}</span>}
             </span>
             {!isCollapsed && updateAvailable && (
               <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] animate-pulse" />
@@ -248,11 +266,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className={`flex items-center rounded text-[11px] font-mono text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33]/40 transition-colors border-t border-[#334155]/20 pt-1.5 cursor-pointer ${
               isCollapsed ? 'justify-center p-2' : 'justify-between px-2 py-1'
             }`}
-            title="Consulter les mentions légales et l'avertissement d'indépendance (Cisco, Palo Alto, Fortinet...)"
+            title={t('navigation:legalNotice')}
           >
             <span className="flex items-center gap-1.5 truncate">
               <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
-              {!isCollapsed && <span className="truncate">Mentions Légales</span>}
+              {!isCollapsed && <span className="truncate">{t('navigation:legalNotice')}</span>}
             </span>
             {!isCollapsed && (
               <span className="material-symbols-outlined text-xs shrink-0">open_in_new</span>

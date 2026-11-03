@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useUpdate } from '../context/UpdateContext';
 import { useTheme } from '../context/ThemeContext';
 import { usePWA } from '../context/PWAContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface SystemSettingsModalProps {
   isOpen: boolean;
@@ -14,6 +16,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
   onClose,
   onOpenLegalDisclaimer,
 }) => {
+  const { t } = useTranslation(['common', 'settings']);
   const {
     currentVersion,
     releaseDate,
@@ -45,13 +48,13 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
             </div>
             <div>
               <h3 className="font-semibold text-sm sm:text-base font-mono text-[#00e5ff] tracking-wide flex items-center gap-2">
-                <span>Paramètres Système</span>
+                <span>{t('settings:system.title')}</span>
                 <span className="text-[10px] text-[#4edea3] font-normal px-2 py-0.5 rounded bg-[#003824]/60 border border-[#4edea3]/30">
                   NOC v{currentVersion}
                 </span>
               </h3>
               <p className="text-[11px] text-[#849396]">
-                Gestion des versions, mises à jour en arrière-plan et apparence
+                {t('settings:system.subtitle')}
               </p>
             </div>
           </div>
@@ -59,7 +62,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33] transition-colors"
-            title="Fermer"
+            title={t('common:actions.close')}
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -77,7 +80,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
               <button
                 onClick={clearUpdateNotice}
                 className="text-[#849396] hover:text-[#00e5ff] p-1"
-                title="Fermer la notification"
+                title={t('common:actions.close')}
               >
                 <span className="material-symbols-outlined text-xs">close</span>
               </button>
@@ -89,48 +92,47 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-xs uppercase tracking-wider font-mono text-[#00e5ff] flex items-center gap-2">
                 <span className="material-symbols-outlined text-base">update</span>
-                <span>Informations de Version & Mises à Jour</span>
+                <span>{t('settings:system.versionInfo')}</span>
               </h4>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0a0e16] border border-[#334155]/40 text-[#4edea3] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3] animate-pulse" />
-                {updateAvailable ? 'Mise à jour disponible' : 'Système Opérationnel'}
+                {updateAvailable ? t('settings:system.updateAvailable') : t('settings:system.upToDate')}
               </span>
             </div>
 
             {/* Information Grid: Release Date & Last Checked */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              {/* Date de sortie */}
+              {/* Release Date */}
               <div className="p-3 rounded-lg bg-[#0a0e16]/80 border border-[#334155]/40 flex flex-col gap-1">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#849396] flex items-center gap-1">
                   <span className="material-symbols-outlined text-xs">calendar_month</span>
-                  <span>Date de sortie</span>
+                  <span>{t('settings:system.releaseDate')}</span>
                 </span>
                 <span className="text-sm font-bold font-mono text-[#dfe2ee]">
                   {releaseDate}
                 </span>
                 <span className="text-[10px] text-[#849396]">
-                  Version officielle déployée : v{currentVersion}
+                  {t('settings:system.currentVersion')} : v{currentVersion}
                 </span>
               </div>
 
-              {/* Date de la dernière vérification */}
+              {/* Last Checked Date */}
               <div className="p-3 rounded-lg bg-[#0a0e16]/80 border border-[#334155]/40 flex flex-col gap-1">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#849396] flex items-center gap-1">
                   <span className="material-symbols-outlined text-xs">history</span>
-                  <span>Dernière vérification</span>
+                  <span>{t('settings:system.lastChecked')}</span>
                 </span>
                 <span className="text-xs font-bold font-mono text-[#4edea3] truncate">
                   {lastCheckedDate}
                 </span>
                 <span className="text-[10px] text-[#849396]">
-                  Contrôle périodique automatisé
+                  {t('settings:system.autoUpdateDesc')}
                 </span>
               </div>
             </div>
 
-            {/* Action Buttons: Vérifier les mises à jour & Forcer la mise à jour */}
+            {/* Action Buttons: Check for updates & Force update */}
             <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2">
-              {/* Button: Vérifier les mises à jour */}
               <button
                 onClick={() => checkForUpdates(true)}
                 disabled={isChecking || isUpdating}
@@ -144,16 +146,15 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                   sync
                 </span>
                 <span>
-                  {isChecking ? 'Recherche en cours...' : 'Vérifier les mises à jour'}
+                  {isChecking ? t('settings:system.checking') : t('settings:system.btnCheckUpdates')}
                 </span>
               </button>
 
-              {/* Button: Forcer la mise à jour */}
               <button
                 onClick={forceUpdate}
                 disabled={isChecking || isUpdating}
                 className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-[#1c2028] hover:bg-[#262a33] text-[#ffb4ab] border border-[#ffb4ab]/40 font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
-                title="Purge tous les caches du navigateur et réinstalle la version la plus récente"
+                title={t('settings:system.btnForceUpdate')}
               >
                 <span
                   className={`material-symbols-outlined text-base ${
@@ -163,7 +164,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                   restart_alt
                 </span>
                 <span>
-                  {isUpdating ? 'Actualisation...' : 'Forcer la mise à jour'}
+                  {isUpdating ? t('settings:system.updating') : t('settings:system.btnForceUpdate')}
                 </span>
               </button>
             </div>
@@ -173,10 +174,10 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
               <div className="flex flex-col gap-0.5">
                 <span className="font-semibold text-xs text-[#dfe2ee] flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-sm text-[#00daf3]">auto_mode</span>
-                  <span>Mises à jour automatiques en arrière-plan</span>
+                  <span>{t('settings:system.autoUpdateLabel')}</span>
                 </span>
                 <span className="text-[11px] text-[#849396]">
-                  Vérification toutes les 15 min et installation transparente sans interruption de session
+                  {t('settings:system.autoUpdateDesc')}
                 </span>
               </div>
 
@@ -185,7 +186,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                 className={`w-11 h-6 rounded-full flex items-center p-1 transition-colors cursor-pointer shrink-0 ${
                   autoUpdateEnabled ? 'bg-[#00e5ff]' : 'bg-[#31353e]'
                 }`}
-                aria-label="Basculer les mises à jour automatiques"
+                aria-label={t('settings:system.autoUpdateLabel')}
               >
                 <div
                   className={`w-4 h-4 rounded-full bg-[#00363d] shadow transition-transform ${
@@ -196,11 +197,24 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
             </div>
           </div>
 
-          {/* SECTION 2: APPARENCE & THÈMES (DARK / LIGHT) */}
+          {/* SECTION 2: LANGUAGE SELECTION (BILINGUAL FR / EN) */}
+          <div className="flex flex-col gap-3 p-4 rounded-xl bg-[#181c24] border border-[#334155]/60">
+            <h4 className="font-bold text-xs uppercase tracking-wider font-mono text-[#00e5ff] flex items-center gap-2">
+              <span className="material-symbols-outlined text-base">translate</span>
+              <span>{t('settings:system.language')}</span>
+            </h4>
+            <p className="text-[11px] text-[#849396]">
+              {t('settings:system.languageDesc')}
+            </p>
+
+            <LanguageSwitcher variant="settings" />
+          </div>
+
+          {/* SECTION 3: APPARENCE & THÈMES (DARK / LIGHT) */}
           <div className="flex flex-col gap-3 p-4 rounded-xl bg-[#181c24] border border-[#334155]/60">
             <h4 className="font-bold text-xs uppercase tracking-wider font-mono text-[#00e5ff] flex items-center gap-2">
               <span className="material-symbols-outlined text-base">palette</span>
-              <span>Thème & Affichage Visuel</span>
+              <span>{t('settings:system.appearance')}</span>
             </h4>
 
             <div className="grid grid-cols-2 gap-3">
@@ -222,9 +236,9 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <div className="font-bold text-xs font-mono">Thème Sombre NOC</div>
+                  <div className="font-bold text-xs font-mono">{t('settings:system.themeDark')}</div>
                   <div className="text-[10px] text-[#849396] mt-0.5">
-                    Mode haute immersion pour consoles d'opérations réseau
+                    {t('settings:system.themeDarkDesc')}
                   </div>
                 </div>
               </button>
@@ -247,31 +261,31 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <div className="font-bold text-xs font-mono">Thème Clair</div>
+                  <div className="font-bold text-xs font-mono">{t('settings:system.themeLight')}</div>
                   <div className="text-[10px] text-[#849396] mt-0.5">
-                    Lisibilité optimale en environnement lumineux et bureau
+                    {t('settings:system.themeLightDesc')}
                   </div>
                 </div>
               </button>
             </div>
           </div>
 
-          {/* SECTION 3: INSTALLATION & APPLICATION */}
+          {/* SECTION 4: INSTALLATION & APPLICATION (PWA) */}
           <div className="flex flex-col gap-3 p-4 rounded-xl bg-[#181c24] border border-[#334155]/60">
             <h4 className="font-bold text-xs uppercase tracking-wider font-mono text-[#00e5ff] flex items-center gap-2">
               <span className="material-symbols-outlined text-base">download_for_offline</span>
-              <span>Installation de l'Application (PWA)</span>
+              <span>{t('common:pwa.install')} (PWA)</span>
             </h4>
 
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-0.5 pr-3">
                 <span className="font-semibold text-xs text-[#dfe2ee]">
-                  Ajouter à l'écran d'accueil (Mobile & Bureau)
+                  {t('common:pwa.installTooltip')}
                 </span>
                 <span className="text-[11px] text-[#849396]">
                   {isInstalled
-                    ? 'NetOps Academy est déjà installée sur cet appareil.'
-                    : 'Accédez rapidement à vos fiches et examens sans barre de navigation.'}
+                    ? t('common:pwa.installed')
+                    : t('common:pwa.installTooltip')}
                 </span>
               </div>
 
@@ -280,27 +294,27 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                   onClick={installApp}
                   className="px-3.5 py-2 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:bg-[#9cf0ff] transition-all shrink-0 cursor-pointer shadow-md"
                 >
-                  Installer
+                  {t('common:actions.start')}
                 </button>
               ) : (
                 <div className="flex items-center gap-1.5 text-xs font-mono text-[#4edea3]">
                   <span className="material-symbols-outlined text-sm">verified</span>
-                  <span>Installé</span>
+                  <span>{t('common:pwa.installed')}</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* SECTION 4: CADRE LÉGAL & INDÉPENDANCE */}
+          {/* SECTION 5: CADRE LÉGAL & INDÉPENDANCE */}
           {onOpenLegalDisclaimer && (
             <div className="p-4 rounded-xl bg-[#0a0e16]/80 border border-[#334155]/50 flex items-center justify-between">
               <div className="flex flex-col gap-0.5">
                 <span className="font-semibold text-xs text-[#dfe2ee] flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
-                  <span>Mentions Légales & Avertissement</span>
+                  <span>{t('navigation:legalNotice')}</span>
                 </span>
                 <span className="text-[11px] text-[#849396]">
-                  Absence d'affiliation (Cisco, Palo Alto, Fortinet) et exonération de responsabilité
+                  {t('settings:system.legalNoticeBtn')}
                 </span>
               </div>
 
@@ -311,7 +325,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
                 }}
                 className="px-3 py-1.5 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-[#bac9cc] hover:text-[#00e5ff] border border-[#334155]/50 text-xs font-mono transition-colors cursor-pointer shrink-0"
               >
-                Consulter
+                {t('common:actions.open')}
               </button>
             </div>
           )}
@@ -326,7 +340,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-[#262a33] hover:bg-[#31353e] text-[#dfe2ee] font-mono text-xs transition-colors cursor-pointer"
           >
-            Fermer
+            {t('common:actions.close')}
           </button>
         </div>
       </div>

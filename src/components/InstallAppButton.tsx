@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { usePWA } from '../context/PWAContext';
 
 interface InstallAppButtonProps {
@@ -10,6 +11,7 @@ export const InstallAppButton: React.FC<InstallAppButtonProps> = ({
   className = '',
   variant = 'header',
 }) => {
+  const { t } = useTranslation(['common']);
   const { isInstalled, installApp } = usePWA();
 
   if (isInstalled) {
@@ -17,7 +19,7 @@ export const InstallAppButton: React.FC<InstallAppButtonProps> = ({
       return (
         <div className="flex items-center gap-2 text-xs font-mono text-[#4edea3]">
           <span className="material-symbols-outlined text-sm">verified</span>
-          <span>Application installée</span>
+          <span>{t('common:pwa.installed')}</span>
         </div>
       );
     }
@@ -29,11 +31,11 @@ export const InstallAppButton: React.FC<InstallAppButtonProps> = ({
       <button
         onClick={installApp}
         className={`w-full flex items-center justify-between px-3 py-2 rounded-lg bg-[#00363d]/40 hover:bg-[#00363d]/70 text-[#00e5ff] border border-[#00e5ff]/30 text-xs font-mono transition-all cursor-pointer ${className}`}
-        title="Installer NetOps sur votre écran d'accueil (Mobile ou Ordinateur)"
+        title={t('common:pwa.installTooltip')}
       >
         <span className="flex items-center gap-2">
           <span className="material-symbols-outlined text-base">install_mobile</span>
-          <span>Installer l'app</span>
+          <span>{t('common:pwa.install')}</span>
         </span>
         <span className="text-[10px] bg-[#00e5ff]/20 px-1.5 py-0.5 rounded text-[#00e5ff] font-bold">
           PWA
@@ -47,10 +49,10 @@ export const InstallAppButton: React.FC<InstallAppButtonProps> = ({
       <button
         onClick={installApp}
         className={`flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#00daf3] to-[#0091ea] text-[#00363d] font-bold text-xs font-mono shadow-md hover:brightness-110 active:scale-95 transition-all cursor-pointer ${className}`}
-        title="Ajouter à l'écran d'accueil"
+        title={t('common:pwa.installTooltip')}
       >
         <span className="material-symbols-outlined text-base">download_for_offline</span>
-        <span>Installer l'application</span>
+        <span>{t('common:pwa.install')}</span>
       </button>
     );
   }
@@ -60,15 +62,17 @@ export const InstallAppButton: React.FC<InstallAppButtonProps> = ({
     <button
       onClick={installApp}
       className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#00363d]/40 hover:bg-[#00363d]/70 text-[#00e5ff] border border-[#00e5ff]/40 text-xs font-mono transition-all cursor-pointer shrink-0 ${className}`}
-      title="Installer NetOps Academy sur votre appareil"
+      title={t('common:pwa.installTooltip')}
     >
       <span className="material-symbols-outlined text-sm">install_desktop</span>
-      <span className="hidden sm:inline">Installer</span>
+      <span className="hidden sm:inline">{t('common:pwa.installDesktop')}</span>
     </button>
   );
 };
 
 export const InstallInstructionModal: React.FC = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language?.startsWith('en');
   const { showIOSModal, setShowIOSModal, isIOS } = usePWA();
 
   if (!showIOSModal) return null;
@@ -79,7 +83,9 @@ export const InstallInstructionModal: React.FC = () => {
         <div className="flex items-center justify-between border-b border-[#334155]/40 pb-3">
           <div className="flex items-center gap-2 text-[#00e5ff]">
             <span className="material-symbols-outlined text-2xl">install_mobile</span>
-            <h3 className="font-bold text-base font-mono">Installer NetOps Academy</h3>
+            <h3 className="font-bold text-base font-mono">
+              {isEn ? 'Install NetOps Academy' : 'Installer NetOps Academy'}
+            </h3>
           </div>
           <button
             onClick={() => setShowIOSModal(false)}
@@ -90,40 +96,66 @@ export const InstallInstructionModal: React.FC = () => {
         </div>
 
         <p className="text-xs text-[#bac9cc] leading-relaxed">
-          Installez NetOps Academy directement sur l'écran d'accueil de votre téléphone ou sur le bureau de votre ordinateur pour l'utiliser comme une application native rapide et accessible hors-ligne.
+          {isEn
+            ? 'Install NetOps Academy directly onto your home screen or desktop to use it as a fast, offline-capable native app.'
+            : "Installez NetOps Academy directement sur l'écran d'accueil de votre téléphone ou sur le bureau de votre ordinateur pour l'utiliser comme une application native rapide et accessible hors-ligne."}
         </p>
 
         {isIOS ? (
           <div className="p-3.5 rounded-xl bg-[#0a0e16] border border-[#334155]/50 flex flex-col gap-2.5 font-mono text-xs">
             <div className="font-bold text-[#00e5ff] flex items-center gap-1.5">
-              <span>Sur iPhone / iPad (Safari) :</span>
+              <span>{isEn ? 'On iPhone / iPad (Safari):' : 'Sur iPhone / iPad (Safari) :'}</span>
             </div>
             <ol className="list-decimal list-inside space-y-2 text-[#dfe2ee]/90 font-sans text-xs">
               <li>
-                Appuyez sur le bouton <strong>Partager</strong> en bas de Safari (l'icône avec un carré et une flèche vers le haut).
+                {isEn ? (
+                  <>Tap the <strong>Share</strong> button at the bottom of Safari (box with upward arrow).</>
+                ) : (
+                  <>Appuyez sur le bouton <strong>Partager</strong> en bas de Safari (l'icône avec un carré et une flèche vers le haut).</>
+                )}
               </li>
               <li>
-                Faites défiler vers le bas et sélectionnez <strong>« Sur l'écran d'accueil »</strong> (icône avec un « + »).
+                {isEn ? (
+                  <>Scroll down and tap <strong>"Add to Home Screen"</strong> (icon with a "+").</>
+                ) : (
+                  <>Faites défiler vers le bas et sélectionnez <strong>« Sur l'écran d'accueil »</strong> (icône avec un « + »).</>
+                )}
               </li>
               <li>
-                Appuyez sur <strong>« Ajouter »</strong> en haut à droite.
+                {isEn ? (
+                  <>Tap <strong>"Add"</strong> in the top-right corner.</>
+                ) : (
+                  <>Appuyez sur <strong>« Ajouter »</strong> en haut à droite.</>
+                )}
               </li>
             </ol>
           </div>
         ) : (
           <div className="p-3.5 rounded-xl bg-[#0a0e16] border border-[#334155]/50 flex flex-col gap-2.5 font-mono text-xs">
             <div className="font-bold text-[#00e5ff] flex items-center gap-1.5">
-              <span>Sur Chrome, Edge ou Android :</span>
+              <span>{isEn ? 'On Chrome, Edge, or Android:' : 'Sur Chrome, Edge ou Android :'}</span>
             </div>
             <ol className="list-decimal list-inside space-y-2 text-[#dfe2ee]/90 font-sans text-xs">
               <li>
-                Cliquez sur l'icône <strong>Installer l'application</strong> située à droite de la barre d'adresse de votre navigateur.
+                {isEn ? (
+                  <>Click the <strong>Install App</strong> icon in your browser address bar.</>
+                ) : (
+                  <>Cliquez sur l'icône <strong>Installer l'application</strong> située à droite de la barre d'adresse de votre navigateur.</>
+                )}
               </li>
               <li>
-                Ou ouvrez le menu du navigateur (les 3 points) et choisissez <strong>« Installer NetOps Academy »</strong>.
+                {isEn ? (
+                  <>Or open the browser menu (3 dots) and select <strong>"Install NetOps Academy"</strong>.</>
+                ) : (
+                  <>Ou ouvrez le menu du navigateur (les 3 points) et choisissez <strong>« Installer NetOps Academy »</strong>.</>
+                )}
               </li>
               <li>
-                Confirmez en cliquant sur <strong>« Installer »</strong>.
+                {isEn ? (
+                  <>Confirm by clicking <strong>"Install"</strong>.</>
+                ) : (
+                  <>Confirmez en cliquant sur <strong>« Installer »</strong>.</>
+                )}
               </li>
             </ol>
           </div>
@@ -132,9 +164,9 @@ export const InstallInstructionModal: React.FC = () => {
         <div className="flex justify-end pt-2">
           <button
             onClick={() => setShowIOSModal(false)}
-            className="px-4 py-2 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:bg-[#9cf0ff] transition-colors"
+            className="px-4 py-2 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:bg-[#9cf0ff] transition-colors cursor-pointer"
           >
-            Compris
+            {isEn ? 'Got it' : 'Compris'}
           </button>
         </div>
       </div>

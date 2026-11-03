@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CertificationItem, ViewMode } from '../types';
 import { certificationsList } from '../data/mockData';
 
@@ -11,10 +12,13 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
   onNavigate,
   onSelectExam,
 }) => {
+  const { t, i18n } = useTranslation(['common', 'navigation', 'exams']);
+  const isEn = i18n.language === 'en';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVendor, setSelectedVendor] = useState<string>('all');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
   const [selectedCertId, setSelectedCertId] = useState<string>('ccna-200-301');
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   // Filter certifications
   const filteredCerts = certificationsList.filter((cert) => {
@@ -36,12 +40,14 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
     certificationsList[0];
 
   const vendorPills = [
-    { id: 'all', label: 'Tous les éditeurs' },
+    { id: 'all', label: isEn ? 'All Vendors' : 'Tous les éditeurs' },
     { id: 'cisco', label: 'Cisco Systems (CCNA, CCNP, CCIE)' },
+    { id: 'paloalto', label: 'Palo Alto Networks (PCNSE)' },
+    { id: 'fortinet', label: 'Fortinet (FCP FortiGate)' },
     { id: 'comptia', label: 'CompTIA (Vendor-Neutral)' },
     { id: 'juniper', label: 'Juniper Networks (Junos)' },
-    { id: 'security', label: 'Sécurité Réseau & NGFW' },
-    { id: 'cloud', label: 'Réseaux Cloud & Hybrides' },
+    { id: 'security', label: isEn ? 'Network Security & NGFW' : 'Sécurité Réseau & NGFW' },
+    { id: 'cloud', label: isEn ? 'Cloud & Hybrid Networks' : 'Réseaux Cloud & Hybrides' },
   ];
 
   const handleLaunchCert = (cert: CertificationItem) => {
@@ -59,29 +65,36 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#00e5ff] text-2xl">layers</span>
             <span className="text-xs font-mono uppercase tracking-widest text-[#00daf3]">
-              CATALOGUE OFFICIEL &amp; BLUEPRINTS
+              {isEn ? 'OFFICIAL CATALOG & BLUEPRINTS' : 'CATALOGUE OFFICIEL & BLUEPRINTS'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-[#dfe2ee] tracking-tight">
-            Catalogue des Certifications Réseau &amp; Cyber
+            {isEn ? 'Network & Cyber Certification Catalog' : 'Catalogue des Certifications Réseau & Cyber'}
           </h1>
           <p className="text-sm text-[#bac9cc] leading-relaxed">
-            Simulations conformes aux Blueprints officiels 2025. Entraînement au format QCM
-            proctorisé, scénarios de glisser-déposer et labs pratiques en CLI réelle.
+            {isEn
+              ? 'Simulations aligned with official 2025 Blueprints. Timed proctored MCQ exams, drag-and-drop scenarios, and real CLI hands-on troubleshooting labs.'
+              : 'Simulations conformes aux Blueprints officiels 2025. Entraînement au format QCM proctorisé, scénarios de glisser-déposer et labs pratiques en CLI réelle.'}
           </p>
         </div>
 
         <div className="flex items-center gap-4 self-start xl:self-auto bg-[#181c24] border border-[#334155]/50 px-5 py-3 rounded-xl shadow-lg">
           <div className="flex flex-col pr-4 border-r border-[#334155]/50">
-            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">Tracks Réseau</span>
+            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">
+              {isEn ? 'Network Tracks' : 'Tracks Réseau'}
+            </span>
             <span className="text-lg font-bold text-[#dfe2ee]">28 Tracks</span>
           </div>
           <div className="flex flex-col pr-4 border-r border-[#334155]/50">
-            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">Questions</span>
+            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">
+              {isEn ? 'Questions' : 'Questions'}
+            </span>
             <span className="text-lg font-bold text-[#00e5ff]">14 280</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">Conformité</span>
+            <span className="text-[10px] font-mono uppercase text-[#bac9cc]">
+              {isEn ? 'Blueprint Match' : 'Conformité'}
+            </span>
             <span className="text-lg font-bold text-[#a8ffd2]">96.8%</span>
           </div>
         </div>
@@ -99,7 +112,11 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filtrer par code (ex: 200-301, ENCOR), titre, protocole..."
+              placeholder={
+                isEn
+                  ? 'Filter by code (e.g. 200-301, ENCOR, PCNSE), title, protocol...'
+                  : 'Filtrer par code (ex: 200-301, ENCOR), titre, protocole...'
+              }
               className="w-full bg-[#181c24] border border-[#334155]/50 rounded-lg pl-11 pr-4 py-2.5 text-sm text-[#dfe2ee] placeholder:text-[#849396] focus:border-[#00e5ff] focus:outline-none transition-colors"
             />
           </div>
@@ -111,7 +128,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
               onChange={(e) => setSelectedLevel(e.target.value)}
               className="w-full bg-[#181c24] border border-[#334155]/50 rounded-lg px-3 py-2.5 text-sm text-[#dfe2ee] focus:border-[#00e5ff] focus:outline-none"
             >
-              <option value="all">Niveau : Tous les niveaux</option>
+              <option value="all">{isEn ? 'Level: All Levels' : 'Niveau : Tous les niveaux'}</option>
               <option value="support">Support Technician</option>
               <option value="associate">Associate (CCNA, Network+, JNCIA)</option>
               <option value="professional">Professional (CCNP, PCNSE, FCP)</option>
@@ -128,7 +145,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
               <button
                 key={pill.id}
                 onClick={() => setSelectedVendor(pill.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-[#00e5ff] text-[#00363d] font-semibold shadow-[0_0_10px_rgba(0,229,255,0.3)]'
                     : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee] border border-[#334155]/40'
@@ -151,7 +168,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
                 search_off
               </span>
               <p className="text-base text-[#dfe2ee] font-medium">
-                Aucune certification ne correspond aux filtres sélectionnés
+                {isEn ? 'No certifications match the selected filters' : 'Aucune certification ne correspond aux filtres sélectionnés'}
               </p>
               <button
                 onClick={() => {
@@ -159,9 +176,9 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
                   setSelectedVendor('all');
                   setSelectedLevel('all');
                 }}
-                className="px-4 py-2 bg-[#262a33] text-xs font-mono text-[#00e5ff] rounded-lg hover:bg-[#31353e]"
+                className="px-4 py-2 bg-[#262a33] text-xs font-mono text-[#00e5ff] rounded-lg hover:bg-[#31353e] cursor-pointer"
               >
-                Réinitialiser les filtres
+                {isEn ? 'Reset filters' : 'Réinitialiser les filtres'}
               </button>
             </div>
           ) : (
@@ -180,7 +197,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
                   >
                     {cert.highlight && (
                       <div className="absolute top-0 right-0 bg-[#00e5ff] text-[#00363d] text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-bl-lg uppercase tracking-wider">
-                        Populaire 2025
+                        {isEn ? 'Top Pick 2025' : 'Populaire 2025'}
                       </div>
                     )}
 
@@ -194,7 +211,9 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
                         </span>
                         {cert.isEnrolled && (
                           <span className="text-[10px] uppercase font-mono text-[#a8ffd2] px-1.5 py-0.5 rounded bg-[#a8ffd2]/10 border border-[#a8ffd2]/30">
-                            {cert.enrolledProgress === 100 ? 'Certifié' : `${cert.enrolledProgress}% En cours`}
+                            {cert.enrolledProgress === 100
+                              ? (isEn ? 'Certified' : 'Certifié')
+                              : `${cert.enrolledProgress}% ${isEn ? 'In progress' : 'En cours'}`}
                           </span>
                         )}
                       </div>
@@ -217,7 +236,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
                         {cert.itemsCount} items
                       </span>
                       <span className="text-[#00e5ff] flex items-center gap-0.5 font-semibold">
-                        Inspecter
+                        {isEn ? 'Inspect' : 'Inspecter'}
                         <span className="material-symbols-outlined text-sm">chevron_right</span>
                       </span>
                     </div>
@@ -250,13 +269,17 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
             {/* Quick Specs Grid */}
             <div className="grid grid-cols-3 gap-2 py-1 font-mono text-center">
               <div className="bg-[#0a0e16] p-2.5 rounded-lg border border-[#334155]/40 flex flex-col">
-                <span className="text-[10px] text-[#849396] uppercase">Durée</span>
+                <span className="text-[10px] text-[#849396] uppercase">
+                  {isEn ? 'Duration' : 'Durée'}
+                </span>
                 <span className="text-xs font-bold text-[#dfe2ee]">
                   {selectedCert.durationMin} min
                 </span>
               </div>
               <div className="bg-[#0a0e16] p-2.5 rounded-lg border border-[#334155]/40 flex flex-col">
-                <span className="text-[10px] text-[#849396] uppercase">Seuil</span>
+                <span className="text-[10px] text-[#849396] uppercase">
+                  {isEn ? 'Passing' : 'Seuil'}
+                </span>
                 <span className="text-xs font-bold text-[#a8ffd2]">
                   {selectedCert.thresholdScore}
                 </span>
@@ -273,9 +296,11 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-semibold text-[#dfe2ee] uppercase">
-                  Domaines Blueprint Officiel
+                  {isEn ? 'Official Blueprint Domains' : 'Domaines Blueprint Officiel'}
                 </span>
-                <span className="text-[10px] font-mono text-[#00e5ff]">Pondération</span>
+                <span className="text-[10px] font-mono text-[#00e5ff]">
+                  {isEn ? 'Weight' : 'Pondération'}
+                </span>
               </div>
 
               <div className="flex flex-col gap-2.5">
@@ -301,10 +326,12 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
               <div className="bg-[#0a0e16] p-3.5 rounded-xl border border-[#334155]/40 flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase font-mono text-[#849396]">
-                    Indicateur d&apos;Admissibilité
+                    {isEn ? 'Exam Readiness Index' : "Indicateur d'Admissibilité"}
                   </span>
                   <span className="text-xs font-medium text-[#a8ffd2]">
-                    {selectedCert.readinessPct >= 80 ? 'Niveau élevé d\'admission' : 'Préparation recommandée'}
+                    {selectedCert.readinessPct >= 80
+                      ? (isEn ? 'High readiness score' : "Niveau élevé d'admission")
+                      : (isEn ? 'Recommended preparation' : 'Préparation recommandée')}
                   </span>
                 </div>
                 <div className="text-xl font-bold font-mono text-[#00e5ff]">
@@ -313,30 +340,45 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
               </div>
             )}
 
+            {/* Download notification if triggered */}
+            {downloadSuccess && (
+              <div className="p-2.5 rounded-lg bg-[#00363d]/60 border border-[#00e5ff]/40 text-xs font-mono text-[#a8ffd2] flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm">verified</span>
+                <span>
+                  {isEn
+                    ? `Blueprint ${selectedCert.blueprintVersion} package ready for study`
+                    : `Pack Blueprint ${selectedCert.blueprintVersion} prêt pour l'étude`}
+                </span>
+              </div>
+            )}
+
             {/* Actions CTA */}
             <div className="flex flex-col gap-2 pt-2">
               <button
                 onClick={() => handleLaunchCert(selectedCert)}
-                className="w-full py-3 px-4 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-[0_0_16px_rgba(0,229,255,0.35)] flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-[0_0_16px_rgba(0,229,255,0.35)] flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-xl">play_circle</span>
-                <span>Commencer la préparation</span>
+                <span>{isEn ? 'Start Exam Simulation' : 'Commencer la préparation'}</span>
               </button>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => alert(`Téléchargement du Blueprint officiel ${selectedCert.name} (${selectedCert.blueprintVersion})`)}
-                  className="py-2 px-3 rounded-lg bg-[#262a33] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] hover:bg-[#31353e] border border-[#334155] flex items-center justify-center gap-1.5 transition-colors"
+                  onClick={() => {
+                    setDownloadSuccess(true);
+                    setTimeout(() => setDownloadSuccess(false), 3000);
+                  }}
+                  className="py-2 px-3 rounded-lg bg-[#262a33] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] hover:bg-[#31353e] border border-[#334155] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">description</span>
                   <span>Blueprint PDF</span>
                 </button>
                 <button
                   onClick={() => onNavigate('simulateur-d-examen')}
-                  className="py-2 px-3 rounded-lg bg-[#262a33] text-xs font-mono text-[#00daf3] hover:bg-[#31353e] border border-[#334155] flex items-center justify-center gap-1.5 transition-colors"
+                  className="py-2 px-3 rounded-lg bg-[#262a33] text-xs font-mono text-[#00daf3] hover:bg-[#31353e] border border-[#334155] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">quiz</span>
-                  <span>Simulateur Blanc</span>
+                  <span>{isEn ? 'Practice Exam' : 'Simulateur Blanc'}</span>
                 </button>
               </div>
             </div>
@@ -344,7 +386,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
             {/* Diagnostic Kernel Log */}
             <div className="bg-[#0a0e16]/80 p-2 rounded text-[10px] font-mono text-[#849396] border border-[#334155]/30">
               <code>
-                [KERNEL] Blueprint checksum match SHA-256 (350-401-v1.2). Exam engine ready.
+                [KERNEL] Blueprint checksum match SHA-256 ({selectedCert.code}-v{selectedCert.blueprintVersion}). Exam engine ready.
               </code>
             </div>
           </div>

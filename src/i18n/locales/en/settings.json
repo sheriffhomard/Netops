@@ -1,0 +1,85 @@
+{
+  "system": {
+    "title": "System Settings",
+    "subtitle": "Version management, background updates, and appearance",
+    "versionInfo": "Version & Update Information",
+    "currentVersion": "Current version",
+    "releaseDate": "Release date",
+    "lastChecked": "Last checked",
+    "checking": "Checking for updates...",
+    "updating": "Applying update...",
+    "updateAvailable": "Update available",
+    "upToDate": "System Operational",
+    "btnCheckUpdates": "Check for updates",
+    "btnForceUpdate": "Force update",
+    "autoUpdateLabel": "Background automatic updates",
+    "autoUpdateDesc": "Periodically checks application status and silently updates cached assets.",
+    "appearance": "Appearance & Visual Theme",
+    "themeLight": "Light Theme",
+    "themeLightDesc": "High-contrast interface on white and crisp slate backgrounds for bright rooms.",
+    "themeDark": "NOC Dark Mode",
+    "themeDarkDesc": "Dark cybersecurity palette (#0f131c) restful for extended training sessions.",
+    "language": "Interface Language & Content",
+    "languageDesc": "Seamlessly switch between French and English with zero state loss.",
+    "legalNoticeBtn": "Review Legal Notices & Independence Disclaimer"
+  },
+  "onboarding": {
+    "title": "NetOps Academy",
+    "badge": "Onboarding & Legal Framework",
+    "stepOf": "Step {{step}} of 4 — {{title}}",
+    "steps": {
+      "welcome": "Welcome",
+      "legal": "Legal Notice & Independence",
+      "target": "Study Goal",
+      "validation": "Validation"
+    },
+    "welcome": {
+      "heading": "Network & Cybersecurity Training Platform",
+      "intro": "Welcome to NetOps Academy, your dedicated environment for intensive network certification prep (Cisco, Palo Alto, Fortinet, CompTIA, Juniper).",
+      "featureCards": "2,900+ Leitner SRS Flashcards with spaced repetition",
+      "featureTerminal": "Hands-on Workshops & Interactive IOS-XE CLI",
+      "featureCloud": "Cloud Architecture Encyclopedia & Matrix",
+      "disclaimerNotice": "Before accessing the platform, please review the legal notices regarding our strict independence from official certification vendors."
+    },
+    "legal": {
+      "bannerTitle": "Legal Notice & Disclaimer of Official Affiliation",
+      "bannerText": "NetOps Academy is a strictly independent educational initiative. Please review the intellectual property and non-affiliation clauses below.",
+      "clause1Title": "1. Complete absence of affiliation or commercial partnership",
+      "clause1Text": "NetOps Academy and its creators are not affiliated, associated, authorized, endorsed by, or in any way officially connected with the companies or organizations issuing the certifications referenced on this platform, including Cisco Systems, Palo Alto Networks, Fortinet, CompTIA, Juniper Networks, AWS, and Microsoft.",
+      "clause2Title": "2. Trademarks and Intellectual Property (Fair Use)",
+      "clause2Text": "All exam codes, acronyms, trademarks, logos, and vendor designations cited are the exclusive property of their respective owners. Their mention on this platform constitutes descriptive nominative fair use for training purposes.",
+      "clause3Title": "3. Original content & Ethical Compliance (Anti-Dump Policy)",
+      "clause3Text": "NetOps Academy strictly prohibits and rejects all brain dumps or leaked exam materials. All questions, scenarios, and flashcards are original creations based on public IETF RFC standards and public vendor architecture guides.",
+      "clause4Title": "4. Full disclaimer of liability regarding provided data",
+      "clause4Text": "Formal disclaimer: The author and creator of NetOps Academy expressly disclaim all liability regarding the accuracy, completeness, validity, or consequences of using the technical configurations, commands, questions, and guides provided. All content is provided AS IS for didactic and personal training purposes.",
+      "clause5Title": "5. No guarantee of certification success",
+      "clause5Text": "Achieving passing scores in simulations or memorizing flashcards does not guarantee passing actual vendor exams and confers no official certification credentials.",
+      "checkbox": "I have read, understood, and unreservedly agree to the legal notices and liability disclaimers above."
+    },
+    "target": {
+      "title": "Customize your learning path",
+      "selectCert": "Select your primary target certification",
+      "selectMode": "Preferred training mode",
+      "modeMixed": "Mixed Training (Theory & Labs)",
+      "modeExam": "Exam Focus (Timed MCQs)",
+      "modeLabs": "Hands-on Focus (CLI & Drills)"
+    },
+    "validation": {
+      "readyTitle": "Your cockpit is ready!",
+      "summary": "You are configured to prepare {{cert}} in {{mode}} mode.",
+      "startBtn": "Enter NetOps Academy"
+    }
+  },
+  "subnetCalc": {
+    "title": "CIDR / VLSM Calculator & IP Subnetting",
+    "ipAddress": "IPv4 Address / Prefix",
+    "networkAddress": "Network Address",
+    "broadcastAddress": "Broadcast Address",
+    "netmask": "Subnet Mask",
+    "wildcard": "Wildcard Mask",
+    "usableHosts": "Usable Hosts",
+    "firstHost": "First Usable Host",
+    "lastHost": "Last Usable Host",
+    "binaryMask": "Binary Mask"
+  }
+}

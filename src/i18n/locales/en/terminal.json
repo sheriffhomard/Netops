@@ -1,0 +1,21 @@
+{
+  "title": "Terminal & Network CLI Console",
+  "subtitle": "Cisco IOS-XE equipment simulator with interactive prompt, command history, and diagnostics.",
+  "devices": {
+    "R1": "Edge Router R1",
+    "SW1": "Core Switch SW1",
+    "PCA": "Admin Station PCA",
+    "SVR1": "Intranet Server SVR1"
+  },
+  "statusConnected": "Connected via Serial Console (9600 8N1)",
+  "clearTerminal": "Clear console",
+  "sendPacket": "Inject test packet",
+  "showRunningConfig": "Show running-config",
+  "autoCompleteHint": "Press 'Tab' for auto-completion or '?' for contextual help",
+  "shortcuts": {
+    "tab": "Tab: Auto-complete",
+    "help": "?: Contextual help",
+    "history": "↑ / ↓: Command history",
+    "clear": "clear: Clear screen"
+  }
+}

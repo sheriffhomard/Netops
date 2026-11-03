@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 import { getBreadcrumbTrail } from '../utils/navigationConfig';
 
@@ -15,7 +16,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   onNavigate,
   showBackButton = true,
 }) => {
-  const trail = getBreadcrumbTrail(currentView, subTitle);
+  const { t } = useTranslation(['common', 'navigation']);
+  const trail = getBreadcrumbTrail(currentView, subTitle, t);
 
   const handleBack = () => {
     // If on a sub-view, go back to the parent view or dashboard
@@ -28,17 +30,17 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
   return (
     <nav
-      aria-label="Fil d'Ariane"
+      aria-label={t('navigation:breadcrumbs.section')}
       className="flex items-center gap-2 text-xs font-mono text-[#849396] overflow-x-auto whitespace-nowrap scrollbar-none py-1"
     >
       {showBackButton && currentView !== 'tableau-de-bord' && (
         <button
           onClick={handleBack}
           className="flex items-center gap-1 px-2 py-1 rounded bg-[#181c24] hover:bg-[#262a33] text-[#bac9cc] hover:text-[#00e5ff] border border-[#334155]/40 transition-colors mr-1 cursor-pointer"
-          title="Revenir à l'écran précédent"
+          title={t('navigation:breadcrumbs.backTooltip')}
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
-          <span className="hidden sm:inline text-[11px]">Retour</span>
+          <span className="hidden sm:inline text-[11px]">{t('navigation:breadcrumbs.back')}</span>
         </button>
       )}
 

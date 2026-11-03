@@ -1,0 +1,17 @@
+{
+  "general": "An unexpected error occurred. Please try again.",
+  "notFound": "Item not found.",
+  "network": "Network connection issue. Offline mode engaged.",
+  "auth": {
+    "loginFailed": "Google authentication failed.",
+    "syncFailed": "Unable to synchronize with Firestore.",
+    "unauthorized": "Please log in to save your progress."
+  },
+  "exam": {
+    "noAnswerSelected": "Please select at least one option.",
+    "timeExpired": "The allocated time for this exam has expired."
+  },
+  "flashcards": {
+    "emptyDeck": "No flashcards match your current filters."
+  }
+}

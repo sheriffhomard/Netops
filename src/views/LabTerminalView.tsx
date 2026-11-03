@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 import { lab08Scenario } from '../data/mockData';
 import { Tooltip } from '../components/Tooltip';
@@ -9,6 +10,8 @@ interface LabTerminalViewProps {
 }
 
 export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) => {
+  const { t, i18n } = useTranslation(['common', 'terminal', 'labs']);
+  const isEn = i18n.language?.startsWith('en');
   const [activeDevice, setActiveDevice] = useState<'R1' | 'SW1' | 'PCA' | 'SVR1'>('R1');
   const [terminalInput, setTerminalInput] = useState('');
   const [tasks, setTasks] = useState(lab08Scenario.tasks);

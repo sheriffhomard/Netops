@@ -1,0 +1,84 @@
+{
+  "menu": "Menu",
+  "menuTooltip": "Ouvrir le menu catégorisé complet (Hamburger)",
+  "collapseSidebar": "Réduire le menu latéral",
+  "expandSidebar": "Développer le menu latéral",
+  "closeMenu": "Fermer le menu",
+  "searchShortcut": "Rechercher...",
+  "searchPlaceholder": "Filtrer les fonctionnalités (ex: Flashcards, BGP, Labs...)",
+  "cidrCalc": "Calculateur CIDR",
+  "systemSettings": "Paramètres Système & Mises à jour",
+  "googleSignIn": "Connexion Google",
+  "manageProfile": "Gérer mon profil & Sync",
+  "studyStreak": "Streak d'étude :",
+  "globalPrecision": "Précision globale :",
+  "targetExam": "Examen cible :",
+  "firestoreSyncActive": "Firestore Sync Actif",
+  "enterpriseNoc": "Enterprise NOC",
+  "sessionDuration": "Durée session",
+  "globalReadiness": "Préparation globale",
+  "legalNotice": "Mentions Légales & Indépendance",
+  "categories": {
+    "accueil": "Accueil",
+    "apprendre": "Apprendre",
+    "reviser": "Réviser",
+    "pratique": "Pratiquer (Ingénierie)",
+    "evaluer": "Évaluer & Mesurer"
+  },
+  "items": {
+    "dashboard": {
+      "label": "Tableau de bord",
+      "shortLabel": "Accueil",
+      "description": "Vue d'ensemble, activité en cours et métriques clés"
+    },
+    "certifications": {
+      "label": "Parcours & Certifications",
+      "shortLabel": "Certifications",
+      "description": "Catalogue complet Cisco, Palo Alto, Fortinet, CompTIA, Juniper"
+    },
+    "cloud": {
+      "label": "Encyclopédie Cloud",
+      "shortLabel": "Cloud",
+      "description": "Topologies hybrides, schémas ASCII et matrice multi-cloud"
+    },
+    "flashcards": {
+      "label": "Flashcards & Mémos",
+      "shortLabel": "Flashcards",
+      "description": "2 900+ fiches de révision, mode répétition espacée et Blitz"
+    },
+    "questions": {
+      "label": "Banque de Questions",
+      "shortLabel": "Questions",
+      "description": "QCM commentés, filtres par domaine et explications détaillées"
+    },
+    "labs": {
+      "label": "Ateliers & Labs",
+      "shortLabel": "Ateliers",
+      "description": "Saisie exacte de commandes, ordonnancement et dépannage"
+    },
+    "terminal": {
+      "label": "Terminal & Lab Virtuel",
+      "shortLabel": "Terminal",
+      "description": "Console CLI Cisco IOS-XE interactive avec auto-complétion"
+    },
+    "simulator": {
+      "label": "Simulateur d'Examen",
+      "shortLabel": "Examens",
+      "description": "Conditions réelles proctorisées avec chronomètre et notation"
+    },
+    "analytics": {
+      "label": "Analytiques de Réussite",
+      "shortLabel": "Analytiques",
+      "description": "Radar des faiblesses, historique des scores et prédiction d'examen"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Accueil",
+    "back": "Retour",
+    "backTooltip": "Revenir à l'écran précédent",
+    "section": "Section"
+  },
+  "mobile": {
+    "navAria": "Navigation principale mobile"
+  }
+}

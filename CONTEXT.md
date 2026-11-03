@@ -82,3 +82,24 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
   - `/users/{userId}/exam_results` : historique des examens blancs avec scores et date.
 - **Règles de sécurité Firestore (firestore.rules)** :
   - Modèle ABAC Zero Trust limitant la lecture et l'écriture strictement aux données du propriétaire authentifié (`request.auth.uid == userId`).
+
+---
+
+## 7. Système d'Internationalisation (i18n) Bilingue Français / Anglais
+
+- **Moteur i18n** : `i18next` avec `react-i18next` (`/src/i18n/index.ts`).
+- **Langue par défaut** : Français (`fr`), basculement bidirectionnel fluide vers l'Anglais (`en`).
+- **Persistance** : Mémorisation locale sous `localStorage.getItem('netops_lang')` et synchronisation immédiate de l'attribut HTML `document.documentElement.lang`.
+- **Zéro Rechargement de Page** : `i18n.changeLanguage()` met à jour l'arbre React de manière purement réactive, préservant sans perte les timers de simulation d'examen, le bloc-notes, les sessions du terminal virtuel et les cartes SRS.
+- **10 Espaces de Noms Modulaires** :
+  - `common` : Boutons universels, statuts, niveaux de certification, thèmes, métriques et PWA.
+  - `navigation` : Catégories hiérarchiques, fil d'Ariane dynamique et libellés de menus.
+  - `dashboard` : Métriques du cockpit NOC, session active, radar et sprint Blitz.
+  - `flashcards` : Modes d'étude 3D, filtres Leitner, lecteur TTS (`en-US` / `fr-FR`).
+  - `exams` : Conditions réelles d'examen proctorisé, notation officielle, barème.
+  - `labs` : Ateliers pratiques de configuration CLI et ordonnancement d'étapes.
+  - `terminal` : Terminal virtuel Cisco IOS-XE, complétion TAB et aides CLI.
+  - `encyclopedia` : Topologies hybrides, schémas ASCII et comparatif Cloud.
+  - `settings` : Paramètres système, mentions légales et calculateur CIDR/VLSM.
+  - `errors` : Diagnostics réseau et messages d'erreur techniques.
+- **Préservation des Données Techniques** : Syntaxe exacte des commandes CLI (Cisco IOS-XE, Palo Alto PAN-OS, Fortinet FortiOS) et identifiants techniques stables pour les 2 900+ flashcards.

@@ -1,0 +1,84 @@
+{
+  "menu": "Menu",
+  "menuTooltip": "Open categorized main menu (Hamburger)",
+  "collapseSidebar": "Collapse sidebar",
+  "expandSidebar": "Expand sidebar",
+  "closeMenu": "Close menu",
+  "searchShortcut": "Search...",
+  "searchPlaceholder": "Filter features (e.g., Flashcards, BGP, Labs...)",
+  "cidrCalc": "CIDR Calculator",
+  "systemSettings": "System Settings & Updates",
+  "googleSignIn": "Google Sign In",
+  "manageProfile": "Manage Profile & Sync",
+  "studyStreak": "Study streak:",
+  "globalPrecision": "Overall accuracy:",
+  "targetExam": "Target exam:",
+  "firestoreSyncActive": "Firestore Sync Active",
+  "enterpriseNoc": "Enterprise NOC",
+  "sessionDuration": "Session duration",
+  "globalReadiness": "Global readiness",
+  "legalNotice": "Legal Notice & Independence",
+  "categories": {
+    "accueil": "Home",
+    "apprendre": "Learn",
+    "reviser": "Review",
+    "pratique": "Practice (Engineering)",
+    "evaluer": "Assess & Track"
+  },
+  "items": {
+    "dashboard": {
+      "label": "Dashboard",
+      "shortLabel": "Home",
+      "description": "Overview, current activity, and key readiness metrics"
+    },
+    "certifications": {
+      "label": "Paths & Certifications",
+      "shortLabel": "Certifications",
+      "description": "Full catalog for Cisco, Palo Alto, Fortinet, CompTIA, Juniper"
+    },
+    "cloud": {
+      "label": "Cloud Encyclopedia",
+      "shortLabel": "Cloud",
+      "description": "Hybrid topologies, ASCII diagrams, and multi-cloud matrix"
+    },
+    "flashcards": {
+      "label": "Flashcards & Notes",
+      "shortLabel": "Flashcards",
+      "description": "2,900+ revision cards, Leitner spaced repetition, and Blitz mode"
+    },
+    "questions": {
+      "label": "Question Bank",
+      "shortLabel": "Questions",
+      "description": "Annotated MCQs, domain filters, and detailed explanations"
+    },
+    "labs": {
+      "label": "Workshops & Labs",
+      "shortLabel": "Workshops",
+      "description": "Exact command syntax drills, sequencing, and troubleshooting"
+    },
+    "terminal": {
+      "label": "Terminal & Virtual Lab",
+      "shortLabel": "Terminal",
+      "description": "Interactive Cisco IOS-XE CLI console with auto-completion"
+    },
+    "simulator": {
+      "label": "Exam Simulator",
+      "shortLabel": "Exams",
+      "description": "Proctored real-world conditions with countdown timer and grading"
+    },
+    "analytics": {
+      "label": "Success Analytics",
+      "shortLabel": "Analytics",
+      "description": "Weakness radar, score history, and exam readiness prediction"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "back": "Back",
+    "backTooltip": "Return to previous screen",
+    "section": "Section"
+  },
+  "mobile": {
+    "navAria": "Mobile primary navigation"
+  }
+}

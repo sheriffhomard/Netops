@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserProfile, ViewMode } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -6,6 +7,7 @@ import { useUpdate } from '../context/UpdateContext';
 import { InstallAppButton } from './InstallAppButton';
 import { UserProfileModal } from './UserProfileModal';
 import { Breadcrumbs } from './Breadcrumbs';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HeaderProps {
   user: UserProfile;
@@ -32,8 +34,9 @@ export const Header: React.FC<HeaderProps> = ({
   isSidebarCollapsed = false,
   onToggleSidebarCollapse,
 }) => {
+  const { t } = useTranslation(['common', 'navigation']);
   const { user: authUser, userProfile, signIn, signOut } = useAuth();
-  const { theme, toggleTheme, isLight } = useTheme();
+  const { toggleTheme, isLight } = useTheme();
   const { updateAvailable } = useUpdate();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -49,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header
-        className={`fixed top-0 right-0 h-16 bg-[#0a0e16]/90 backdrop-blur-xl z-40 flex items-center justify-between px-6 border-b border-[#334155]/30 shadow-[0_1px_8px_rgba(0,0,0,0.4)] select-none transition-all duration-300 ${
+        className={`fixed top-0 right-0 h-16 bg-[#0a0e16]/90 backdrop-blur-xl z-40 flex items-center justify-between px-4 sm:px-6 border-b border-[#334155]/30 shadow-[0_1px_8px_rgba(0,0,0,0.4)] select-none transition-all duration-300 ${
           isSidebarCollapsed ? 'left-20' : 'left-72'
         }`}
       >
@@ -59,11 +62,11 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenHamburgerMenu}
               className="p-1.5 rounded-lg text-[#00e5ff] bg-[#00363d]/40 hover:bg-[#00363d]/80 border border-[#00e5ff]/40 transition-colors shrink-0 flex items-center gap-1.5 px-2.5 font-mono text-xs cursor-pointer shadow-sm"
-              title="Ouvrir le menu catégorisé complet (Hamburger)"
-              aria-label="Menu principal"
+              title={t('navigation:menuTooltip')}
+              aria-label={t('navigation:menu')}
             >
               <span className="material-symbols-outlined text-base">menu</span>
-              <span className="hidden xl:inline font-bold">Menu</span>
+              <span className="hidden xl:inline font-bold">{t('navigation:menu')}</span>
             </button>
           )}
 
@@ -71,8 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleSidebarCollapse}
               className="p-1.5 rounded-lg text-[#849396] hover:text-[#00e5ff] hover:bg-[#181c24] border border-[#334155]/30 transition-colors shrink-0"
-              title={isSidebarCollapsed ? "Développer le menu latéral" : "Réduire le menu latéral"}
-              aria-label="Basculer le menu latéral"
+              title={isSidebarCollapsed ? t('navigation:expandSidebar') : t('navigation:collapseSidebar')}
+              aria-label={t('navigation:collapseSidebar')}
             >
               <span className="material-symbols-outlined text-base">
                 {isSidebarCollapsed ? 'first_page' : 'menu_open'}
@@ -86,18 +89,18 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Center/Right: Action Group */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           {/* Quick Search Trigger */}
           <button
             onClick={onOpenSearch}
             className="hidden md:flex items-center gap-2 bg-[#181c24] hover:bg-[#262a33] px-3 py-1.5 rounded-lg text-[#bac9cc] border border-[#334155]/50 transition-all text-left group cursor-pointer"
-            title="Rechercher rapidement une certification, une RFC ou une commande"
+            title={t('navigation:items.dashboard.description')}
           >
             <span className="material-symbols-outlined text-base text-[#849396] group-hover:text-[#00e5ff] transition-colors">
               search
             </span>
             <span className="text-xs text-[#bac9cc] truncate">
-              Rechercher...
+              {t('navigation:searchShortcut')}
             </span>
             <kbd className="bg-[#262a33] border border-[#3b494c] px-1.5 py-0.5 rounded text-[10px] font-mono text-[#00daf3] shadow-sm ml-1.5">
               Ctrl+K
@@ -108,13 +111,16 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenSubnetCalc && (
             <button
               onClick={onOpenSubnetCalc}
-              title="Calculatrice de sous-réseaux IP & VLSM"
+              title={t('navigation:cidrCalc')}
               className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 text-xs font-mono transition-all cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">calculate</span>
-              <span className="hidden xl:inline">Calculateur CIDR</span>
+              <span className="hidden xl:inline">{t('navigation:cidrCalc')}</span>
             </button>
           )}
+
+          {/* Language Switcher (FR / EN) */}
+          <LanguageSwitcher variant="header" />
 
           {/* Install App Button (PWA) */}
           <InstallAppButton variant="header" />
@@ -123,8 +129,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={toggleTheme}
             className="p-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#ffd700] border border-[#334155]/40 transition-colors cursor-pointer shrink-0"
-            title={isLight ? "Basculer en Mode Sombre NOC" : "Basculer en Thème Clair"}
-            aria-label="Basculer le thème clair ou sombre"
+            title={isLight ? t('common:theme.switchToDark') : t('common:theme.switchToLight')}
+            aria-label={t('common:theme.switchToLight')}
           >
             <span className="material-symbols-outlined text-base">
               {isLight ? 'dark_mode' : 'light_mode'}
@@ -136,8 +142,8 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenSystemSettings}
               className="relative p-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00daf3] border border-[#334155]/40 transition-colors cursor-pointer shrink-0"
-              title="Paramètres Système & Mises à jour"
-              aria-label="Paramètres Système"
+              title={t('navigation:systemSettings')}
+              aria-label={t('navigation:systemSettings')}
             >
               <span className="material-symbols-outlined text-base">settings_suggest</span>
               {updateAvailable && (
@@ -171,7 +177,7 @@ export const Header: React.FC<HeaderProps> = ({
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>Connexion Google</span>
+              <span>{t('navigation:googleSignIn')}</span>
             </button>
           ) : (
             /* Authenticated Profile Card */
@@ -208,21 +214,21 @@ export const Header: React.FC<HeaderProps> = ({
                       <h4 className="text-sm font-semibold text-[#dfe2ee] truncate">{displayName}</h4>
                       <p className="text-[11px] text-[#00daf3] font-mono truncate">{authUser.email}</p>
                       <span className="text-[10px] text-[#a8ffd2] font-mono">
-                        Firestore Sync Actif
+                        {t('navigation:firestoreSyncActive')}
                       </span>
                     </div>
                   </div>
                   <div className="py-2.5 flex flex-col gap-1.5 text-xs text-[#bac9cc] font-mono">
                     <div className="flex justify-between">
-                      <span>Streak d&apos;étude :</span>
-                      <span className="text-[#a8ffd2]">{streakDays} jours</span>
+                      <span>{t('navigation:studyStreak')}</span>
+                      <span className="text-[#a8ffd2]">{streakDays} {t('common:units.days')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Précision globale :</span>
+                      <span>{t('navigation:globalPrecision')}</span>
                       <span className="text-[#00e5ff]">{precision}%</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Examen cible :</span>
+                      <span>{t('navigation:targetExam')}</span>
                       <span className="text-[#c0c1ff]">{targetExam}</span>
                     </div>
                   </div>
@@ -236,7 +242,7 @@ export const Header: React.FC<HeaderProps> = ({
                       className="w-full py-1.5 rounded bg-[#262a33] text-xs text-[#00e5ff] hover:bg-[#31353e] transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-sm">settings</span>
-                      Gérer mon profil & Sync
+                      {t('navigation:manageProfile')}
                     </button>
                     {onOpenLegalDisclaimer && (
                       <button
@@ -247,7 +253,7 @@ export const Header: React.FC<HeaderProps> = ({
                         className="w-full py-1.5 rounded bg-[#181c24] text-xs text-[#849396] hover:text-[#00e5ff] hover:bg-[#262a33] transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-sm">gavel</span>
-                        Mentions Légales &amp; Indépendance
+                        {t('navigation:legalNotice')}
                       </button>
                     )}
                     <button
@@ -258,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
                       className="w-full py-1.5 rounded bg-[#ffb4ab]/10 text-xs text-[#ffb4ab] hover:bg-[#ffb4ab]/20 transition-colors font-mono flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-sm">logout</span>
-                      Déconnexion
+                      {t('common:actions.cancel')}
                     </button>
                   </div>
                 </div>

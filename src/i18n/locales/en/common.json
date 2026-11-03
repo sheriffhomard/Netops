@@ -1,0 +1,82 @@
+{
+  "appName": "NetOps Academy",
+  "appTagline": "Enterprise NOC & Training Platform",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "search": "Search",
+    "searchPlaceholder": "Search...",
+    "filter": "Filter",
+    "reset": "Reset",
+    "apply": "Apply",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "start": "Start",
+    "resume": "Resume",
+    "retry": "Retry",
+    "open": "Open",
+    "refresh": "Refresh",
+    "details": "Details",
+    "seeMore": "See more",
+    "seeLess": "See less"
+  },
+  "status": {
+    "loading": "Loading...",
+    "operational": "System Operational",
+    "active": "Active",
+    "inactive": "Inactive",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started",
+    "passed": "Passed",
+    "failed": "Failed",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "levels": {
+    "support": "Support / Foundations",
+    "associate": "Associate / CCNA",
+    "professional": "Professional / CCNP",
+    "expert": "Expert / CCIE",
+    "fundamental": "Fundamental",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "units": {
+    "minutes": "min",
+    "seconds": "s",
+    "hours": "h",
+    "days": "days",
+    "questions": "questions",
+    "cards": "cards",
+    "score": "score",
+    "points": "points",
+    "percent": "%"
+  },
+  "theme": {
+    "switchToLight": "Switch to Light Theme",
+    "switchToDark": "Switch to NOC Dark Mode",
+    "light": "Light Theme",
+    "dark": "NOC Dark Mode"
+  },
+  "language": {
+    "select": "Language",
+    "fr": "Français",
+    "en": "English",
+    "switchPrompt": "Switch language (FR / EN)"
+  },
+  "pwa": {
+    "install": "Install app",
+    "installDesktop": "Install",
+    "installed": "App installed",
+    "installTooltip": "Install NetOps on your home screen (Mobile or Desktop)"
+  }
+}

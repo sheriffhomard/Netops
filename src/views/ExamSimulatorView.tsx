@@ -4,6 +4,7 @@ import { generateFullExamQuestions } from '../data/mockData';
 import { SubnetCalculatorModal } from '../components/SubnetCalculatorModal';
 import { useAuth } from '../context/AuthContext';
 import { Tooltip } from '../components/Tooltip';
+import { useTranslation } from 'react-i18next';
 import confetti from 'canvas-confetti';
 
 interface ExamSimulatorViewProps {
@@ -15,6 +16,8 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   onNavigate,
   examCode = '350-401 ENCOR',
 }) => {
+  const { t, i18n } = useTranslation(['common', 'exams']);
+  const isEn = i18n.language?.startsWith('en');
   const { user, saveExamResult } = useAuth();
   const [questions, setQuestions] = useState<ExamQuestion[]>(() => generateFullExamQuestions());
 
@@ -121,14 +124,14 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00363d] text-[#00e5ff] text-xs font-mono font-semibold border border-[#00e5ff]/30">
             <span className="material-symbols-outlined text-sm">security</span>
-            PROCTOR OFFICIEL
+            {isEn ? 'OFFICIAL PROCTOR' : 'PROCTOR OFFICIEL'}
           </span>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-[#dfe2ee] truncate">
-              Cisco CCNP Enterprise {examCode} (Test #4)
+              Cisco CCNP Enterprise {examCode} {isEn ? '(Mock #4)' : '(Test #4)'}
             </span>
             <span className="text-[11px] text-[#bac9cc] font-mono">
-              Simulation d&apos;examen officiel • Environnement sous surveillance
+              {isEn ? 'Official exam simulation • Proctored environment' : 'Simulation d\'examen officiel • Environnement sous surveillance'}
             </span>
           </div>
         </div>
@@ -149,26 +152,26 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
 
           <button
             onClick={() => setShowSubnetCalc(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#262a33] text-[#00daf3] hover:bg-[#31353e] text-xs font-mono border border-[#334155] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#262a33] text-[#00daf3] hover:bg-[#31353e] text-xs font-mono border border-[#334155] transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined text-sm">calculate</span>
-            <span>Calculateur VLSM</span>
+            <span>{t('navigation:cidrCalc')}</span>
           </button>
 
           <button
             onClick={() => setIsPaused(!isPaused)}
-            className="p-1.5 rounded-lg bg-[#262a33] text-[#bac9cc] hover:text-[#dfe2ee] hover:bg-[#31353e] border border-[#334155] transition-colors"
-            title={isPaused ? 'Reprendre le test' : 'Mettre en pause'}
+            className="p-1.5 rounded-lg bg-[#262a33] text-[#bac9cc] hover:text-[#dfe2ee] hover:bg-[#31353e] border border-[#334155] transition-colors cursor-pointer"
+            title={isPaused ? t('exams:resume') : t('exams:pause')}
           >
             <span className="material-symbols-outlined text-lg">
               {isPaused ? 'play_arrow' : 'pause'}
             </span>
           </button>
 
-          <Tooltip content="Consignes de la simulation : 100 questions, 120 minutes. Utilisez le bouton Marquer pour réviser ultérieurement. Seuil d'admission officiel fixé à 825 / 1000 points.">
+          <Tooltip content={isEn ? "Simulation guidelines: 100 questions, 120 minutes. Use the Flag button to review later. Passing score: 825 / 1000 points." : "Consignes de la simulation : 100 questions, 120 minutes. Utilisez le bouton Marquer pour réviser ultérieurement. Seuil d'admission officiel fixé à 825 / 1000 points."}>
             <button
               className="p-1.5 rounded-lg bg-[#262a33] text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#31353e] border border-[#334155] transition-colors cursor-help"
-              title="Aide & Directives"
+              title={isEn ? "Help & Guidelines" : "Aide & Directives"}
             >
               <span className="material-symbols-outlined text-lg">help</span>
             </button>
@@ -604,19 +607,19 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
           className="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#262a33] disabled:opacity-40 text-xs font-mono text-[#dfe2ee] hover:bg-[#31353e] transition-colors flex items-center justify-center gap-2 border border-[#334155]"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span>
-          <span>Question Précédente</span>
+          <span>{t('exams:previous')}</span>
         </button>
 
         <div className="text-[11px] font-mono text-[#849396] text-center hidden md:block">
-          Sauvegardé automatiquement à l&apos;instant • Local Storage Sync
+          {isEn ? 'Automatically saved just now • Local Storage Sync' : 'Sauvegardé automatiquement à l\'instant • Local Storage Sync'}
         </div>
 
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <button
             onClick={() => setShowSubmitModal(true)}
-            className="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#93000a]/40 hover:bg-[#93000a]/70 text-[#ffb4ab] border border-[#ffb4ab]/40 text-xs font-mono transition-all"
+            className="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#93000a]/40 hover:bg-[#93000a]/70 text-[#ffb4ab] border border-[#ffb4ab]/40 text-xs font-mono transition-all cursor-pointer"
           >
-            Terminer &amp; Soumettre
+            {t('exams:finishExam')}
           </button>
 
           <button
@@ -627,9 +630,9 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
               }
             }}
             disabled={currentIndex === questions.length - 1}
-            className="w-full sm:w-auto px-6 py-2 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:brightness-110 active:scale-95 transition-all shadow-[0_0_12px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-2 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:brightness-110 active:scale-95 transition-all shadow-[0_0_12px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>Question Suivante</span>
+            <span>{t('exams:next')}</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>

@@ -1,0 +1,17 @@
+{
+  "general": "Une erreur inattendue est survenue. Veuillez réessayer.",
+  "notFound": "Élément introuvable.",
+  "network": "Problème de connexion réseau. Mode hors ligne activé.",
+  "auth": {
+    "loginFailed": "Échec de l'authentification Google.",
+    "syncFailed": "Impossible de synchroniser avec Firestore.",
+    "unauthorized": "Veuillez vous connecter pour enregistrer vos progrès."
+  },
+  "exam": {
+    "noAnswerSelected": "Veuillez sélectionner au moins une option.",
+    "timeExpired": "Le temps imparti pour cet examen est écoulé."
+  },
+  "flashcards": {
+    "emptyDeck": "Aucune fiche ne correspond à vos filtres actuels."
+  }
+}

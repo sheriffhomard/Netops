@@ -4,6 +4,7 @@ import { ViewMode } from '../types';
 import { cloudGlossaryTerms } from '../data/cloudData';
 import { useAuth } from '../context/AuthContext';
 import { Tooltip } from '../components/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 
 interface FlashcardsViewProps {
@@ -30,6 +31,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
   onOpenCloudArticle,
 }) => {
   const { user, userFlashcards, createUserFlashcard } = useAuth();
+  const { t, i18n } = useTranslation(['common', 'flashcards', 'navigation']);
+  const isEn = i18n.language?.startsWith('en');
 
   // Load initial cards merged with custom cards from localStorage
   const [cards, setCards] = useState<Flashcard[]>(() => {
@@ -369,7 +372,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
       : `${activeCard.frontTitle}. ${activeCard.frontPrompt}`;
 
     const utterance = new SpeechSynthesisUtterance(textToRead);
-    utterance.lang = 'fr-FR';
+    utterance.lang = isEn ? 'en-US' : 'fr-FR';
     utterance.rate = 1.0;
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
@@ -605,18 +608,18 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="text-xs font-mono font-bold uppercase tracking-widest px-2.5 py-1 rounded bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
-              Écran Dédié Flashcards
+              {isEn ? 'Dedicated Flashcards Cockpit' : 'Écran Dédié Flashcards'}
             </span>
             <span className="text-xs font-mono text-[#a8ffd2] flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#4edea3] animate-pulse" />
-              Moteur SRS Répétition Espacée Leitner
+              {isEn ? 'Leitner Spaced Repetition SRS Engine' : 'Moteur SRS Répétition Espacée Leitner'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#dfe2ee] tracking-tight">
-            Flashcards &amp; Mémos Certifications
+            {t('flashcards:title')}
           </h1>
           <p className="text-xs sm:text-sm text-[#bac9cc]">
-            Mémorisation réflexe des standards RFC, protocoles, commandes CLI et pièges d'examen pour Cisco, Palo Alto, CompTIA &amp; Juniper.
+            {t('flashcards:subtitle')}
           </p>
         </div>
 
@@ -625,13 +628,13 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
           <button
             onClick={() => onNavigate?.('glossaire-cloud')}
             className="px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 bg-[#00363d]/70 hover:bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 shadow-[0_0_12px_rgba(0,229,255,0.2)]"
-            title="Consulter l'Encyclopédie et Glossaire Cloud"
+            title={t('navigation:items.cloud.description')}
           >
             <span className="material-symbols-outlined text-base">cloud_sync</span>
-            <span>Encyclopédie Cloud</span>
+            <span>{t('navigation:items.cloud.label')}</span>
           </button>
 
-          <Tooltip content="Affichage immersif carte par carte avec retournement 3D, chronomètre et notation Leitner.">
+          <Tooltip content={isEn ? "Immersive card-by-card mode with 3D flip, timer, and Leitner rating." : "Affichage immersif carte par carte avec retournement 3D, chronomètre et notation Leitner."}>
             <button
               onClick={() => setDisplayMode('focus')}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -641,11 +644,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="material-symbols-outlined text-base">flip</span>
-              <span>Mode Focus 3D</span>
+              <span>{t('flashcards:modes.focus')}</span>
             </button>
           </Tooltip>
 
-          <Tooltip content="Vue d'ensemble en grille de toutes les fiches avec filtres par fournisseur et domaine.">
+          <Tooltip content={isEn ? "Grid overview of all flashcards with filters by vendor and domain." : "Vue d'ensemble en grille de toutes les fiches avec filtres par fournisseur et domaine."}>
             <button
               onClick={() => setDisplayMode('grid')}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -655,11 +658,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="material-symbols-outlined text-base">grid_view</span>
-              <span>Répertoire ({cards.length})</span>
+              <span>{t('flashcards:modes.grid')} ({cards.length})</span>
             </button>
           </Tooltip>
 
-          <Tooltip content="Défi intensif de 120 secondes chrono pour tester votre réactivité sur un maximum de questions.">
+          <Tooltip content={isEn ? "Intensive 120-second blitz sprint to test reflex accuracy." : "Défi intensif de 120 secondes chrono pour tester votre réactivité sur un maximum de questions."}>
             <button
               onClick={handleStartBlitz}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -669,11 +672,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="material-symbols-outlined text-base">bolt</span>
-              <span>Chrono-Blitz 2 min</span>
+              <span>{t('flashcards:modes.blitz')}</span>
             </button>
           </Tooltip>
 
-          <Tooltip content="Rédigez et ajoutez vos propres fiches mémo personnalisées avec synchronisation cloud.">
+          <Tooltip content={isEn ? "Write and add your own custom flashcards with cloud sync." : "Rédigez et ajoutez vos propres fiches mémo personnalisées avec synchronisation cloud."}>
             <button
               onClick={() => setDisplayMode('create')}
               className={`px-3.5 py-2 rounded-xl text-xs font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
@@ -683,7 +686,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="material-symbols-outlined text-base">add_card</span>
-              <span>Créer Carte</span>
+              <span>{t('flashcards:modes.create')}</span>
             </button>
           </Tooltip>
         </div>
@@ -820,7 +823,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                   : 'text-[#849396] hover:text-[#dfe2ee]'
               }`}
             >
-              Toutes ({filteredCards.length})
+              {isEn ? 'All' : 'Toutes'} ({filteredCards.length})
             </button>
             <button
               onClick={() => setStatusFilter('review')}
@@ -831,7 +834,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#ffb4ab]" />
-              À revoir ({reviewIds.size})
+              {isEn ? 'Review' : 'À revoir'} ({reviewIds.size})
             </button>
             <button
               onClick={() => setStatusFilter('mastered')}
@@ -842,7 +845,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3]" />
-              Maîtrisées ({masteredIds.size})
+              {isEn ? 'Mastered' : 'Maîtrisées'} ({masteredIds.size})
             </button>
             <button
               onClick={() => setStatusFilter('favorites')}
@@ -853,7 +856,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               }`}
             >
               <span className="material-symbols-outlined text-xs text-[#ffcc00]">star</span>
-              Favoris ({favoriteIds.size})
+              {isEn ? 'Favorites' : 'Favoris'} ({favoriteIds.size})
             </button>
           </div>
         </div>
@@ -1150,8 +1153,8 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
 
                   {/* Card Bottom Hint Bar */}
                   <div className="pt-4 border-t border-[#334155]/40 flex items-center justify-between text-[11px] font-mono text-[#849396]">
-                    <span>Appuyez sur [Espace] ou cliquez pour retourner</span>
-                    <span className="hidden sm:inline">Raccourcis : [←] Précédent • [→] Suivant</span>
+                    <span>{isEn ? 'Press [Space] or click to flip' : 'Appuyez sur [Espace] ou cliquez pour retourner'}</span>
+                    <span className="hidden sm:inline">{isEn ? 'Shortcuts: [←] Prev • [→] Next' : 'Raccourcis : [←] Précédent • [→] Suivant'}</span>
                   </div>
                 </div>
               )}
@@ -1161,49 +1164,49 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={handlePrev}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#0f131c] hover:bg-[#262a33] text-[#dfe2ee] border border-[#334155]/40 font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#0f131c] hover:bg-[#262a33] text-[#dfe2ee] border border-[#334155]/40 font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <span className="material-symbols-outlined text-base">arrow_back</span>
-                    <span>Précédente</span>
+                    <span>{t('common:actions.previous')}</span>
                   </button>
                   <button
                     onClick={handleNext}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#0f131c] hover:bg-[#262a33] text-[#dfe2ee] border border-[#334155]/40 font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                    className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#0f131c] hover:bg-[#262a33] text-[#dfe2ee] border border-[#334155]/40 font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <span>Suivante</span>
+                    <span>{t('common:actions.next')}</span>
                     <span className="material-symbols-outlined text-base">arrow_forward</span>
                   </button>
                 </div>
 
                 {/* Rating Level buttons with Tooltips */}
                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <Tooltip content="Boîte Leitner 1 : La notion sera replacée dans la file d'attente pour être révisée dans 10 minutes.">
+                  <Tooltip content={isEn ? "Leitner Box 1: Concept returned to review queue in 10 minutes." : "Boîte Leitner 1 : La notion sera replacée dans la file d'attente pour être révisée dans 10 minutes."}>
                     <button
                       onClick={() => handleRate('review')}
                       className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#3d1214] hover:bg-[#521b1e] text-[#ffb4ab] border border-[#ffb4ab]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
                     >
                       <span className="w-2 h-2 rounded-full bg-[#ffb4ab]" />
-                      <span>[1] À revoir (10 min)</span>
+                      <span>{isEn ? '[1] Review (10 min)' : '[1] À revoir (10 min)'}</span>
                     </button>
                   </Tooltip>
 
-                  <Tooltip content="Boîte Leitner 2 : Réponse correcte mais hésitante. La carte sera représentée demain.">
+                  <Tooltip content={isEn ? "Leitner Box 2: Correct answer with hesitation. Scheduled for tomorrow." : "Boîte Leitner 2 : Réponse correcte mais hésitante. La carte sera représentée demain."}>
                     <button
                       onClick={() => handleRate('good')}
                       className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#2e2600] hover:bg-[#3d3300] text-[#ffcc00] border border-[#ffcc00]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm cursor-pointer"
                     >
                       <span className="w-2 h-2 rounded-full bg-[#ffcc00]" />
-                      <span>[2] Correct (Demain)</span>
+                      <span>{isEn ? '[2] Good (Tomorrow)' : '[2] Correct (Demain)'}</span>
                     </button>
                   </Tooltip>
 
-                  <Tooltip content="Boîte Leitner 3-5 : Réponse réflexe parfaite ! L'intervalle de révision passe à 4 jours pour un ancrage définitif.">
+                  <Tooltip content={isEn ? "Leitner Box 3-5: Instant reflex! Spaced interval expanded to 4 days." : "Boîte Leitner 3-5 : Réponse réflexe parfaite ! L'intervalle de révision passe à 4 jours pour un ancrage définitif."}>
                     <button
                       onClick={() => handleRate('mastered')}
                       className="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-[#003822] hover:bg-[#004d2f] text-[#4edea3] border border-[#4edea3]/40 font-mono text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(78,222,163,0.3)] cursor-pointer"
                     >
                       <span className="w-2 h-2 rounded-full bg-[#4edea3]" />
-                      <span>[3] Maîtrisé (4 jours)</span>
+                      <span>{isEn ? '[3] Mastered (4 days)' : '[3] Maîtrisé (4 jours)'}</span>
                     </button>
                   </Tooltip>
                 </div>

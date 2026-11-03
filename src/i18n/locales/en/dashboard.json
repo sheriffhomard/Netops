@@ -1,0 +1,48 @@
+{
+  "resumeSession": {
+    "title": "Resume my session",
+    "lastActivity": "Last active 2h ago",
+    "currentModule": "Current module:",
+    "moduleDescription": "BGP Routing & L2 Spanning-Tree Convergence. You were reviewing eBGP/iBGP path selection rules and MED / Local-Preference attributes.",
+    "globalProgress": "Overall progress:",
+    "nextMilestone": "Next milestone:",
+    "nextMilestoneValue": "Practice Exam #4",
+    "resumeExam": "Resume mock exam",
+    "reviewCards": "Review module flashcards"
+  },
+  "srs": {
+    "title": "Spaced Repetition (SRS)",
+    "tooltip": "Leitner algorithm: failed cards are reviewed soon, while mastered cards space out over time to build solid long-term memory.",
+    "readyToReview": "Cards due for review",
+    "priorityCards": "priority cards",
+    "startReview": "Start session",
+    "blitzTitle": "2-min Blitz Sprint",
+    "blitzDesc": "Rapid-fire memorization of RFCs, protocol ports, and core metrics under timed pressure.",
+    "startBlitz": "Launch Blitz",
+    "boxStats": "Leitner Box breakdown"
+  },
+  "radar": {
+    "title": "Weakness Radar & Critical Domains",
+    "tooltip": "Diagnostics calculated from your latest exam simulations and practice drills. Prioritize topics under 70%.",
+    "viewAll": "View detailed analysis",
+    "strengthen": "Strengthen domain",
+    "critical": "Critical",
+    "medium": "Consolidate",
+    "strong": "Strong",
+    "mastered": "Mastered"
+  },
+  "drills": {
+    "title": "Daily Drills & Technical Challenges",
+    "tooltip": "Targeted micro-exercises to solidify configuration and troubleshooting reflexes.",
+    "startDrill": "Launch drill",
+    "timeLimit": "Estimated time"
+  },
+  "history": {
+    "title": "Recent Simulation History",
+    "simulation": "Simulation",
+    "date": "Date",
+    "score": "Score",
+    "status": "Result",
+    "viewReport": "View report"
+  }
+}

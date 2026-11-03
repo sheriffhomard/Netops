@@ -1,0 +1,22 @@
+{
+  "title": "Hands-On Workshops & Labs",
+  "subtitle": "Guided drills, exact syntax conformity validation, troubleshooting scenarios, and interactive network topologies.",
+  "activeDevice": "Active equipment",
+  "topology": "Network Topology & Diagram",
+  "tasks": "Objectives & Validation Steps",
+  "taskCompleted": "Step verified",
+  "taskPending": "Pending verification",
+  "validateTask": "Check configuration",
+  "passScore": "Passing score",
+  "meshLatency": "Mesh latency",
+  "resetTopology": "Reset topology",
+  "typingChallenge": {
+    "title": "Exact Syntax Drill (Blind)",
+    "description": "Enter the exact IOS-XE CLI command at the specified device prompt.",
+    "submitCommand": "Validate command (Enter)",
+    "placeholder": "Type the exact command...",
+    "showHint": "Show technical hint",
+    "accepted": "Command accepted!",
+    "rejected": "Syntax error or missing parameter. Try again!"
+  }
+}

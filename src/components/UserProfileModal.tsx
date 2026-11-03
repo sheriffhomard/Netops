@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -12,6 +14,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   onClose,
   onOpenLegalDisclaimer,
 }) => {
+  const { t, i18n } = useTranslation(['common', 'navigation', 'settings']);
+  const isEn = i18n.language === 'en';
   const { user, userProfile, signIn, signOut, updateProfile, examResults, userFlashcards } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(userProfile?.displayName || '');
@@ -50,15 +54,20 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           <div className="flex items-center gap-2.5">
             <span className="material-symbols-outlined text-[#00e5ff]">account_circle</span>
             <h3 className="font-semibold text-base font-mono text-[#00e5ff] uppercase tracking-wide">
-              {user ? 'Profil Ingénieur & Sync Firestore' : 'Authentification Firebase'}
+              {user
+                ? (isEn ? 'Network Engineer Profile & Firestore Sync' : 'Profil Ingénieur & Sync Firestore')
+                : (isEn ? 'Firebase Authentication' : 'Authentification Firebase')}
             </h3>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33] transition-colors"
-          >
-            <span className="material-symbols-outlined text-xl">close</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="compact" />
+            <button
+              onClick={onClose}
+              className="p-1 rounded-lg text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33] transition-colors"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+          </div>
         </div>
 
         {/* Body */}
@@ -71,12 +80,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
               <div className="flex flex-col gap-1.5 max-w-md">
                 <h4 className="text-lg font-semibold text-[#dfe2ee]">
-                  Synchronisez votre progression réseau
+                  {isEn ? 'Synchronize your network engineering progress' : 'Synchronisez votre progression réseau'}
                 </h4>
                 <p className="text-xs text-[#bac9cc] leading-relaxed">
-                  Connectez-vous avec votre compte Google pour synchroniser vos scores d&apos;examen,
-                  vos flashcards créées et vos statistiques d&apos;étude en temps réel sur la base
-                  Google Cloud Firestore.
+                  {isEn
+                    ? 'Sign in with your Google account to sync your exam simulations, SRS flashcard progress, and live study metrics with Google Cloud Firestore across all devices.'
+                    : "Connectez-vous avec votre compte Google pour synchroniser vos scores d'examen, vos flashcards créées et vos statistiques d'étude en temps réel sur la base Google Cloud Firestore."}
                 </p>
               </div>
 
@@ -105,7 +114,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                     />
                   </svg>
-                  <span>Connexion avec Google</span>
+                  <span className="text-neutral-900 font-semibold">{isEn ? 'Sign in with Google' : 'Connexion avec Google'}</span>
                 </button>
                 <div className="flex items-center gap-2 justify-center text-[11px] text-[#849396] font-mono">
                   <span className="w-2 h-2 rounded-full bg-[#5be9ad]" />
@@ -130,31 +139,31 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h4 className="text-base font-semibold text-[#dfe2ee] truncate">
-                      {userProfile?.displayName || user.displayName || 'Alex (Ingénieur Réseau)'}
+                      {userProfile?.displayName || user.displayName || (isEn ? 'Alex (Network Engineer)' : 'Alex (Ingénieur Réseau)')}
                     </h4>
                     <span
-                      title="Email vérifié via Google"
+                      title={isEn ? 'Verified Google identity' : 'Email vérifié via Google'}
                       className="px-1.5 py-0.5 rounded text-[10px] bg-[#00363d] text-[#00e5ff] font-mono border border-[#00e5ff]/30 flex items-center gap-1"
                     >
                       <span className="material-symbols-outlined text-xs">verified</span>
-                      Vérifié
+                      {isEn ? 'Verified' : 'Vérifié'}
                     </span>
                   </div>
                   <p className="text-xs text-[#bac9cc] font-mono truncate mt-0.5">{user.email}</p>
-                  <p className="text-xs text-[#00daf3] mt-1 font-medium">{userProfile?.role || 'Architecte Réseau & Cloud'}</p>
+                  <p className="text-xs text-[#00daf3] mt-1 font-medium">{userProfile?.role || (isEn ? 'Network & Cloud Architect' : 'Architecte Réseau & Cloud')}</p>
                 </div>
                 <button
                   onClick={() => setIsEditing(!isEditing)}
                   className="px-2.5 py-1.5 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] transition-colors"
                 >
-                  {isEditing ? 'Annuler' : 'Modifier'}
+                  {isEditing ? (isEn ? 'Cancel' : 'Annuler') : (isEn ? 'Edit' : 'Modifier')}
                 </button>
               </div>
 
               {saveSuccess && (
                 <div className="p-3 rounded-lg bg-[#00363d]/60 border border-[#00e5ff]/40 text-xs text-[#a8ffd2] font-mono flex items-center gap-2">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
-                  Profil mis à jour et synchronisé avec Firestore !
+                  {isEn ? 'Profile updated and synchronized with Firestore!' : 'Profil mis à jour et synchronisé avec Firestore !'}
                 </div>
               )}
 
@@ -162,7 +171,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {isEditing ? (
                 <form onSubmit={handleSave} className="flex flex-col gap-4 p-4 rounded-xl bg-[#12151c] border border-[#334155]">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-[#bac9cc]">Nom d&apos;affichage</label>
+                    <label className="text-xs font-mono text-[#bac9cc]">
+                      {isEn ? 'Display name' : "Nom d'affichage"}
+                    </label>
                     <input
                       type="text"
                       value={displayName}
@@ -172,7 +183,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-[#bac9cc]">Rôle / Titre professionnel</label>
+                    <label className="text-xs font-mono text-[#bac9cc]">
+                      {isEn ? 'Professional role / title' : 'Rôle / Titre professionnel'}
+                    </label>
                     <input
                       type="text"
                       value={role}
@@ -182,7 +195,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-[#bac9cc]">Examen cible prioritaire</label>
+                    <label className="text-xs font-mono text-[#bac9cc]">
+                      {isEn ? 'Primary target exam' : 'Examen cible prioritaire'}
+                    </label>
                     <select
                       value={targetExam}
                       onChange={(e) => setTargetExam(e.target.value)}
@@ -192,6 +207,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <option value="300-410 ENARSI">Cisco CCNP Routing & Switching 300-410 ENARSI</option>
                       <option value="350-701 SCOR">Cisco CCNP Security 350-701 SCOR</option>
                       <option value="200-301 CCNA">Cisco CCNA 200-301 All Domains</option>
+                      <option value="PCNSE">Palo Alto PCNSE PAN-OS 11.x</option>
+                      <option value="FCP-FortiGate">Fortinet FCP FortiGate 7.4</option>
                       <option value="AWS SAA-C03">AWS Certified Solutions Architect</option>
                       <option value="Azure AZ-104">Microsoft Azure Administrator AZ-104</option>
                     </select>
@@ -203,14 +220,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       onClick={() => setIsEditing(false)}
                       className="px-3 py-1.5 rounded-lg bg-[#262a33] text-xs text-[#bac9cc] hover:bg-[#31353e]"
                     >
-                      Annuler
+                      {isEn ? 'Cancel' : 'Annuler'}
                     </button>
                     <button
                       type="submit"
                       disabled={isSaving}
                       className="px-4 py-1.5 rounded-lg bg-[#00e5ff] text-neutral-900 font-semibold text-xs hover:bg-[#00daf3] transition-colors"
                     >
-                      {isSaving ? 'Enregistrement...' : 'Enregistrer sur Firestore'}
+                      {isSaving ? (isEn ? 'Saving...' : 'Enregistrement...') : (isEn ? 'Save to Firestore' : 'Enregistrer sur Firestore')}
                     </button>
                   </div>
                 </form>
@@ -219,25 +236,33 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {/* Firestore Real-time telemetry metrics */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 rounded-xl bg-[#12151c] border border-[#334155]/40 flex flex-col gap-1">
-                  <span className="text-[10px] text-[#849396] font-mono uppercase">Streak</span>
+                  <span className="text-[10px] text-[#849396] font-mono uppercase">
+                    {isEn ? 'Study Streak' : 'Streak'}
+                  </span>
                   <span className="text-base font-semibold text-[#a8ffd2] font-mono">
-                    {userProfile?.streakDays || 14}j
+                    {userProfile?.streakDays || 14}{isEn ? 'd' : 'j'}
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-[#12151c] border border-[#334155]/40 flex flex-col gap-1">
-                  <span className="text-[10px] text-[#849396] font-mono uppercase">Précision</span>
+                  <span className="text-[10px] text-[#849396] font-mono uppercase">
+                    {isEn ? 'Accuracy' : 'Précision'}
+                  </span>
                   <span className="text-base font-semibold text-[#00e5ff] font-mono">
                     {userProfile?.precisionGlobal || 86.5}%
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-[#12151c] border border-[#334155]/40 flex flex-col gap-1">
-                  <span className="text-[10px] text-[#849396] font-mono uppercase">Flashcards Firestore</span>
+                  <span className="text-[10px] text-[#849396] font-mono uppercase">
+                    {isEn ? 'Firestore Cards' : 'Flashcards Firestore'}
+                  </span>
                   <span className="text-base font-semibold text-[#c0c1ff] font-mono">
                     {userFlashcards.length}
                   </span>
                 </div>
                 <div className="p-3 rounded-xl bg-[#12151c] border border-[#334155]/40 flex flex-col gap-1">
-                  <span className="text-[10px] text-[#849396] font-mono uppercase">Simulations Sauvegardées</span>
+                  <span className="text-[10px] text-[#849396] font-mono uppercase">
+                    {isEn ? 'Saved Exams' : 'Simulations Sauvegardées'}
+                  </span>
                   <span className="text-base font-semibold text-[#5be9ad] font-mono">
                     {examResults.length}
                   </span>
@@ -248,7 +273,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {examResults.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <h5 className="text-xs font-mono text-[#00daf3] uppercase tracking-wider">
-                    Historique des examens récents (Firestore)
+                    {isEn ? 'Recent exam history (Firestore)' : 'Historique des examens récents (Firestore)'}
                   </h5>
                   <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
                     {examResults.slice(0, 5).map((r) => (
@@ -269,7 +294,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             {r.score}/1000 ({r.passed ? 'PASS' : 'FAIL'})
                           </span>
                           <span className="text-[10px] text-[#849396]">
-                            {new Date(r.completedAt).toLocaleDateString('fr-FR')}
+                            {new Date(r.completedAt).toLocaleDateString(isEn ? 'en-US' : 'fr-FR')}
                           </span>
                         </div>
                       </div>
@@ -281,16 +306,20 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               {/* Firestore Technical Connectivity Info */}
               <div className="p-3 rounded-xl bg-[#0a0e16] border border-[#334155]/30 flex flex-col gap-1.5 text-[11px] font-mono text-[#849396]">
                 <div className="flex items-center justify-between">
-                  <span>Instance Firestore :</span>
-                  <span className="text-[#a8ffd2] font-semibold">Active & Sécurisée</span>
+                  <span>{isEn ? 'Firestore Instance:' : 'Instance Firestore :'}</span>
+                  <span className="text-[#a8ffd2] font-semibold">
+                    {isEn ? 'Live & Secured' : 'Active & Sécurisée'}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Identifiant UID :</span>
+                  <span>{isEn ? 'UID Identifier:' : 'Identifiant UID :'}</span>
                   <span className="text-[#00daf3] truncate max-w-[200px]">{user.uid}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Règles ABAC :</span>
-                  <span className="text-[#dfe2ee]">Pilliers Zéro-Trust Actifs</span>
+                  <span>{isEn ? 'Security Rules:' : 'Règles ABAC :'}</span>
+                  <span className="text-[#dfe2ee]">
+                    {isEn ? 'Active Zero-Trust Rules' : 'Pilliers Zéro-Trust Actifs'}
+                  </span>
                 </div>
               </div>
 
@@ -299,7 +328,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#181c24] border border-[#334155]/40 text-xs">
                   <span className="text-[#849396] font-mono flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
-                    Cadre Légal &amp; Indépendance
+                    {isEn ? 'Legal Notice & Independence' : 'Cadre Légal & Indépendance'}
                   </span>
                   <button
                     type="button"
@@ -309,7 +338,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     }}
                     className="text-[#00e5ff] hover:underline font-mono text-[11px] font-semibold"
                   >
-                    Consulter
+                    {isEn ? 'View Disclaimer' : 'Consulter'}
                   </button>
                 </div>
               )}
@@ -324,13 +353,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#ffb4ab]/10 hover:bg-[#ffb4ab]/20 text-[#ffb4ab] border border-[#ffb4ab]/30 text-xs font-mono transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm">logout</span>
-                  Se déconnecter
+                  {isEn ? 'Sign out' : 'Se déconnecter'}
                 </button>
                 <button
                   onClick={onClose}
                   className="px-4 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#dfe2ee] transition-colors"
                 >
-                  Fermer
+                  {isEn ? 'Close' : 'Fermer'}
                 </button>
               </div>
             </div>

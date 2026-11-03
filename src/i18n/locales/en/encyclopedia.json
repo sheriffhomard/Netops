@@ -1,0 +1,37 @@
+{
+  "title": "Cloud Encyclopedia & Hybrid Topologies",
+  "subtitle": "Architectural knowledge base: multi-cloud interconnects, ASCII routing diagrams, and service equivalence matrix.",
+  "tabs": {
+    "encyclopedia": "Architecture Articles",
+    "glossary": "Technical Glossary (50+)",
+    "matrix": "Multi-Cloud Matrix"
+  },
+  "searchPlaceholder": "Search a concept, service, or RFC (e.g., Direct Connect, ExpressRoute, BGP, VPC Peering)...",
+  "categories": {
+    "all": "All categories",
+    "network": "Networking & Interconnect",
+    "compute": "Compute & Containers",
+    "storage": "Storage & Data",
+    "security": "Security, IAM & Compliance",
+    "devops": "DevOps, CI/CD & IaC",
+    "architecture": "Architecture & FinOps",
+    "multicloud": "Multi-Cloud & Hybrid"
+  },
+  "article": {
+    "readTime": "Read time",
+    "level": "Level",
+    "overview": "Architectural overview",
+    "keyTakeaways": "Key takeaways for the exam",
+    "practiceCards": "Practice on the {{count}} associated flashcards",
+    "relatedTerms": "Related glossary terms",
+    "comparison": "Multi-Cloud Feature Comparison"
+  },
+  "matrix": {
+    "title": "Comparative Cloud Service Matrix",
+    "concept": "Concept & Domain",
+    "aws": "AWS (Amazon)",
+    "azure": "Microsoft Azure",
+    "gcp": "Google Cloud",
+    "cncf": "Standard / On-Premises"
+  }
+}

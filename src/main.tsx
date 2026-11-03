@@ -6,6 +6,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { UpdateProvider } from './context/UpdateContext';
 import { PWAProvider } from './context/PWAContext';
 import './index.css';
+import './i18n';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

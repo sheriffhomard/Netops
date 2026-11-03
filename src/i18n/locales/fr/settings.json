@@ -1,0 +1,85 @@
+{
+  "system": {
+    "title": "Paramètres Système",
+    "subtitle": "Gestion des versions, mises à jour en arrière-plan et apparence",
+    "versionInfo": "Informations de Version & Mises à Jour",
+    "currentVersion": "Version actuelle",
+    "releaseDate": "Date de version",
+    "lastChecked": "Dernière vérification",
+    "checking": "Vérification en cours...",
+    "updating": "Application de la mise à jour...",
+    "updateAvailable": "Mise à jour disponible",
+    "upToDate": "Système Opérationnel",
+    "btnCheckUpdates": "Vérifier les mises à jour",
+    "btnForceUpdate": "Forcer la mise à jour",
+    "autoUpdateLabel": "Mises à jour automatiques en arrière-plan",
+    "autoUpdateDesc": "Vérifie régulièrement l'état de l'application et actualise les caches de manière transparente.",
+    "appearance": "Apparence & Thème Visuel",
+    "themeLight": "Thème Clair",
+    "themeLightDesc": "Interface contrastée sur fond blanc et gris clair pour environnement lumineux.",
+    "themeDark": "Mode Sombre NOC",
+    "themeDarkDesc": "Ambiance cybersécurité sombre (#0f131c) reposante pour les longues sessions.",
+    "language": "Langue de l'interface & Contenus",
+    "languageDesc": "Basculez instantanément entre le français et l'anglais sans perte d'état.",
+    "legalNoticeBtn": "Consulter les Mentions Légales & l'Avertissement d'Indépendance"
+  },
+  "onboarding": {
+    "title": "NetOps Academy",
+    "badge": "Onboarding & Cadre Légal",
+    "stepOf": "Étape {{step}} sur 4 — {{title}}",
+    "steps": {
+      "welcome": "Bienvenue",
+      "legal": "Mentions Légales & Indépendance",
+      "target": "Objectif d'Étude",
+      "validation": "Validation"
+    },
+    "welcome": {
+      "heading": "Plateforme d'Entraînement Réseau & Cybersécurité",
+      "intro": "Bienvenue sur NetOps Academy, votre environnement dédié à la préparation intensive des certifications réseau (Cisco, Palo Alto, Fortinet, CompTIA, Juniper).",
+      "featureCards": "2 900+ Flashcards SRS avec répétition espacée Leitner",
+      "featureTerminal": "Ateliers & Terminal interactif CLI IOS-XE",
+      "featureCloud": "Encyclopédie & Matrice comparative Multi-Cloud",
+      "disclaimerNotice": "Avant d'accéder à la plateforme, veuillez prendre connaissance des mentions légales relatives à l'indépendance de ce service vis-à-vis des éditeurs officiels."
+    },
+    "legal": {
+      "bannerTitle": "Avertissement Légal & Absence d'Affiliation Officielle",
+      "bannerText": "NetOps Academy est une initiative éducative strictement indépendante. Veuillez lire attentivement les clauses de non-affiliation et de propriété intellectuelle ci-dessous.",
+      "clause1Title": "1. Absence totale d'affiliation et de partenariat commercial",
+      "clause1Text": "NetOps Academy et ses auteurs ne sont affiliés, associés, approuvés, sponsorisés, agréés, ni officiellement liés d'aucune manière avec les sociétés et organismes émetteurs des certifications professionnelles référencées sur cette plateforme, incluant notamment Cisco Systems, Palo Alto Networks, Fortinet, CompTIA, Juniper Networks, AWS et Microsoft.",
+      "clause2Title": "2. Marques déposées et propriété intellectuelle (Fair Use)",
+      "clause2Text": "Tous les noms d'examens, acronymes, marques commerciales, logos et dénominations de constructeurs cités sont la propriété exclusive de leurs détenteurs respectifs. Leur mention relève exclusivement de la désignation descriptive des programmes d'entraînement et de la citation pédagogique loyalement admise (Nominative Fair Use).",
+      "clause3Title": "3. Contenu original et respect des chartes éthiques (Anti-Dump Policy)",
+      "clause3Text": "NetOps Academy ne publie, ne commercialise et n'utilise aucun « Brain Dump » ni question issue de fuites d'examens officiels. Toutes les questions, scénarios d'ateliers et fiches flashcards sont des créations originales fondées sur les standards RFC de l'IETF et la documentation publique.",
+      "clause4Title": "4. Exonération totale de responsabilité quant aux données fournies",
+      "clause4Text": "Avis de non-responsabilité formel : L'auteur et créateur de NetOps Academy décline expressément toute responsabilité concernant l'exactitude, la validité, l'exhaustivité, l'actualité ou les conséquences de l'utilisation des données, configurations techniques, commandes CLI, questions d'examens, corrigés et fiches fournis dans cette application. Toutes les informations sont livrées « en l'état » (AS IS) à visée exclusivement didactique.",
+      "clause5Title": "5. Absence de garantie d'obtention des certifications",
+      "clause5Text": "La réussite aux simulations ou la mémorisation des fiches sur cette plateforme ne constitue en aucun cas une garantie de réussite aux examens réels des éditeurs et ne confère aucun diplôme officiel.",
+      "checkbox": "J'ai lu, compris et j'accepte sans réserve les mentions légales et clauses de non-responsabilité ci-dessus."
+    },
+    "target": {
+      "title": "Personnalisez votre parcours d'apprentissage",
+      "selectCert": "Sélectionnez votre certification cible prioritaire",
+      "selectMode": "Mode d'entraînement préféré",
+      "modeMixed": "Entraînement Mixte (Théorie & Labs)",
+      "modeExam": "Focus Examen & QCM chronométrés",
+      "modeLabs": "Focus Pratique & Commandes CLI"
+    },
+    "validation": {
+      "readyTitle": "Votre cockpit est prêt !",
+      "summary": "Vous êtes configuré pour préparer {{cert}} en mode {{mode}}.",
+      "startBtn": "Accéder à NetOps Academy"
+    }
+  },
+  "subnetCalc": {
+    "title": "Calculateur CIDR / VLSM & Adressage IP",
+    "ipAddress": "Adresse IPv4 / Préfixe",
+    "networkAddress": "Adresse Réseau",
+    "broadcastAddress": "Adresse de Diffusion (Broadcast)",
+    "netmask": "Masque de sous-réseau",
+    "wildcard": "Masque générique (Wildcard)",
+    "usableHosts": "Hôtes exploitables",
+    "firstHost": "Premier hôte",
+    "lastHost": "Dernier hôte",
+    "binaryMask": "Masque binaire"
+  }
+}

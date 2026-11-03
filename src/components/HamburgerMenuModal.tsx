@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
-import { NAV_CATEGORIES } from '../utils/navigationConfig';
+import { getLocalizedNavCategories } from '../utils/navigationConfig';
 import { useTheme } from '../context/ThemeContext';
 import { useUpdate } from '../context/UpdateContext';
 import { usePWA } from '../context/PWAContext';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HamburgerMenuModalProps {
   isOpen: boolean;
@@ -24,10 +26,12 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
   onOpenSystemSettings,
   onOpenLegalDisclaimer,
 }) => {
+  const { t } = useTranslation(['common', 'navigation', 'settings']);
   const [filterQuery, setFilterQuery] = useState('');
-  const { theme, toggleTheme, isLight } = useTheme();
+  const { toggleTheme, isLight } = useTheme();
   const { currentVersion, updateAvailable } = useUpdate();
   const { isInstalled, installApp } = usePWA();
+  const localizedCategories = getLocalizedNavCategories(t);
 
   if (!isOpen) return null;
 
@@ -43,9 +47,10 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
         <div className="h-16 flex items-center justify-between px-5 border-b border-[#334155]/60 bg-[#0a0e16]/90 shrink-0">
           <div className="flex items-center gap-3">
             <img
-              src="/logo.jpg"
+              src="/src/assets/images/netops_logo_1790514169496.jpg"
               alt="NetOps Logo"
               className="w-8 h-8 rounded-xl object-cover ring-1 ring-[#00e5ff]/50 shrink-0"
+              referrerPolicy="no-referrer"
             />
             <div className="flex flex-col">
               <span className="font-bold text-sm font-mono text-[#00e5ff] tracking-tight flex items-center gap-2">
@@ -55,7 +60,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                 </span>
               </span>
               <span className="text-[11px] text-[#849396]">
-                Navigation Catégorisée & Outils
+                {t('navigation:menu')} &amp; {t('navigation:categories.pratique')}
               </span>
             </div>
           </div>
@@ -63,7 +68,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33] transition-colors"
-            title="Fermer le menu"
+            title={t('common:actions.close')}
           >
             <span className="material-symbols-outlined text-xl">close</span>
           </button>
@@ -79,7 +84,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
               type="text"
               value={filterQuery}
               onChange={(e) => setFilterQuery(e.target.value)}
-              placeholder="Filtrer les fonctionnalités (ex: Flashcards, BGP, Labs...)"
+              placeholder={t('navigation:searchPlaceholder')}
               className="w-full bg-[#0a0e16] border border-[#334155]/60 rounded-xl pl-9 pr-8 py-2 text-xs font-mono text-[#dfe2ee] placeholder-[#849396] focus:outline-none focus:border-[#00e5ff]"
             />
             {filterQuery && (
@@ -95,7 +100,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
 
         {/* Categorized List of Features */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 flex flex-col gap-5">
-          {NAV_CATEGORIES.map((cat) => {
+          {localizedCategories.map((cat) => {
             const filteredItems = cat.items.filter((item) => {
               if (!filterQuery) return true;
               const q = filterQuery.toLowerCase();
@@ -115,7 +120,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                   <span className="material-symbols-outlined text-base">{cat.icon}</span>
                   <span>{cat.label}</span>
                   <span className="ml-auto text-[10px] text-[#849396] font-normal font-sans">
-                    {filteredItems.length} module{filteredItems.length > 1 ? 's' : ''}
+                    {filteredItems.length}
                   </span>
                 </div>
 
@@ -167,7 +172,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                             )}
                           </div>
                           <p
-                            className={`text-[11px] line-clamp-1 mt-0.5 ${
+                            className={`text-[11px] mt-0.5 line-clamp-1 ${
                               isActive ? 'text-[#00363d]/80' : 'text-[#849396]'
                             }`}
                           >
@@ -182,15 +187,25 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
             );
           })}
 
-          {/* SECTION: OUTILS, SYSTÈME & PARAMÈTRES */}
-          <div className="flex flex-col gap-2 pt-2 border-t border-[#334155]/50">
-            <div className="flex items-center gap-2 px-2 text-xs font-mono font-bold uppercase tracking-wider text-[#c0c1ff]">
-              <span className="material-symbols-outlined text-base">build_circle</span>
-              <span>Outils & Système</span>
+          {/* Quick Tools & Settings Section in Menu */}
+          <div className="flex flex-col gap-2 pt-3 border-t border-[#334155]/60">
+            <div className="flex items-center justify-between px-2 text-xs font-mono font-bold uppercase tracking-wider text-[#00daf3]">
+              <span className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-base">construction</span>
+                <span>{t('navigation:systemSettings')}</span>
+              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {/* CIDR Calc Button */}
+              {/* Language Switcher pill in menu */}
+              <div className="p-2 rounded-xl bg-[#181c24] border border-[#334155]/50 flex items-center justify-between gap-2">
+                <span className="text-xs font-mono font-semibold text-[#dfe2ee]">
+                  {t('common:language.select')}
+                </span>
+                <LanguageSwitcher variant="menu" className="w-28" />
+              </div>
+
+              {/* Subnet Calculator Button */}
               <button
                 onClick={() => {
                   onClose();
@@ -202,8 +217,8 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                   <span className="material-symbols-outlined text-base">calculate</span>
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs font-mono font-bold text-[#dfe2ee]">Calculateur CIDR</div>
-                  <div className="text-[10px] text-[#849396] truncate">Masques IP & VLSM</div>
+                  <div className="text-xs font-mono font-bold text-[#dfe2ee]">{t('navigation:cidrCalc')}</div>
+                  <div className="text-[10px] text-[#849396] truncate">IP &amp; VLSM</div>
                 </div>
               </button>
 
@@ -220,12 +235,12 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-mono font-bold text-[#dfe2ee] flex items-center gap-1">
-                    <span>Paramètres Système</span>
+                    <span>{t('navigation:systemSettings')}</span>
                     {updateAvailable && (
                       <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-ping" />
                     )}
                   </div>
-                  <div className="text-[10px] text-[#849396] truncate">Mises à jour & Thèmes</div>
+                  <div className="text-[10px] text-[#849396] truncate">v{currentVersion}</div>
                 </div>
               </button>
 
@@ -241,10 +256,10 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                 </div>
                 <div className="min-w-0">
                   <div className="text-xs font-mono font-bold text-[#dfe2ee]">
-                    {isLight ? 'Mode Sombre NOC' : 'Thème Clair'}
+                    {isLight ? t('common:theme.dark') : t('common:theme.light')}
                   </div>
                   <div className="text-[10px] text-[#849396] truncate">
-                    {isLight ? 'Activer le mode sombre' : 'Activer le mode clair'}
+                    {isLight ? t('common:theme.switchToDark') : t('common:theme.switchToLight')}
                   </div>
                 </div>
               </button>
@@ -263,10 +278,10 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs font-mono font-bold text-[#00e5ff]">
-                      Installer l'application
+                      {t('common:pwa.install')}
                     </div>
                     <div className="text-[10px] text-[#849396] truncate">
-                      PWA Mobile & Bureau
+                      PWA
                     </div>
                   </div>
                 </button>
@@ -285,7 +300,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
             className="flex items-center gap-1.5 hover:text-[#00e5ff] transition-colors cursor-pointer text-[11px]"
           >
             <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
-            <span>Mentions Légales & Non-affiliation</span>
+            <span>{t('navigation:legalNotice')}</span>
           </button>
 
           <span className="text-[10px]">NetOps v{currentVersion}</span>

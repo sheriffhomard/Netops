@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 
 interface QuestionBankViewProps {
@@ -7,6 +8,8 @@ interface QuestionBankViewProps {
 }
 
 export const QuestionBankView: React.FC<QuestionBankViewProps> = ({ onNavigate }) => {
+  const { t, i18n } = useTranslation(['common', 'exams', 'navigation']);
+  const isEn = i18n.language?.startsWith('en');
   const [search, setSearch] = useState('');
   const [selectedCert, setSelectedCert] = useState('all');
   const [selectedDomain, setSelectedDomain] = useState('all');

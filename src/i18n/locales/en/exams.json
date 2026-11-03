@@ -1,0 +1,38 @@
+{
+  "title": "Professional Exam Simulator",
+  "subtitle": "Real proctored conditions with countdown timer, digital scratchpad, CIDR calculator, and domain scoring.",
+  "questionNumber": "Question",
+  "of": "of",
+  "domain": "Domain",
+  "flagForReview": "Flag for review",
+  "flagged": "Flagged",
+  "scratchpad": "Digital Scratchpad & Notes",
+  "calculator": "CIDR Calculator",
+  "previous": "Previous question",
+  "next": "Next question",
+  "finishExam": "Submit exam",
+  "timeRemaining": "Time left:",
+  "pause": "Pause",
+  "resume": "Resume",
+  "confirmSubmit": "Confirm Submission",
+  "confirmSubmitText": "Are you sure you want to finish and submit your exam? You have answered {{answered}} of {{total}} questions ({{flagged}} flagged for review).",
+  "results": {
+    "title": "Official Simulation Results",
+    "scoreLabel": "Your final score",
+    "thresholdLabel": "Passing threshold",
+    "statusPass": "CONGRATULATIONS — EXAM PASSED",
+    "statusFail": "FAIL — ADDITIONAL PRACTICE REQUIRED",
+    "timeSpent": "Total time spent",
+    "accuracy": "Overall accuracy",
+    "domainBreakdown": "Official domain breakdown",
+    "reviewAnswers": "Review questions & explanations",
+    "retryExam": "Retake simulation"
+  },
+  "explanation": {
+    "title": "Detailed Technical Explanation",
+    "correctAnswer": "Correct answer:",
+    "yourAnswer": "Your answer:",
+    "show": "Show explanation",
+    "hide": "Hide explanation"
+  }
+}

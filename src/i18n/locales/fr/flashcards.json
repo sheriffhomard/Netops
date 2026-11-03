@@ -1,0 +1,68 @@
+{
+  "title": "Flashcards & Mémos Réseau (SRS)",
+  "subtitle": "Système de répétition espacée (Leitner) pour ancrer les protocoles, RFCs et commandes CLI.",
+  "searchPlaceholder": "Rechercher par mot-clé (ex: BGP, OSPF, RFC, MTU, ACL...)",
+  "allVendors": "Tous les éditeurs",
+  "allModules": "Tous les modules",
+  "difficulty": {
+    "all": "Toutes difficultés",
+    "fundamental": "Fondamental",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé"
+  },
+  "modes": {
+    "focus": "Mode Focus 3D",
+    "grid": "Grille d'étude",
+    "blitz": "Mode Blitz (2 min)",
+    "create": "Créer une fiche"
+  },
+  "card": {
+    "front": "Recto / Question",
+    "back": "Verso / Réponse & Spécification",
+    "hint": "Indice",
+    "showAnswer": "Afficher la réponse (Espace)",
+    "hideAnswer": "Masquer la réponse",
+    "flip": "Retourner la carte",
+    "again": "À revoir (1j)",
+    "hard": "Difficile (3j)",
+    "good": "Bien (7j)",
+    "easy": "Facile (14j)",
+    "mastered": "Maîtrisée",
+    "favorite": "Favori",
+    "unfavorite": "Retirer des favoris",
+    "cliExample": "Exemple de commande CLI",
+    "rfcRef": "Référence RFC / Norme",
+    "relatedGlossary": "Terme lié au glossaire",
+    "relatedArticle": "Article lié dans l'encyclopédie"
+  },
+  "stats": {
+    "totalCards": "Fiches au total",
+    "masteredCards": "Maîtrisées",
+    "inReview": "En révision",
+    "favorites": "Favoris",
+    "retentionRate": "Taux de rétention estimé"
+  },
+  "blitz": {
+    "title": "Mode Blitz Chronométré",
+    "description": "2 minutes pour répondre à un maximum de fiches sans hésiter !",
+    "timeRemaining": "Temps restant",
+    "score": "Score",
+    "streak": "Série",
+    "start": "Lancer le défi",
+    "complete": "Défi Blitz terminé !",
+    "finalScore": "Score final :",
+    "bestStreak": "Meilleure série :",
+    "playAgain": "Rejouer"
+  },
+  "createCard": {
+    "title": "Créer une Flashcard Personnalisée",
+    "desc": "Ajoutez vos propres synthèses techniques, mémos de lab ou questions types.",
+    "frontLabel": "Question ou notion clé (Recto)",
+    "backLabel": "Réponse technique et explication (Verso)",
+    "moduleLabel": "Module / Certification cible",
+    "difficultyLabel": "Niveau de difficulté",
+    "hintLabel": "Indice (optionnel)",
+    "submit": "Ajouter la fiche",
+    "success": "Flashcard créée avec succès !"
+  }
+}

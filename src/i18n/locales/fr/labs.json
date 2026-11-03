@@ -1,0 +1,22 @@
+{
+  "title": "Ateliers & Laboratoires Pratiques",
+  "subtitle": "Exercices guidés, vérification de conformité de syntaxe exacte, scénarios de dépannage et topologies interactives.",
+  "activeDevice": "Équipement actif",
+  "topology": "Topologie Réseau & Schéma",
+  "tasks": "Objectifs & Étapes de Validation",
+  "taskCompleted": "Étape validée",
+  "taskPending": "En attente de validation",
+  "validateTask": "Vérifier la configuration",
+  "passScore": "Score requis",
+  "meshLatency": "Latence du maillage",
+  "resetTopology": "Réinitialiser la topologie",
+  "typingChallenge": {
+    "title": "Drill de Saisie Exacte (Sans Indice)",
+    "description": "Tapez rigoureusement la commande CLI IOS-XE demandée au prompt indiqué.",
+    "submitCommand": "Valider la commande (Entrée)",
+    "placeholder": "Tapez la commande exacte...",
+    "showHint": "Afficher l'indice technique",
+    "accepted": "Commande acceptée !",
+    "rejected": "Erreur de syntaxe ou paramètre manquant. Réessayez !"
+  }
+}

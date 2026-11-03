@@ -8,6 +8,7 @@ export interface NavItemConfig {
   badge?: string;
   description: string;
   category: 'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'evaluer';
+  translationKey: string;
 }
 
 export interface NavCategoryConfig {
@@ -26,6 +27,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'dashboard',
     description: 'Vue d\'ensemble, activité en cours et métriques clés',
     category: 'accueil',
+    translationKey: 'dashboard',
   },
 
   // Apprendre
@@ -36,6 +38,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'layers',
     description: 'Catalogue complet Cisco, Palo Alto, Fortinet, CompTIA, Juniper',
     category: 'apprendre',
+    translationKey: 'certifications',
   },
   {
     id: 'glossaire-cloud',
@@ -45,6 +48,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     badge: 'NEW',
     description: 'Topologies hybrides, schémas ASCII et matrice multi-cloud',
     category: 'apprendre',
+    translationKey: 'cloud',
   },
 
   // Réviser
@@ -56,6 +60,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     badge: 'SRS',
     description: '2 900+ fiches de révision, mode répétition espacée et Blitz',
     category: 'reviser',
+    translationKey: 'flashcards',
   },
   {
     id: 'banque-de-questions',
@@ -64,6 +69,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'database',
     description: 'QCM commentés, filtres par domaine et explications détaillées',
     category: 'reviser',
+    translationKey: 'questions',
   },
 
   // Pratiquer (Ingénierie Réseau & Ateliers)
@@ -74,6 +80,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'science',
     description: 'Saisie exacte de commandes, ordonnancement et dépannage',
     category: 'pratique',
+    translationKey: 'labs',
   },
   {
     id: 'terminal-lab-virtuel',
@@ -82,6 +89,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'terminal',
     description: 'Console CLI Cisco IOS-XE interactive avec auto-complétion',
     category: 'pratique',
+    translationKey: 'terminal',
   },
 
   // Évaluer & Mesurer
@@ -92,6 +100,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'check_circle',
     description: 'Conditions réelles proctorisées avec chronomètre et notation',
     category: 'evaluer',
+    translationKey: 'simulator',
   },
   {
     id: 'analytiques-de-reussite',
@@ -100,6 +109,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
     icon: 'monitoring',
     description: 'Radar des faiblesses, historique des scores et prédiction d\'examen',
     category: 'evaluer',
+    translationKey: 'analytics',
   },
 ];
 
@@ -136,26 +146,73 @@ export const NAV_CATEGORIES: NavCategoryConfig[] = [
   },
 ];
 
+/**
+ * Returns localized nav items using the active translation function
+ */
+export function getLocalizedNavItems(t?: (key: string) => string): NavItemConfig[] {
+  if (!t) return NAV_ITEMS;
+  return NAV_ITEMS.map((item) => ({
+    ...item,
+    label: t(`navigation:items.${item.translationKey}.label`),
+    shortLabel: t(`navigation:items.${item.translationKey}.shortLabel`),
+    description: t(`navigation:items.${item.translationKey}.description`),
+  }));
+}
+
+/**
+ * Returns localized nav categories using the active translation function
+ */
+export function getLocalizedNavCategories(t?: (key: string) => string): NavCategoryConfig[] {
+  const items = getLocalizedNavItems(t);
+  const categoryIds: Array<'accueil' | 'apprendre' | 'reviser' | 'pratique' | 'evaluer'> = [
+    'accueil',
+    'apprendre',
+    'reviser',
+    'pratique',
+    'evaluer',
+  ];
+
+  return categoryIds.map((catId) => {
+    const base = NAV_CATEGORIES.find((c) => c.id === catId)!;
+    return {
+      ...base,
+      label: t ? t(`navigation:categories.${catId}`) : base.label,
+      items: items.filter((i) => i.category === catId),
+    };
+  });
+}
+
 export interface BreadcrumbSegment {
   label: string;
   view?: ViewMode;
   isActive?: boolean;
 }
 
-export function getBreadcrumbTrail(view: ViewMode, subTitle?: string): BreadcrumbSegment[] {
-  const item = NAV_ITEMS.find((i) => i.id === view);
+export function getBreadcrumbTrail(
+  view: ViewMode,
+  subTitle?: string,
+  t?: (key: string) => string
+): BreadcrumbSegment[] {
+  const items = getLocalizedNavItems(t);
+  const categories = getLocalizedNavCategories(t);
+
+  const homeLabel = t ? t('navigation:breadcrumbs.home') : 'Accueil';
+  const item = items.find((i) => i.id === view);
+
   if (!item) {
-    return [{ label: 'Accueil', view: 'tableau-de-bord' }];
+    return [{ label: homeLabel, view: 'tableau-de-bord' }];
   }
 
   if (view === 'tableau-de-bord') {
-    return [{ label: 'Tableau de bord', isActive: true }];
+    return [{ label: item.label, isActive: true }];
   }
 
-  const category = NAV_CATEGORIES.find((c) => c.id === item.category);
+  const category = categories.find((c) => c.id === item.category);
+  const categoryLabel = category?.label || (t ? t('navigation:breadcrumbs.section') : 'Section');
+
   const segments: BreadcrumbSegment[] = [
-    { label: 'Accueil', view: 'tableau-de-bord' },
-    { label: category?.label || 'Section' },
+    { label: homeLabel, view: 'tableau-de-bord' },
+    { label: categoryLabel },
     { label: item.label, view: item.id, isActive: !subTitle },
   ];
 

@@ -1,0 +1,38 @@
+{
+  "title": "Simulateur d'Examen Professionnel",
+  "subtitle": "Conditions proctorisées réelles avec chronomètre, brouillon numérique, calculatrice CIDR et notation par domaine.",
+  "questionNumber": "Question",
+  "of": "sur",
+  "domain": "Domaine",
+  "flagForReview": "Marquer pour relecture",
+  "flagged": "Marquée",
+  "scratchpad": "Brouillon numérique & Notes",
+  "calculator": "Calculateur CIDR",
+  "previous": "Question précédente",
+  "next": "Question suivante",
+  "finishExam": "Soumettre l'examen",
+  "timeRemaining": "Temps restant :",
+  "pause": "Pause",
+  "resume": "Reprendre",
+  "confirmSubmit": "Confirmer la soumission",
+  "confirmSubmitText": "Êtes-vous sûr de vouloir soumettre votre copie ? Vous avez répondu à {{answered}} questions sur {{total}} ({{flagged}} marquées pour relecture).",
+  "results": {
+    "title": "Résultats Officiels de la Simulation",
+    "scoreLabel": "Votre score final",
+    "thresholdLabel": "Seuil de réussite",
+    "statusPass": "FÉLICITATIONS — EXAMEN RÉUSSI",
+    "statusFail": "ÉCHEC — ENTRAÎNEMENT COMPLÉMENTAIRE REQUIS",
+    "timeSpent": "Temps total passé",
+    "accuracy": "Précision globale",
+    "domainBreakdown": "Ventilation des scores par domaine officiel",
+    "reviewAnswers": "Passer en revue les questions et explications",
+    "retryExam": "Recommencer une simulation"
+  },
+  "explanation": {
+    "title": "Explication technique détaillée",
+    "correctAnswer": "Bonne réponse :",
+    "yourAnswer": "Votre réponse :",
+    "show": "Afficher l'explication",
+    "hide": "Masquer l'explication"
+  }
+}

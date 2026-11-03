@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tooltip, FieldHelper } from './Tooltip';
 
 interface SubnetCalculatorModalProps {
@@ -7,6 +8,8 @@ interface SubnetCalculatorModalProps {
 }
 
 export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ isOpen, onClose }) => {
+  const { t, i18n } = useTranslation(['common', 'settings']);
+  const isEn = i18n.language?.startsWith('en');
   const [ip, setIp] = useState('192.168.10.10');
   const [cidr, setCidr] = useState(24);
 
@@ -74,10 +77,12 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
             <span className="material-symbols-outlined text-2xl">calculate</span>
             <div>
               <h3 className="font-semibold text-lg text-[#dfe2ee]">
-                Calculatrice de Sous-Réseaux CIDR &amp; VLSM
+                {t('settings:subnetCalc.title')}
               </h3>
               <p className="text-[11px] text-[#849396]">
-                Survolez les icônes d'aide (?) pour comprendre chaque paramètre réseau
+                {isEn
+                  ? 'Hover over help icons (?) to understand each network subnetting parameter'
+                  : "Survolez les icônes d'aide (?) pour comprendre chaque paramètre réseau"}
               </p>
             </div>
           </div>
@@ -93,8 +98,12 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4 font-mono">
           <div>
             <FieldHelper
-              label="Adresse IP IPv4"
-              helpText="Format standard 4 octets de 0 à 255 séparés par des points (ex: 192.168.1.1 ou 10.0.0.1)."
+              label={t('settings:subnetCalc.ipAddress')}
+              helpText={
+                isEn
+                  ? 'Standard 4-octet IPv4 format from 0 to 255 separated by dots (e.g. 192.168.1.1 or 10.0.0.1).'
+                  : 'Format standard 4 octets de 0 à 255 séparés par des points (ex: 192.168.1.1 ou 10.0.0.1).'
+              }
               className="mb-1"
             />
             <input
@@ -107,8 +116,12 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
           </div>
           <div>
             <FieldHelper
-              label={`Préfixe CIDR (/${cidr})`}
-              helpText="Nombre de bits à 1 dans le masque réseau. /24 = 254 hôtes, /30 = 2 hôtes pour liaisons point-à-point."
+              label={`${isEn ? 'CIDR Prefix' : 'Préfixe CIDR'} (/${cidr})`}
+              helpText={
+                isEn
+                  ? 'Number of masked network bits. /24 = 254 usable hosts, /30 = 2 hosts for point-to-point links.'
+                  : 'Nombre de bits à 1 dans le masque réseau. /24 = 254 hôtes, /30 = 2 hôtes pour liaisons point-à-point.'
+              }
               className="mb-1"
             />
             <select
@@ -118,7 +131,7 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
             >
               {Array.from({ length: 25 }, (_, i) => i + 8).map((bit) => (
                 <option key={bit} value={bit}>
-                  /{bit} — {Math.pow(2, 32 - bit) - 2 > 0 ? Math.pow(2, 32 - bit) - 2 : (bit === 31 ? 2 : 1)} hôtes
+                  /{bit} — {Math.pow(2, 32 - bit) - 2 > 0 ? Math.pow(2, 32 - bit) - 2 : (bit === 31 ? 2 : 1)} {t('common:units.hosts', 'hosts')}
                 </option>
               ))}
             </select>
@@ -130,61 +143,61 @@ export const SubnetCalculatorModal: React.FC<SubnetCalculatorModalProps> = ({ is
           <div className="bg-[#0a0e16] rounded-lg p-4 font-mono text-xs flex flex-col gap-2.5 border border-[#334155]/60">
             <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Masque Décimal :</span>
-                <Tooltip content="Masque de sous-réseau en notation décimale équivalente au préfixe CIDR sélectionné." />
+                <span>{t('settings:subnetCalc.netmask')} :</span>
+                <Tooltip content={isEn ? 'Subnet mask in decimal notation corresponding to the CIDR prefix.' : 'Masque de sous-réseau en notation décimale équivalente au préfixe CIDR sélectionné.'} />
               </span>
               <span className="text-[#00e5ff] font-semibold">{results.maskStr}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Masque Inversé (Wildcard) :</span>
-                <Tooltip content="Masque inversé utilisé dans les ACL Cisco et les déclarations de réseaux OSPF (255.255.255.255 - Masque)." />
+                <span>{t('settings:subnetCalc.wildcard')} :</span>
+                <Tooltip content={isEn ? 'Wildcard mask used in Cisco ACLs and OSPF network statements (255.255.255.255 - Mask).' : 'Masque inversé utilisé dans les ACL Cisco et les déclarations de réseaux OSPF (255.255.255.255 - Masque).'} />
               </span>
               <span className="text-[#a8ffd2] font-semibold">{results.wildcardStr}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Adresse Réseau (Subnet ID) :</span>
-                <Tooltip content="Première adresse du bloc IP représentant le sous-réseau lui-même. Non attribuable à un équipement terminal." />
+                <span>{t('settings:subnetCalc.networkAddress')} :</span>
+                <Tooltip content={isEn ? 'First address of the IP block representing the network itself.' : 'Première adresse du bloc IP représentant le sous-réseau lui-même.'} />
               </span>
               <span className="text-[#dfe2ee] font-semibold">{results.networkStr} /{cidr}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Adresse de Diffusion (Broadcast) :</span>
-                <Tooltip content="Dernière adresse du bloc IP permettant d'envoyer un paquet à tous les hôtes du sous-réseau." />
+                <span>{t('settings:subnetCalc.broadcastAddress')} :</span>
+                <Tooltip content={isEn ? 'Last address of the block to broadcast packets to all subnet hosts.' : 'Dernière adresse du bloc IP permettant d\'envoyer un paquet à tous les hôtes du sous-réseau.'} />
               </span>
               <span className="text-[#ffb4ab] font-semibold">{results.broadcastStr}</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-[#334155]/40">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Plage d'Hôtes Utilisables :</span>
-                <Tooltip content="Intervalle d'adresses IP pouvant être attribuées aux interfaces, routeurs, serveurs et postes clients." />
+                <span>{isEn ? 'Usable Host Range :' : 'Plage d\'Hôtes Utilisables :'}</span>
+                <Tooltip content={isEn ? 'Range of IP addresses assignable to network interfaces and endpoints.' : 'Intervalle d\'adresses IP pouvant être attribuées aux interfaces, routeurs, serveurs et postes clients.'} />
               </span>
               <span className="text-[#c0c1ff] font-semibold">{results.hostRangeStr}</span>
             </div>
             <div className="flex justify-between items-center pt-1">
               <span className="text-[#849396] flex items-center gap-1.5">
-                <span>Nombre d'Hôtes Utilisables :</span>
-                <Tooltip content="Nombre total d'adresses (2^(32-CIDR)) moins l'adresse réseau et l'adresse de diffusion (-2)." />
+                <span>{t('settings:subnetCalc.usableHosts')} :</span>
+                <Tooltip content={isEn ? 'Total addresses 2^(32-CIDR) minus network and broadcast (-2).' : "Nombre total d'adresses (2^(32-CIDR)) moins l'adresse réseau et l'adresse de diffusion (-2)."} />
               </span>
               <span className="text-[#5be9ad] font-bold text-sm">
-                {results.usableHosts.toLocaleString()}
+                {new Intl.NumberFormat(isEn ? 'en-US' : 'fr-FR').format(results.usableHosts)}
               </span>
             </div>
           </div>
         ) : (
           <div className="bg-[#0a0e16] p-4 text-center text-xs text-[#ffb4ab] font-mono rounded-lg">
-            Format d&apos;adresse IP invalide. Exemple : 192.168.10.10
+            {isEn ? 'Invalid IPv4 address. Example: 192.168.10.10' : 'Format d\'adresse IP invalide. Exemple : 192.168.10.10'}
           </div>
         )}
 
         <div className="mt-4 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#dfe2ee] rounded-lg transition-colors"
+            className="px-4 py-2 bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#dfe2ee] rounded-lg transition-colors cursor-pointer"
           >
-            Fermer
+            {t('common:actions.close')}
           </button>
         </div>
       </div>

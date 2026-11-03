@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 
 interface CommandPaletteModalProps {
@@ -9,7 +10,7 @@ interface CommandPaletteModalProps {
 
 interface PaletteItem {
   id: string;
-  category: 'Pages' | 'Certifications' | 'Outils Réseau' | 'Flashcards & SRS';
+  category: string;
   title: string;
   desc: string;
   icon: string;
@@ -22,76 +23,83 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
   onClose,
   onNavigate,
 }) => {
+  const { t, i18n } = useTranslation(['common', 'navigation', 'flashcards', 'exams']);
+  const isEn = i18n.language === 'en';
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const catPages = isEn ? 'Pages' : 'Pages';
+  const catCerts = isEn ? 'Certifications' : 'Certifications';
+  const catTools = isEn ? 'Network Tools' : 'Outils Réseau';
+  const catSRS = isEn ? 'Flashcards & SRS' : 'Flashcards & SRS';
+
   const items: PaletteItem[] = [
     // Navigation / Pages
     {
       id: 'page-dashboard',
-      category: 'Pages',
-      title: 'Tableau de bord',
-      desc: 'Vue d\'ensemble, activité en cours, objectifs et métriques clés',
+      category: catPages,
+      title: isEn ? 'Dashboard & NOC' : 'Tableau de bord',
+      desc: isEn ? 'Overview, active study sessions, goals and key metrics' : "Vue d'ensemble, activité en cours, objectifs et métriques clés",
       icon: 'dashboard',
       view: 'tableau-de-bord',
     },
     {
       id: 'page-flashcards',
-      category: 'Pages',
-      title: 'Flashcards & Mémos (SRS)',
-      desc: '2 900+ fiches de révision active avec répétition espacée Leitner',
+      category: catPages,
+      title: isEn ? 'Flashcards & Leitner SRS' : 'Flashcards & Mémos (SRS)',
+      desc: isEn ? '2,900+ active recall flashcards with Leitner spaced repetition' : '2 900+ fiches de révision active avec répétition espacée Leitner',
       icon: 'style',
       view: 'flashcards',
       badge: '2900+',
     },
     {
       id: 'page-cloud',
-      category: 'Pages',
-      title: 'Encyclopédie Cloud & Glossaire',
-      desc: 'Topologies Direct Connect / ExpressRoute, schémas ASCII et comparatif',
+      category: catPages,
+      title: isEn ? 'Cloud Encyclopedia & Glossary' : 'Encyclopédie Cloud & Glossaire',
+      desc: isEn ? 'Direct Connect / ExpressRoute topologies, ASCII schematics and matrix' : 'Topologies Direct Connect / ExpressRoute, schémas ASCII et comparatif',
       icon: 'cloud_sync',
       view: 'glossaire-cloud',
       badge: 'NEW',
     },
     {
       id: 'page-simulator',
-      category: 'Pages',
-      title: 'Simulateur d\'Examen',
-      desc: 'Entraînement proctorisé chronométré avec notation conforme au score réel',
+      category: catPages,
+      title: isEn ? 'Exam Simulator' : "Simulateur d'Examen",
+      desc: isEn ? 'Timed proctored simulation with vendor-grade scoring models' : "Entraînement proctorisé chronométré avec notation conforme au score réel",
       icon: 'check_circle',
       view: 'simulateur-d-examen',
     },
     {
       id: 'page-workshops',
-      category: 'Pages',
-      title: 'Ateliers & Labs Pratiques',
-      desc: 'Saisie exacte de commandes IOS, dépannage avec injection de pannes',
+      category: catPages,
+      title: isEn ? 'Workshops & Hands-on Labs' : 'Ateliers & Labs Pratiques',
+      desc: isEn ? 'Exact IOS CLI syntax input, step sequencing and fault injection' : 'Saisie exacte de commandes IOS, dépannage avec injection de pannes',
       icon: 'science',
       view: 'ateliers-et-labs',
     },
     {
       id: 'page-terminal',
-      category: 'Pages',
-      title: 'Terminal & Lab Virtuel',
-      desc: 'Console Cisco IOS-XE interactive avec auto-complétion TAB',
+      category: catPages,
+      title: isEn ? 'Virtual Terminal & Lab' : 'Terminal & Lab Virtuel',
+      desc: isEn ? 'Interactive Cisco IOS-XE terminal with TAB auto-completion' : 'Console Cisco IOS-XE interactive avec auto-complétion TAB',
       icon: 'terminal',
       view: 'terminal-lab-virtuel',
     },
     {
       id: 'page-questions',
-      category: 'Pages',
-      title: 'Banque de Questions',
-      desc: 'QCM commentés, filtres par domaine de certification et explications',
+      category: catPages,
+      title: isEn ? 'Question Bank' : 'Banque de Questions',
+      desc: isEn ? 'Detailed MCQ explanations, certification domain filters' : 'QCM commentés, filtres par domaine de certification et explications',
       icon: 'database',
       view: 'banque-de-questions',
     },
     {
       id: 'page-analytics',
-      category: 'Pages',
-      title: 'Analytiques de Réussite',
-      desc: 'Radar des faiblesses, historique des scores et courbe de progression',
+      category: catPages,
+      title: isEn ? 'Success Analytics' : 'Analytiques de Réussite',
+      desc: isEn ? 'Weakness radar chart, historical scores and readiness forecast' : 'Radar des faiblesses, historique des scores et courbe de progression',
       icon: 'monitoring',
       view: 'analytiques-de-reussite',
     },
@@ -157,28 +165,28 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
       view: 'parcours-certifications',
     },
 
-    // Outils Réseau
+    // Network Tools
     {
       id: 'tool-cidr',
-      category: 'Outils Réseau',
-      title: 'Calculateur CIDR / VLSM',
-      desc: 'Découpage de sous-réseaux IPv4, masques /24 à /30, adresses réseau et broadcast',
+      category: catTools,
+      title: isEn ? 'CIDR / VLSM Calculator' : 'Calculateur CIDR / VLSM',
+      desc: isEn ? 'IPv4 subnetting, /24 to /30 masks, network and broadcast addresses' : 'Découpage de sous-réseaux IPv4, masques /24 à /30, adresses réseau et broadcast',
       icon: 'calculate',
       view: 'tableau-de-bord',
     },
     {
       id: 'tool-terminal-bgp',
-      category: 'Outils Réseau',
-      title: 'Simulation BGP Multi-homing',
-      desc: 'Validation des sessions eBGP, AS-Path prepending et attributs Local-Preference',
+      category: catTools,
+      title: isEn ? 'BGP Multi-homing Lab' : 'Simulation BGP Multi-homing',
+      desc: isEn ? 'eBGP sessions validation, AS-Path prepending and Local-Preference attributes' : 'Validation des sessions eBGP, AS-Path prepending et attributs Local-Preference',
       icon: 'terminal',
       view: 'terminal-lab-virtuel',
     },
     {
       id: 'tool-cloud-matrix',
-      category: 'Outils Réseau',
-      title: 'Matrice Comparative Multi-Cloud',
-      desc: 'Correspondance des services réseau AWS vs Azure vs Google Cloud vs CNCF',
+      category: catTools,
+      title: isEn ? 'Multi-Cloud Comparative Matrix' : 'Matrice Comparative Multi-Cloud',
+      desc: isEn ? 'AWS vs Azure vs Google Cloud vs CNCF networking service equivalence' : 'Correspondance des services réseau AWS vs Azure vs Google Cloud vs CNCF',
       icon: 'compare_arrows',
       view: 'glossaire-cloud',
     },
@@ -186,23 +194,23 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
     // Flashcards & SRS
     {
       id: 'flash-blitz',
-      category: 'Flashcards & SRS',
-      title: 'Défi Chrono Blitz (2 minutes)',
-      desc: 'Session intensive chronométrée pour stimuler la mémorisation réflexe',
+      category: catSRS,
+      title: isEn ? 'Chrono Blitz Challenge (2 min)' : 'Défi Chrono Blitz (2 minutes)',
+      desc: isEn ? 'Timed high-intensity sprint to sharpen reflex memorization' : 'Session intensive chronométrée pour stimuler la mémorisation réflexe',
       icon: 'timer',
       view: 'flashcards',
     },
     {
       id: 'flash-due',
-      category: 'Flashcards & SRS',
-      title: 'Révisions espacées du jour (SRS)',
-      desc: 'Cartes à revoir prioritaires déterminées par l\'algorithme d\'espacement',
+      category: catSRS,
+      title: isEn ? 'Today SRS Spaced Reviews' : 'Révisions espacées du jour (SRS)',
+      desc: isEn ? 'Priority review cards scheduled by Leitner spacing algorithm' : "Cartes à revoir prioritaires déterminées par l'algorithme d'espacement",
       icon: 'psychology',
       view: 'flashcards',
     },
   ];
 
-  const categories = ['all', 'Pages', 'Certifications', 'Outils Réseau', 'Flashcards & SRS'];
+  const categories = ['all', catPages, catCerts, catTools, catSRS];
 
   const filtered = items.filter((item) => {
     const matchCategory = activeCategory === 'all' || item.category === activeCategory;
@@ -270,20 +278,24 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher certif (CCNA, PCNSE, FCP), commande IOS, lab..."
+            placeholder={
+              isEn
+                ? 'Search cert (CCNA, PCNSE, FCP), IOS CLI command, lab...'
+                : 'Rechercher certif (CCNA, PCNSE, FCP), commande IOS, lab...'
+            }
             className="w-full bg-transparent border-none outline-none font-mono text-sm text-[#dfe2ee] placeholder:text-[#849396] focus:ring-0"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
               className="p-1 rounded text-[#849396] hover:text-[#dfe2ee]"
-              title="Effacer"
+              title={isEn ? 'Clear' : 'Effacer'}
             >
               <span className="material-symbols-outlined text-sm">close</span>
             </button>
           )}
           <kbd className="bg-[#262a33] text-[#849396] px-2 py-0.5 rounded text-xs font-mono shrink-0">
-            ÉCHAP
+            {isEn ? 'ESC' : 'ÉCHAP'}
           </kbd>
         </div>
 
@@ -299,7 +311,7 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
                   : 'text-[#849396] hover:text-[#dfe2ee] hover:bg-[#262a33]'
               }`}
             >
-              {cat === 'all' ? 'Tout' : cat}
+              {cat === 'all' ? (isEn ? 'All' : 'Tout') : cat}
             </button>
           ))}
         </div>
@@ -309,8 +321,14 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
           {filtered.length === 0 ? (
             <div className="py-12 text-center text-sm text-[#849396] font-mono flex flex-col items-center gap-2">
               <span className="material-symbols-outlined text-3xl text-[#3b494c]">manage_search</span>
-              <span>Aucun résultat trouvé pour &quot;{search}&quot;</span>
-              <span className="text-xs text-[#849396]">Essayez avec un mot-clé comme &quot;CCNA&quot;, &quot;PCNSE&quot;, &quot;BGP&quot; ou &quot;Flashcards&quot;</span>
+              <span>
+                {isEn ? `No results found for "${search}"` : `Aucun résultat trouvé pour "${search}"`}
+              </span>
+              <span className="text-xs text-[#849396]">
+                {isEn
+                  ? 'Try keywords like "CCNA", "PCNSE", "BGP" or "Flashcards"'
+                  : 'Essayez avec un mot-clé comme "CCNA", "PCNSE", "BGP" ou "Flashcards"'}
+              </span>
             </div>
           ) : (
             filtered.map((item, idx) => {
@@ -378,11 +396,13 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
 
         {/* Footer shortcuts */}
         <div className="px-4 py-2 bg-[#0f131c] border-t border-[#334155]/40 flex items-center justify-between text-[11px] font-mono text-[#849396] shrink-0">
-          <span className="truncate">Palette de commandes NetOps</span>
+          <span className="truncate">
+            {isEn ? 'NetOps Command Palette' : 'Palette de commandes NetOps'}
+          </span>
           <div className="flex items-center gap-3 shrink-0">
-            <span>↑↓ Déplacer</span>
-            <span>↵ Ouvrir</span>
-            <span>ÉCHAP Quitter</span>
+            <span>↑↓ {isEn ? 'Navigate' : 'Déplacer'}</span>
+            <span>↵ {isEn ? 'Open' : 'Ouvrir'}</span>
+            <span>{isEn ? 'ESC Exit' : 'ÉCHAP Quitter'}</span>
           </div>
         </div>
       </div>

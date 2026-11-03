@@ -1,0 +1,48 @@
+{
+  "resumeSession": {
+    "title": "Reprendre ma session",
+    "lastActivity": "Dernière activité il y a 2h",
+    "currentModule": "Module en cours :",
+    "moduleDescription": "Routage BGP & Convergence L2 Spanning-Tree. Vous étiez en train de réviser les règles de sélection de route eBGP/iBGP et les attributs MED / Local-Preference.",
+    "globalProgress": "Avancement global :",
+    "nextMilestone": "Prochain jalon :",
+    "nextMilestoneValue": "Examen Blanc #4",
+    "resumeExam": "Reprendre l'examen blanc",
+    "reviewCards": "Réviser les fiches du module"
+  },
+  "srs": {
+    "title": "Répétition espacée (SRS)",
+    "tooltip": "Algorithme Leitner : les cartes échouées sont revues rapidement, les cartes maîtrisées s'espacent dans le temps pour ancrer durablement la mémoire.",
+    "readyToReview": "Fiches prêtes à revoir",
+    "priorityCards": "cartes prioritaires",
+    "startReview": "Lancer la session",
+    "blitzTitle": "Sprint Blitz 2 min",
+    "blitzDesc": "Mémorisation ultra-rapide des RFCs, ports et métriques clés sous pression chronométrée.",
+    "startBlitz": "Démarrer le Blitz",
+    "boxStats": "Répartition des boîtes Leitner"
+  },
+  "radar": {
+    "title": "Radar des Faiblesses & Domaines Critiques",
+    "tooltip": "Diagnostic basé sur vos dernières sessions d'examens et drills pratiques. Ciblez en priorité les thèmes sous 70%.",
+    "viewAll": "Voir l'analyse détaillée",
+    "strengthen": "Renforcer ce domaine",
+    "critical": "Critique",
+    "medium": "À consolider",
+    "strong": "Solide",
+    "mastered": "Maîtrisé"
+  },
+  "drills": {
+    "title": "Drills du Jour & Défis Techniques",
+    "tooltip": "Exercices courts et ciblés pour valider vos automatismes de configuration et diagnostic.",
+    "startDrill": "Lancer le drill",
+    "timeLimit": "Temps estimé"
+  },
+  "history": {
+    "title": "Historique des Simulations Récentes",
+    "simulation": "Simulation",
+    "date": "Date",
+    "score": "Score",
+    "status": "Résultat",
+    "viewReport": "Voir le rapport"
+  }
+}

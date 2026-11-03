@@ -1,0 +1,82 @@
+{
+  "appName": "NetOps Academy",
+  "appTagline": "Enterprise NOC & Training Platform",
+  "actions": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher...",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "apply": "Appliquer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "finish": "Terminer",
+    "start": "Commencer",
+    "resume": "Reprendre",
+    "retry": "Réessayer",
+    "open": "Ouvrir",
+    "refresh": "Actualiser",
+    "details": "Détails",
+    "seeMore": "Voir plus",
+    "seeLess": "Voir moins"
+  },
+  "status": {
+    "loading": "Chargement...",
+    "operational": "Système Opérationnel",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "completed": "Terminé",
+    "inProgress": "En cours",
+    "notStarted": "Non commencé",
+    "passed": "Réussi",
+    "failed": "Échoué",
+    "online": "En ligne",
+    "offline": "Hors ligne"
+  },
+  "levels": {
+    "support": "Support / Fondations",
+    "associate": "Associate / CCNA",
+    "professional": "Professional / CCNP",
+    "expert": "Expert / CCIE",
+    "fundamental": "Fondamental",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé"
+  },
+  "units": {
+    "minutes": "min",
+    "seconds": "s",
+    "hours": "h",
+    "days": "jours",
+    "questions": "questions",
+    "cards": "fiches",
+    "score": "score",
+    "points": "points",
+    "percent": "%"
+  },
+  "theme": {
+    "switchToLight": "Basculer en Thème Clair",
+    "switchToDark": "Basculer en Mode Sombre NOC",
+    "light": "Thème Clair",
+    "dark": "Mode Sombre NOC"
+  },
+  "language": {
+    "select": "Langue",
+    "fr": "Français",
+    "en": "English",
+    "switchPrompt": "Changer la langue (FR / EN)"
+  },
+  "pwa": {
+    "install": "Installer l'app",
+    "installDesktop": "Installer",
+    "installed": "Application installée",
+    "installTooltip": "Installer NetOps sur votre écran d'accueil (Mobile ou Ordinateur)"
+  }
+}

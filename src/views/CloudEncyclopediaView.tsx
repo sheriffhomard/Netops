@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode, CloudCategory, CloudGlossaryTerm, CloudEncyclopediaArticle } from '../types';
 import { cloudGlossaryTerms, cloudEncyclopediaArticles, multiCloudMatrix } from '../data/cloudData';
 
@@ -17,6 +18,8 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
   initialTermId = null,
   initialArticleId = null,
 }) => {
+  const { t, i18n } = useTranslation(['common', 'encyclopedia', 'navigation']);
+  const isEn = i18n.language?.startsWith('en');
   const [activeTab, setActiveTab] = useState<'glossaire' | 'encyclopedie' | 'matrice'>(initialTab);
   
   // Glossary state
@@ -251,14 +254,14 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
       <div className="flex items-center gap-2 border-b border-[#334155]/40 pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('encyclopedie')}
-          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'encyclopedie'
               ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_12px_rgba(0,229,255,0.3)]'
               : 'text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee]'
           }`}
         >
           <span className="material-symbols-outlined text-lg">menu_book</span>
-          <span>Dossiers d'Architecture & Topologies</span>
+          <span>{t('encyclopedia:tabs.encyclopedia')}</span>
           <span
             className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
               activeTab === 'encyclopedie' ? 'bg-[#00363d] text-[#00e5ff]' : 'bg-[#0f131c] text-[#849396]'
@@ -270,14 +273,14 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
 
         <button
           onClick={() => setActiveTab('glossaire')}
-          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'glossaire'
               ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_12px_rgba(0,229,255,0.3)]'
               : 'text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee]'
           }`}
         >
           <span className="material-symbols-outlined text-lg">dictionary</span>
-          <span>Glossaire Technique Indexé (A-Z)</span>
+          <span>{t('encyclopedia:tabs.glossary')}</span>
           <span
             className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
               activeTab === 'glossaire' ? 'bg-[#00363d] text-[#00e5ff]' : 'bg-[#0f131c] text-[#849396]'
@@ -289,14 +292,14 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
 
         <button
           onClick={() => setActiveTab('matrice')}
-          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+          className={`flex items-center gap-2.5 px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
             activeTab === 'matrice'
               ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_12px_rgba(0,229,255,0.3)]'
               : 'text-[#bac9cc] hover:bg-[#262a33] hover:text-[#dfe2ee]'
           }`}
         >
           <span className="material-symbols-outlined text-lg">compare</span>
-          <span>Matrice Multi-Cloud (AWS vs Azure vs GCP)</span>
+          <span>{t('encyclopedia:tabs.matrix')}</span>
           <span
             className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
               activeTab === 'matrice' ? 'bg-[#00363d] text-[#00e5ff]' : 'bg-[#0f131c] text-[#849396]'

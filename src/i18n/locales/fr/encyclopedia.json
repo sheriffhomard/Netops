@@ -1,0 +1,37 @@
+{
+  "title": "Encyclopédie Cloud & Topologies Hybrides",
+  "subtitle": "Base de connaissances d'architecture : interconnexions multi-cloud, schémas de routage ASCII et matrice d'équivalence de services.",
+  "tabs": {
+    "encyclopedia": "Articles d'Architecture",
+    "glossary": "Glossaire Technique (50+)",
+    "matrix": "Matrice Multi-Cloud"
+  },
+  "searchPlaceholder": "Rechercher une notion, un service ou une RFC (ex: Direct Connect, ExpressRoute, BGP, VPC Peering)...",
+  "categories": {
+    "all": "Toutes les catégories",
+    "network": "Réseau & Interconnexion",
+    "compute": "Compute & Conteneurs",
+    "storage": "Stockage & Données",
+    "security": "Sécurité, IAM & Conformité",
+    "devops": "DevOps, CI/CD & IaC",
+    "architecture": "Architecture & FinOps",
+    "multicloud": "Multi-Cloud & Hybride"
+  },
+  "article": {
+    "readTime": "Temps de lecture",
+    "level": "Niveau",
+    "overview": "Synthèse architecturale",
+    "keyTakeaways": "Points clés à retenir pour l'examen",
+    "practiceCards": "S'entraîner sur les {{count}} fiches flashcards associées",
+    "relatedTerms": "Termes du glossaire associés",
+    "comparison": "Comparaison Multi-Cloud des fonctionnalités"
+  },
+  "matrix": {
+    "title": "Matrice Comparative des Services Cloud",
+    "concept": "Concept & Domaine",
+    "aws": "AWS (Amazon)",
+    "azure": "Microsoft Azure",
+    "gcp": "Google Cloud",
+    "cncf": "Standard / On-Premises"
+  }
+}

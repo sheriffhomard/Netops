@@ -1,0 +1,68 @@
+{
+  "title": "Flashcards & Network Notes (SRS)",
+  "subtitle": "Leitner spaced repetition system to master protocols, RFCs, and CLI commands.",
+  "searchPlaceholder": "Search by keyword (e.g., BGP, OSPF, RFC, MTU, ACL...)",
+  "allVendors": "All vendors",
+  "allModules": "All modules",
+  "difficulty": {
+    "all": "All levels",
+    "fundamental": "Fundamental",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
+  },
+  "modes": {
+    "focus": "3D Focus Mode",
+    "grid": "Study Grid",
+    "blitz": "Blitz Mode (2 min)",
+    "create": "Create a Card"
+  },
+  "card": {
+    "front": "Front / Question",
+    "back": "Back / Answer & Spec",
+    "hint": "Hint",
+    "showAnswer": "Show answer (Space)",
+    "hideAnswer": "Hide answer",
+    "flip": "Flip card",
+    "again": "Again (1d)",
+    "hard": "Hard (3d)",
+    "good": "Good (7d)",
+    "easy": "Easy (14d)",
+    "mastered": "Mastered",
+    "favorite": "Favorite",
+    "unfavorite": "Remove favorite",
+    "cliExample": "CLI command snippet",
+    "rfcRef": "RFC / Standard reference",
+    "relatedGlossary": "Related glossary term",
+    "relatedArticle": "Related encyclopedia article"
+  },
+  "stats": {
+    "totalCards": "Total Cards",
+    "masteredCards": "Mastered",
+    "inReview": "In Review",
+    "favorites": "Favorites",
+    "retentionRate": "Estimated retention"
+  },
+  "blitz": {
+    "title": "Timed Blitz Mode",
+    "description": "2 minutes to answer as many flashcards as possible without pause!",
+    "timeRemaining": "Time left",
+    "score": "Score",
+    "streak": "Streak",
+    "start": "Start Challenge",
+    "complete": "Blitz sprint completed!",
+    "finalScore": "Final score:",
+    "bestStreak": "Best streak:",
+    "playAgain": "Play again"
+  },
+  "createCard": {
+    "title": "Create a Custom Flashcard",
+    "desc": "Add your own technical summaries, lab takeaways, or exam questions.",
+    "frontLabel": "Prompt or core concept (Front)",
+    "backLabel": "Technical answer and explanation (Back)",
+    "moduleLabel": "Target module / certification",
+    "difficultyLabel": "Difficulty level",
+    "hintLabel": "Hint (optional)",
+    "submit": "Add Flashcard",
+    "success": "Flashcard successfully created!"
+  }
+}
