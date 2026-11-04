@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 import { currentUser, sessionHistory } from '../data/mockData';
 
@@ -7,14 +8,53 @@ interface AnalyticsViewProps {
 }
 
 export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
+  const { t, i18n } = useTranslation(['common', 'dashboard']);
+  const isEn = i18n.language?.startsWith('en');
+  const [exportNotice, setExportNotice] = useState(false);
+
   const domainsMastery = [
-    { name: 'Connectivité IP (OSPFv3 & BGP)', score: 92, status: 'Maîtrisé', color: '#5be9ad' },
-    { name: 'Sécurité & IPsec / TrustSec', score: 89, status: 'Solide', color: '#5be9ad' },
-    { name: 'Assurance Réseau (NetFlow & Syslog)', score: 84, status: 'Optimal', color: '#00e5ff' },
-    { name: 'Automatisation (Python & RESTCONF)', score: 79, status: 'En progression', color: '#00daf3' },
-    { name: 'Virtualisation (VXLAN & LISP)', score: 68, status: 'À consolider', color: '#c0c1ff' },
-    { name: 'Spanning-Tree (STP / MSTP / LoopGuard)', score: 61, status: 'Critique', color: '#ffb4ab' },
+    {
+      name: isEn ? 'IP Connectivity (OSPFv3 & BGP)' : 'Connectivité IP (OSPFv3 & BGP)',
+      score: 92,
+      status: isEn ? 'Mastered' : 'Maîtrisé',
+      color: '#5be9ad',
+    },
+    {
+      name: isEn ? 'Security & IPsec / TrustSec' : 'Sécurité & IPsec / TrustSec',
+      score: 89,
+      status: isEn ? 'Strong' : 'Solide',
+      color: '#5be9ad',
+    },
+    {
+      name: isEn ? 'Network Assurance (NetFlow & Syslog)' : 'Assurance Réseau (NetFlow & Syslog)',
+      score: 84,
+      status: isEn ? 'Optimal' : 'Optimal',
+      color: '#00e5ff',
+    },
+    {
+      name: isEn ? 'Automation (Python & RESTCONF)' : 'Automatisation (Python & RESTCONF)',
+      score: 79,
+      status: isEn ? 'In progress' : 'En progression',
+      color: '#00daf3',
+    },
+    {
+      name: isEn ? 'Virtualization (VXLAN & LISP)' : 'Virtualisation (VXLAN & LISP)',
+      score: 68,
+      status: isEn ? 'To reinforce' : 'À consolider',
+      color: '#c0c1ff',
+    },
+    {
+      name: isEn ? 'Spanning-Tree (STP / MSTP / LoopGuard)' : 'Spanning-Tree (STP / MSTP / LoopGuard)',
+      score: 61,
+      status: isEn ? 'Critical' : 'Critique',
+      color: '#ffb4ab',
+    },
   ];
+
+  const handleExport = () => {
+    setExportNotice(true);
+    setTimeout(() => setExportNotice(false), 3500);
+  };
 
   return (
     <div className="flex flex-col w-full px-4 sm:px-6 py-6 pb-20 lg:pb-8 gap-6">
@@ -24,49 +64,76 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#00e5ff] text-2xl">monitoring</span>
             <span className="text-xs font-mono uppercase tracking-widest text-[#00daf3]">
-              TELEMETRY &amp; AI READINESS ENGINE
+              {t('dashboard:analytics.engine')}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-[#dfe2ee]">
-            Analytiques de Réussite &amp; Diagnostic
+            {t('dashboard:analytics.title')}
           </h1>
           <p className="text-sm text-[#bac9cc]">
-            Projection statistique basée sur 1 420 questions répondues et 38 topologies CLI validées.
+            {t('dashboard:analytics.subtitle')}
           </p>
         </div>
 
         <button
-          onClick={() => alert('Rapport télémétrique complet exporté au format PDF.')}
-          className="px-4 py-2.5 rounded-xl bg-[#262a33] text-xs font-mono text-[#00daf3] hover:bg-[#31353e] border border-[#334155] flex items-center gap-2 self-start sm:self-auto transition-colors"
+          onClick={handleExport}
+          className="px-4 py-2.5 rounded-xl bg-[#262a33] text-xs font-mono text-[#00daf3] hover:bg-[#31353e] border border-[#334155] flex items-center gap-2 self-start sm:self-auto transition-colors cursor-pointer"
         >
           <span className="material-symbols-outlined text-base">download</span>
-          <span>Exporter le Rapport Télémétrique</span>
+          <span>{t('dashboard:analytics.exportPdf')}</span>
         </button>
       </div>
+
+      {exportNotice && (
+        <div className="p-3 rounded-xl bg-[#00363d]/80 border border-[#00e5ff]/50 text-xs font-mono text-[#a8ffd2] flex items-center gap-2 animate-in fade-in">
+          <span className="material-symbols-outlined text-base text-[#00e5ff]">verified</span>
+          <span>{t('dashboard:analytics.exported')}</span>
+        </div>
+      )}
 
       {/* Top 4 KPI Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col gap-2">
-          <span className="text-xs text-[#849396] uppercase">Readiness Global ENCOR</span>
+          <span className="text-xs text-[#849396] uppercase">
+            {t('dashboard:analytics.globalReadiness')}
+          </span>
           <span className="text-3xl font-bold text-[#00e5ff]">78%</span>
-          <span className="text-xs text-[#a8ffd2]">+4.2% ces 7 derniers jours</span>
+          <span className="text-xs text-[#a8ffd2]">
+            {t('dashboard:analytics.last7Days')}
+          </span>
         </div>
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col gap-2">
-          <span className="text-xs text-[#849396] uppercase">Précision Moyenne</span>
-          <span className="text-3xl font-bold text-[#a8ffd2]">{currentUser.precisionGlobal}%</span>
-          <span className="text-xs text-[#849396]">Seuil officiel: 82.5%</span>
+          <span className="text-xs text-[#849396] uppercase">
+            {t('dashboard:analytics.avgAccuracy')}
+          </span>
+          <span className="text-3xl font-bold text-[#a8ffd2]">
+            {new Intl.NumberFormat(isEn ? 'en-US' : 'fr-FR', { minimumFractionDigits: 1 }).format(currentUser.precisionGlobal)}%
+          </span>
+          <span className="text-xs text-[#849396]">
+            {t('dashboard:analytics.officialThreshold')}
+          </span>
         </div>
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col gap-2">
-          <span className="text-xs text-[#849396] uppercase">Vitesse Moyenne</span>
-          <span className="text-3xl font-bold text-[#c0c1ff]">{currentUser.avgTimePerQuestion}s</span>
-          <span className="text-xs text-[#a8ffd2]">+11s de marge par question</span>
+          <span className="text-xs text-[#849396] uppercase">
+            {t('dashboard:analytics.avgSpeed')}
+          </span>
+          <span className="text-3xl font-bold text-[#c0c1ff]">
+            {currentUser.avgTimePerQuestion}s
+          </span>
+          <span className="text-xs text-[#a8ffd2]">
+            {t('dashboard:analytics.speedMargin')}
+          </span>
         </div>
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-5 flex flex-col gap-2">
-          <span className="text-xs text-[#849396] uppercase">Convergence Labs</span>
+          <span className="text-xs text-[#849396] uppercase">
+            {t('dashboard:analytics.labConvergence')}
+          </span>
           <span className="text-3xl font-bold text-[#dfe2ee]">
             {currentUser.labsCompleted}/{currentUser.totalLabs}
           </span>
-          <span className="text-xs text-[#00daf3]">76% des topologies réussies</span>
+          <span className="text-xs text-[#00daf3]">
+            {t('dashboard:analytics.topologiesSuccess')}
+          </span>
         </div>
       </div>
 
@@ -77,9 +144,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
           <div className="flex items-center justify-between pb-3 border-b border-[#334155]/40">
             <h3 className="font-semibold text-base text-[#dfe2ee] flex items-center gap-2">
               <span className="material-symbols-outlined text-[#00e5ff]">pie_chart</span>
-              Maîtrise par Domaine Blueprint ENCOR
+              {t('dashboard:analytics.blueprintMastery')}
             </h3>
-            <span className="text-xs font-mono text-[#849396]">PONDÉRATION 100%</span>
+            <span className="text-xs font-mono text-[#849396]">
+              {t('dashboard:analytics.weighting100')}
+            </span>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -107,16 +176,18 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
 
           <div className="mt-2 bg-[#0a0e16] p-4 rounded-xl border border-[#334155]/50 flex items-center justify-between text-xs">
             <div className="flex flex-col gap-0.5">
-              <span className="font-semibold text-[#dfe2ee]">Plan d&apos;action préconisé</span>
+              <span className="font-semibold text-[#dfe2ee]">
+                {t('dashboard:analytics.actionPlanTitle')}
+              </span>
               <span className="text-[#bac9cc]">
-                2 séries de drills sur Spanning-Tree et VXLAN sont recommandées avant l&apos;examen blanc.
+                {t('dashboard:analytics.actionPlanText')}
               </span>
             </div>
             <button
               onClick={() => onNavigate('simulateur-d-examen')}
-              className="px-3.5 py-1.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold font-mono shrink-0 hover:brightness-110 ml-3"
+              className="px-3.5 py-1.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold font-mono shrink-0 hover:brightness-110 ml-3 cursor-pointer"
             >
-              Lancer
+              {t('dashboard:analytics.start')}
             </button>
           </div>
         </div>
@@ -126,9 +197,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
           <div className="flex items-center justify-between pb-3 border-b border-[#334155]/40">
             <h3 className="font-semibold text-base text-[#dfe2ee] flex items-center gap-2">
               <span className="material-symbols-outlined text-[#c0c1ff]">history_edu</span>
-              Derniers Examens Blancs
+              {t('dashboard:analytics.recentMocks')}
             </h3>
-            <span className="text-xs font-mono text-[#00daf3]">HISTORIQUE 30J</span>
+            <span className="text-xs font-mono text-[#00daf3]">
+              {t('dashboard:analytics.history30d')}
+            </span>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -159,11 +232,10 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
 
           <div className="bg-[#0a0e16] p-4 rounded-xl border border-[#334155]/50 flex flex-col gap-2 text-xs font-mono text-[#bac9cc]">
             <span className="text-[10px] text-[#00daf3] uppercase font-bold">
-              CONSEIL MENTOR NETOPS IA
+              {t('dashboard:analytics.mentorTip')}
             </span>
             <p className="leading-relaxed text-[#dfe2ee]">
-              Vous gagnez en moyenne +1.8% par session d&apos;examen blanc de 102 questions. En maintenant ce rythme,
-              votre probabilité de succès à l&apos;examen CCNP ENCOR dépasse 94% à J-18.
+              {t('dashboard:analytics.mentorText')}
             </p>
           </div>
         </div>
@@ -171,3 +243,4 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ onNavigate }) => {
     </div>
   );
 };
+

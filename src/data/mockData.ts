@@ -332,7 +332,7 @@ export const certificationsList: CertificationItem[] = [
   },
 ];
 
-export const defaultExamQuestions: ExamQuestion[] = [
+export const defaultExamQuestionsFr: ExamQuestion[] = [
   {
     id: 34,
     number: 34,
@@ -388,21 +388,91 @@ export const defaultExamQuestions: ExamQuestion[] = [
   },
 ];
 
+export const defaultExamQuestionsEn: ExamQuestion[] = [
+  {
+    id: 34,
+    number: 34,
+    domain: 'Domain 3.0: IP Connectivity (OSPFv2 / OSPFv3 Routing & LSA Filtering)',
+    domainTitle: 'DOMAIN 3.0: IP CONNECTIVITY (OSPFV2 / OSPFV3 ROUTING & LSA FILTERING)',
+    statement: 'A network engineer notices that router R2 does not install the external OSPF route 10.250.0.0/16 into its global routing table (RIB). Upon investigation, the LSDB returns the following telemetry:',
+    cliSnippet: {
+      hostname: 'R2#',
+      osVersion: 'IOS-XE 17.06.01a',
+      command: 'show ip ospf database external 10.250.0.0',
+      output: `            OSPF Router with ID (10.0.0.2) (Process ID 1)
+
+                Type-5 AS External Link States
+
+  LS age: 412
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: AS External Link
+  Link State ID: 10.250.0.0 (External Network Number)
+  Advertising Router: 192.168.1.1
+  LS Seq Number: 80000003
+  Checksum: 0x4F12
+  Length: 36
+  Network Mask: /16
+        Metric Type: 2 (Larger than any link state path)
+        TOS: 0
+        Metric: 20
+        Forward Address: 172.16.10.5
+        External Route Tag: 65100`,
+    },
+    hasExhibit: true,
+    questionQuery: 'What is the most likely reason why this route is not installed in R2\'s routing table?',
+    options: [
+      {
+        key: 'A',
+        text: 'The Forward Address (FA) 172.16.10.5 is not reachable via a known intra-area or inter-area OSPF path in R2\'s RIB.',
+      },
+      {
+        key: 'B',
+        text: 'The administrative distance of the external route (110) is higher than that of a competing EIGRP route in the topology.',
+      },
+      {
+        key: 'C',
+        text: 'The ASBR 192.168.1.1 is in a Totally Stubby Area (NSSA) which forbids Type-5 LSA generation without Type-7 translation.',
+      },
+      {
+        key: 'D',
+        text: 'The /16 subnet mask is not supported by Type 2 external metrics (E2) without an explicit Type 1 (E1) redistribution clause.',
+      },
+    ],
+    correctAnswer: 'A',
+    explanation: 'Pursuant to RFC 2328 Section 16.4 (Calculating OSPF External Routes), if a Type-5 LSA contains a non-zero Forward Address (FA != 0.0.0.0), the receiving router MUST have an intra-area or inter-area route to that Forward Address in its routing table. If the FA is not reachable via OSPF, the Type-5 route is not installed into the RIB.',
+    isFlagged: false,
+  },
+];
+
+export const defaultExamQuestions = defaultExamQuestionsFr;
+
 // Helper to generate the remaining 101 questions for full 102 items simulation
-export function generateFullExamQuestions(): ExamQuestion[] {
+export function generateFullExamQuestions(lang: 'fr' | 'en' = 'fr'): ExamQuestion[] {
+  const isEn = lang === 'en';
   const list: ExamQuestion[] = [];
-  const domains = [
-    'Domaine 1.0 : Architecture & QoS (SD-Access, SD-WAN, QoS)',
-    'Domaine 2.0 : Virtualisation (LISP, VXLAN, Hyperviseurs)',
-    'Domaine 3.0 : Connectivité IP (OSPFv2 / OSPFv3 Routing & LSA Filtering)',
-    'Domaine 4.0 : Assurance Réseau (NetFlow, Syslog, SPAN, IP SLA)',
-    'Domaine 5.0 : Sécurité (CoPP, TrustSec, 802.1X, MACsec)',
-    'Domaine 6.0 : Automatisation & Programmabilité (Python, EEM, RESTCONF)',
-  ];
+  const domains = isEn
+    ? [
+        'Domain 1.0: Architecture & QoS (SD-Access, SD-WAN, QoS)',
+        'Domain 2.0: Virtualization (LISP, VXLAN, Hypervisors)',
+        'Domain 3.0: IP Connectivity (OSPFv2 / OSPFv3 Routing & LSA Filtering)',
+        'Domain 4.0: Network Assurance (NetFlow, Syslog, SPAN, IP SLA)',
+        'Domain 5.0: Security (CoPP, TrustSec, 802.1X, MACsec)',
+        'Domain 6.0: Automation & Programmability (Python, EEM, RESTCONF)',
+      ]
+    : [
+        'Domaine 1.0 : Architecture & QoS (SD-Access, SD-WAN, QoS)',
+        'Domaine 2.0 : Virtualisation (LISP, VXLAN, Hyperviseurs)',
+        'Domaine 3.0 : Connectivité IP (OSPFv2 / OSPFv3 Routing & LSA Filtering)',
+        'Domaine 4.0 : Assurance Réseau (NetFlow, Syslog, SPAN, IP SLA)',
+        'Domaine 5.0 : Sécurité (CoPP, TrustSec, 802.1X, MACsec)',
+        'Domaine 6.0 : Automatisation & Programmabilité (Python, EEM, RESTCONF)',
+      ];
+
+  const defaultQ = isEn ? defaultExamQuestionsEn[0] : defaultExamQuestionsFr[0];
 
   for (let i = 1; i <= 102; i++) {
     if (i === 34) {
-      list.push(defaultExamQuestions[0]);
+      list.push(defaultQ);
       continue;
     }
 
@@ -416,7 +486,9 @@ export function generateFullExamQuestions(): ExamQuestion[] {
       number: i,
       domain: dom,
       domainTitle: dom.toUpperCase(),
-      statement: `Scénario technique #${i} : Analyse de la convergence et validation du protocole sous-jacent. L'administrateur inspecte la table de commutation et les paquets d'échange sur l'interface principale.`,
+      statement: isEn
+        ? `Technical scenario #${i}: Convergence analysis and protocol validation. The engineer inspects the switching table and control plane exchanges on the primary transit interface.`
+        : `Scénario technique #${i} : Analyse de la convergence et validation du protocole sous-jacent. L'administrateur inspecte la table de commutation et les paquets d'échange sur l'interface principale.`,
       cliSnippet: i % 3 === 0 ? {
         hostname: `R${(i % 4) + 1}#`,
         osVersion: 'IOS-XE 17.09.02',
@@ -430,15 +502,26 @@ Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State
        D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
 O IA  10.${i}.0.0/24 [110/20] via 192.168.1.1, 01:42:15, GigabitEthernet0/0/1`,
       } : undefined,
-      questionQuery: `Quelle action de configuration résout le comportement observé selon les recommandations officielles du référentiel ENCOR ?`,
-      options: [
-        { key: 'A', text: `Ajuster la valeur du timer de maintien pour forcer une ré-élection déterministe sur le lien inter-nœuds.` },
-        { key: 'B', text: `Activer le mécanisme de fast-reroute (LFA) avec calcul de chemin alternatif indépendant de la métrique composite.` },
-        { key: 'C', text: `Déployer une politique de filtrage basée sur prefix-list associée à une route-map sur le processus actif.` },
-        { key: 'D', text: `Modifier la distance administrative par défaut pour aligner la priorité d'installation dans la table globale.` },
-      ],
+      questionQuery: isEn
+        ? `Which configuration command or design adjustment best resolves the observed behavior according to ENCOR guidelines?`
+        : `Quelle action de configuration résout le comportement observé selon les recommandations officielles du référentiel ENCOR ?`,
+      options: isEn
+        ? [
+            { key: 'A', text: `Adjust the hold-down timer parameter to enforce deterministic path selection across inter-node links.` },
+            { key: 'B', text: `Enable Loop-Free Alternate (LFA) fast-reroute with alternate path computation independent of composite metrics.` },
+            { key: 'C', text: `Deploy an inbound prefix-list filter paired with a route-map on the active process.` },
+            { key: 'D', text: `Modify default administrative distance to align installation priority in the global routing table.` },
+          ]
+        : [
+            { key: 'A', text: `Ajuster la valeur du timer de maintien pour forcer une ré-élection déterministe sur le lien inter-nœuds.` },
+            { key: 'B', text: `Activer le mécanisme de fast-reroute (LFA) avec calcul de chemin alternatif indépendant de la métrique composite.` },
+            { key: 'C', text: `Déployer une politique de filtrage basée sur prefix-list associée à une route-map sur le processus actif.` },
+            { key: 'D', text: `Modifier la distance administrative par défaut pour aligner la priorité d'installation dans la table globale.` },
+          ],
       correctAnswer: (['A', 'B', 'C', 'D'] as const)[i % 4],
-      explanation: `L'action recommandée par les guides de conception Cisco Enterprise garantit la stabilité du plan de contrôle tout en évitant les boucles de routage transitoires lors du basculement d'interface.`,
+      explanation: isEn
+        ? `According to Cisco Enterprise Design standards, validating control plane convergence prevents transient routing loops during topology state transitions.`
+        : `L'action recommandée par les guides de conception Cisco Enterprise garantit la stabilité du plan de contrôle tout en évitant les boucles de routage transitoires lors du basculement d'interface.`,
       userAnswer: isAnswered ? (['A', 'B', 'C', 'D'] as const)[(i + 1) % 4] : undefined,
       isFlagged: isFlagged,
     });
@@ -447,53 +530,70 @@ O IA  10.${i}.0.0/24 [110/20] via 192.168.1.1, 01:42:15, GigabitEthernet0/0/1`,
   return list;
 }
 
-export const lab08Scenario: LabScenario = {
-  id: 'lab-08',
-  track: 'CCNA 200-301 • Track Routage',
-  status: 'En cours d\'exécution',
-  uid: 'LAB-VLAN-ROAS-08',
-  title: 'Lab 08 : Configuration d\'un Trunk 802.1Q et Routage Inter-VLAN (Router-on-a-Stick)',
-  description: 'Configurer R1 avec sous-interfaces fa0/0.10 et fa0/0.20, encapsuler en dot1q, configurer le switch SW1 en trunk et tester le ping entre PC-A (192.168.10.10) et Serveur-SRV (192.168.20.50).',
-  tasksCompleted: 3,
-  totalTasks: 4,
-  meshLatency: '1.4ms',
-  passScore: '100%',
-  activeDevice: 'R1',
-  tasks: [
-    {
-      id: 'task-1',
-      title: 'TÂCHE 01 • SW1 VLAN DATABASE',
-      description: 'Créer les VLANs 10 (Sales) et 20 (Engineering) sur le switch SW1.',
-      specLabel: 'Affectation Fa0/1, Fa0/2',
-      specStatus: 'MATCH OK',
-      isValidated: true,
-    },
-    {
-      id: 'task-2',
-      title: 'TÂCHE 02 • SW1 TRUNK PORT',
-      description: 'Configurer l\'interface Fa0/24 en mode Trunk 802.1Q vers le routeur R1.',
-      specLabel: 'switchport mode trunk',
-      specStatus: 'UP / FORWARDING',
-      isValidated: true,
-    },
-    {
-      id: 'task-3',
-      title: 'TÂCHE 03 • R1 SUB-INTERFACES',
-      description: 'Configurer le routage ROAS sur R1 (dot1Q 10 et dot1Q 20 avec IP Gateway).',
-      specLabel: 'gi0/0.10 & gi0/0.20',
-      specStatus: 'ROUTE INTERFACE OK',
-      isValidated: true,
-    },
-    {
-      id: 'task-4',
-      title: 'TÂCHE 04 • ICMP CONVERGENCE',
-      description: 'Vérifier la connectivité ICMP bout-en-bout (Ping PC-A -> SVR-1 : 192.168.20.50).',
-      specLabel: 'Echo Request (Type 8)',
-      specStatus: 'En attente...',
-      isValidated: false,
-    },
-  ],
-};
+export function getLocalizedLabScenario(lang: 'fr' | 'en' = 'fr'): LabScenario {
+  const isEn = lang === 'en';
+  return {
+    id: 'lab-08',
+    track: isEn ? 'CCNA 200-301 • Routing Track' : 'CCNA 200-301 • Track Routage',
+    status: isEn ? 'Running' : 'En cours d\'exécution',
+    uid: 'LAB-VLAN-ROAS-08',
+    title: isEn
+      ? 'Lab 08 : 802.1Q Trunk Configuration & Inter-VLAN Routing (Router-on-a-Stick)'
+      : 'Lab 08 : Configuration d\'un Trunk 802.1Q et Routage Inter-VLAN (Router-on-a-Stick)',
+    description: isEn
+      ? 'Configure R1 sub-interfaces fa0/0.10 and fa0/0.20 with dot1q encapsulation, configure switch SW1 in trunk mode and verify ping between PC-A (192.168.10.10) and Server-SRV (192.168.20.50).'
+      : 'Configurer R1 avec sous-interfaces fa0/0.10 et fa0/0.20, encapsuler en dot1q, configurer le switch SW1 en trunk et tester le ping entre PC-A (192.168.10.10) et Serveur-SRV (192.168.20.50).',
+    tasksCompleted: 3,
+    totalTasks: 4,
+    meshLatency: '1.4ms',
+    passScore: '100%',
+    activeDevice: 'R1',
+    tasks: [
+      {
+        id: 'task-1',
+        title: isEn ? 'TASK 01 • SW1 VLAN DATABASE' : 'TÂCHE 01 • SW1 VLAN DATABASE',
+        description: isEn
+          ? 'Create VLAN 10 (Sales) and VLAN 20 (Engineering) on switch SW1.'
+          : 'Créer les VLANs 10 (Sales) et 20 (Engineering) sur le switch SW1.',
+        specLabel: 'Fa0/1, Fa0/2 Assignment',
+        specStatus: 'MATCH OK',
+        isValidated: true,
+      },
+      {
+        id: 'task-2',
+        title: isEn ? 'TASK 02 • SW1 TRUNK PORT' : 'TÂCHE 02 • SW1 TRUNK PORT',
+        description: isEn
+          ? 'Configure interface Fa0/24 in 802.1Q Trunk mode towards router R1.'
+          : 'Configurer l\'interface Fa0/24 en mode Trunk 802.1Q vers le routeur R1.',
+        specLabel: 'switchport mode trunk',
+        specStatus: 'UP / FORWARDING',
+        isValidated: true,
+      },
+      {
+        id: 'task-3',
+        title: isEn ? 'TASK 03 • R1 SUB-INTERFACES' : 'TÂCHE 03 • R1 SUB-INTERFACES',
+        description: isEn
+          ? 'Configure ROAS routing on R1 (dot1Q 10 and dot1Q 20 with Gateway IPs).'
+          : 'Configurer le routage ROAS sur R1 (dot1Q 10 et dot1Q 20 avec IP Gateway).',
+        specLabel: 'gi0/0.10 & gi0/0.20',
+        specStatus: 'ROUTE INTERFACE OK',
+        isValidated: true,
+      },
+      {
+        id: 'task-4',
+        title: isEn ? 'TASK 04 • ICMP CONVERGENCE' : 'TÂCHE 04 • ICMP CONVERGENCE',
+        description: isEn
+          ? 'Verify end-to-end ICMP connectivity (Ping PC-A -> SVR-1 : 192.168.20.50).'
+          : 'Vérifier la connectivité ICMP bout-en-bout (Ping PC-A -> SVR-1 : 192.168.20.50).',
+        specLabel: 'Echo Request (Type 8)',
+        specStatus: isEn ? 'Pending...' : 'En attente...',
+        isValidated: false,
+      },
+    ],
+  };
+}
+
+export const lab08Scenario: LabScenario = getLocalizedLabScenario('fr');
 
 export const dailyDrills: DailyDrillItem[] = [
   {

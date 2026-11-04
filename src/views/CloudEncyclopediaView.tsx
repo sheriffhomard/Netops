@@ -53,13 +53,13 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
   }, [initialTab, initialTermId, initialArticleId]);
 
   const categories: { id: string; label: string; icon: string }[] = [
-    { id: 'all', label: 'Toutes les catégories', icon: 'apps' },
-    { id: 'Réseau & Interconnexion', label: 'Réseau & Interconnexion', icon: 'hub' },
-    { id: 'Compute & Conteneurs', label: 'Compute & Conteneurs', icon: 'memory' },
-    { id: 'Stockage & Données', label: 'Stockage & Données', icon: 'database' },
-    { id: 'Sécurité, IAM & Conformité', label: 'Sécurité & IAM', icon: 'shield' },
-    { id: 'DevOps, CI/CD & IaC', label: 'DevOps & IaC', icon: 'terminal' },
-    { id: 'Architecture & FinOps', label: 'Architecture & FinOps', icon: 'payments' },
+    { id: 'all', label: isEn ? 'All categories' : 'Toutes les catégories', icon: 'apps' },
+    { id: 'Réseau & Interconnexion', label: isEn ? 'Networking & Interconnect' : 'Réseau & Interconnexion', icon: 'hub' },
+    { id: 'Compute & Conteneurs', label: isEn ? 'Compute & Containers' : 'Compute & Conteneurs', icon: 'memory' },
+    { id: 'Stockage & Données', label: isEn ? 'Storage & Data' : 'Stockage & Données', icon: 'database' },
+    { id: 'Sécurité, IAM & Conformité', label: isEn ? 'Security & IAM' : 'Sécurité & IAM', icon: 'shield' },
+    { id: 'DevOps, CI/CD & IaC', label: isEn ? 'DevOps & IaC' : 'DevOps & IaC', icon: 'terminal' },
+    { id: 'Architecture & FinOps', label: isEn ? 'Architecture & FinOps' : 'Architecture & FinOps', icon: 'payments' },
   ];
 
   // Alphabet list for jump filter
@@ -165,16 +165,14 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#00e5ff] text-2xl">cloud_sync</span>
             <span className="text-xs font-mono font-bold tracking-widest text-[#00e5ff] uppercase">
-              Référence Technique NetOps & Architecture Cloud
+              {isEn ? 'NetOps Technical Reference & Cloud Architecture' : 'Référence Technique NetOps & Architecture Cloud'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-[#dfe2ee] tracking-tight">
-            Encyclopédie & Glossaire Cloud d'Entreprise
+            {t('encyclopedia:title')}
           </h1>
           <p className="text-sm text-[#bac9cc] leading-relaxed">
-            Architectures de réseaux hybrides, topologies AWS / Azure / GCP, interconnexions BGP,
-            conteneurs Kubernetes, sécurité Zero Trust et{' '}
-            <strong className="text-[#a8ffd2]">passerelle directe vers les 900+ Flashcards de révision</strong>.
+            {t('encyclopedia:subtitle')}
           </p>
         </div>
 
@@ -185,67 +183,87 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00e5ff]/10 hover:bg-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/40 text-xs font-semibold tracking-wide transition-all shadow-[0_0_12px_rgba(0,229,255,0.15)]"
           >
             <span className="material-symbols-outlined text-base">style</span>
-            <span>Flashcards Réseau & Cloud</span>
+            <span>{isEn ? 'Network & Cloud Flashcards' : 'Flashcards Réseau & Cloud'}</span>
           </button>
           <button
             onClick={() => onNavigate('parcours-certifications')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155]/60 text-xs font-semibold transition-all"
           >
             <span className="material-symbols-outlined text-base">layers</span>
-            <span>Certifications Associées</span>
+            <span>{isEn ? 'Associated Certifications' : 'Certifications Associées'}</span>
           </button>
         </div>
       </section>
+
+      {/* TECHNICAL CONTENT LANGUAGE NOTICE */}
+      <div className="bg-[#0f172a]/80 border border-[#0284c7]/40 rounded-xl p-3.5 flex items-start gap-3 text-xs">
+        <span className="material-symbols-outlined text-[#38bdf8] text-base shrink-0 mt-0.5">translate</span>
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-[#f1f5f9]">
+              {isEn ? 'Architecture & Glossary Language Standard' : 'Standard Linguistique de l\'Encyclopédie & Glossaire'}
+            </span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#1e293b] text-[#38bdf8] border border-[#38bdf8]/40">
+              {isEn ? 'SOURCE CONTENT: FR (ASCII Topologies & AWS/Azure/GCP terms in EN)' : 'CONTENU SOURCE : FR (Topologies ASCII & termes Cloud en EN)'}
+            </span>
+          </div>
+          <p className="text-[#94a3b8] leading-relaxed">
+            {isEn
+              ? 'In-depth architectural dossiers and glossary explanations are authored in technical French with universal ASCII diagrams and official hyperscaler product names (Direct Connect, ExpressRoute, Cloud Interconnect, BGP MED/Communities). UI controls, categories, telemetry, and search are fully localized.'
+              : 'Les dossiers d\'architecture et les fiches du glossaire sont rédigés en français technique avec schémas topologiques ASCII et terminologie officielle des hyperscalers (AWS, Azure, GCP). Les filtres, onglets, indicateurs et moteurs de recherche sont entièrement bilingues.'}
+          </p>
+        </div>
+      </div>
 
       {/* 2. Platform Telemetry Metrics Strip */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-4 flex flex-col gap-1">
           <span className="text-[11px] font-mono text-[#849396] uppercase tracking-wider flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff]"></span>
-            Termes du Glossaire
+            {isEn ? 'Glossary Terms' : 'Termes du Glossaire'}
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-[#00e5ff]">
               {cloudGlossaryTerms.length}
             </span>
-            <span className="text-xs text-[#bac9cc]">définitions détaillées</span>
+            <span className="text-xs text-[#bac9cc]">{isEn ? 'detailed definitions' : 'définitions détaillées'}</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-4 flex flex-col gap-1">
           <span className="text-[11px] font-mono text-[#849396] uppercase tracking-wider flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#a8ffd2]"></span>
-            Dossiers d'Architecture
+            {isEn ? 'Architecture Files' : 'Dossiers d\'Architecture'}
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-[#a8ffd2]">
               {cloudEncyclopediaArticles.length}
             </span>
-            <span className="text-xs text-[#bac9cc]">avec schémas ASCII</span>
+            <span className="text-xs text-[#bac9cc]">{isEn ? 'with ASCII diagrams' : 'avec schémas ASCII'}</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-4 flex flex-col gap-1">
           <span className="text-[11px] font-mono text-[#849396] uppercase tracking-wider flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ffb74d]"></span>
-            Matrice Multi-Cloud
+            {isEn ? 'Multi-Cloud Matrix' : 'Matrice Multi-Cloud'}
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-[#ffb74d]">
               {multiCloudMatrix.length}
             </span>
-            <span className="text-xs text-[#bac9cc]">services comparés</span>
+            <span className="text-xs text-[#bac9cc]">{isEn ? 'compared services' : 'services comparés'}</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-4 flex flex-col gap-1">
           <span className="text-[11px] font-mono text-[#849396] uppercase tracking-wider flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3]"></span>
-            Liaison Flashcards
+            {isEn ? 'Flashcards Link' : 'Liaison Flashcards'}
           </span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold font-mono text-[#4edea3]">900+</span>
-            <span className="text-xs text-[#bac9cc]">cartes interconnectées</span>
+            <span className="text-xs text-[#bac9cc]">{isEn ? 'linked flashcards' : 'cartes interconnectées'}</span>
           </div>
         </div>
       </section>
@@ -324,7 +342,7 @@ export const CloudEncyclopediaView: React.FC<CloudEncyclopediaViewProps> = ({
               </span>
               <input
                 type="text"
-                placeholder="Filtrer les dossiers techniques..."
+                placeholder={isEn ? "Filter architectural dossiers..." : "Filtrer les dossiers techniques..."}
                 value={encycloSearch}
                 onChange={(e) => setEncycloSearch(e.target.value)}
                 className="w-full bg-[#181c24] border border-[#334155]/60 rounded-lg pl-9 pr-3 py-2 text-xs text-[#dfe2ee] placeholder-[#849396] focus:border-[#00e5ff] focus:outline-none font-mono"

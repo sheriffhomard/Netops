@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { initialExactChallenges, ExactTypingChallenge } from '../../data/workshopsData';
 import confetti from 'canvas-confetti';
 
 export const ExactTypingModule: React.FC = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language?.startsWith('en');
   const [challenges] = useState<ExactTypingChallenge[]>(initialExactChallenges);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [inputCommand, setInputCommand] = useState<string>('');
@@ -108,14 +111,14 @@ export const ExactTypingModule: React.FC = () => {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/30">
-              AUCUN QCM • SAISIE MANUELLE EXACTE
+              {isEn ? 'NO MULTIPLE CHOICE • EXACT CLI INPUT' : 'AUCUN QCM • SAISIE MANUELLE EXACTE'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Tolérance intelligente syntaxique IOS
+              {isEn ? 'Smart IOS syntax abbreviation tolerance' : 'Tolérance intelligente syntaxique IOS'}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#dfe2ee]">
-            Module Saisie Exacte de Ligne de Commande
+            {isEn ? 'Exact Command Line Typing Module' : 'Module Saisie Exacte de Ligne de Commande'}
           </h2>
         </div>
 
@@ -124,12 +127,12 @@ export const ExactTypingModule: React.FC = () => {
             <span className="material-symbols-outlined text-[#00e5ff] text-base">
               local_fire_department
             </span>
-            <span className="text-[#849396]">Série active :</span>
-            <span className="text-[#00e5ff] font-bold">{streak} d&apos;affilée</span>
+            <span className="text-[#849396]">{isEn ? 'Current streak:' : 'Série active :'}</span>
+            <span className="text-[#00e5ff] font-bold">{streak} {isEn ? 'in a row' : 'd\'affilée'}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
             <span className="material-symbols-outlined text-[#5be9ad] text-base">verified</span>
-            <span className="text-[#849396]">Réussis :</span>
+            <span className="text-[#849396]">{isEn ? 'Completed:' : 'Réussis :'}</span>
             <span className="text-[#a8ffd2] font-bold">
               {validatedCount}/{challenges.length}
             </span>
@@ -155,7 +158,7 @@ export const ExactTypingModule: React.FC = () => {
                 : 'bg-[#181c24] text-[#bac9cc] hover:bg-[#262a33] border border-[#334155]/40'
             }`}
           >
-            <span>Défi #{idx + 1}</span>
+            <span>{isEn ? `Drill #${idx + 1}` : `Défi #${idx + 1}`}</span>
             <span className="text-[10px] opacity-75">({c.domain.split(' ')[0]})</span>
           </button>
         ))}
@@ -183,7 +186,7 @@ export const ExactTypingModule: React.FC = () => {
         <div className="flex flex-col gap-2">
           <label className="text-xs font-mono text-[#849396] uppercase flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#5be9ad]" />
-            Invite de commande active (CLI Simulation) :
+            {isEn ? 'Active CLI Prompt (Simulated):' : 'Invite de commande active (CLI Simulation) :'}
           </label>
 
           <form
@@ -197,7 +200,7 @@ export const ExactTypingModule: React.FC = () => {
               type="text"
               value={inputCommand}
               onChange={(e) => setInputCommand(e.target.value)}
-              placeholder="Saisissez la commande IOS exacte (ou abréviation reconnue)..."
+              placeholder={isEn ? "Type exact IOS command (or recognized abbreviation)..." : "Saisissez la commande IOS exacte (ou abréviation reconnue)..."}
               autoFocus
               className="flex-1 bg-transparent border-none outline-none font-mono text-sm text-[#a8ffd2] placeholder:text-[#849396]/60 focus:ring-0"
             />
@@ -205,7 +208,7 @@ export const ExactTypingModule: React.FC = () => {
               type="submit"
               className="px-4 py-1.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold text-xs font-mono hover:brightness-110 shadow-sm shrink-0 transition-all"
             >
-              Vérifier (Entrée)
+              {isEn ? 'Check (Enter)' : 'Vérifier (Entrée)'}
             </button>
           </form>
         </div>
@@ -241,14 +244,14 @@ export const ExactTypingModule: React.FC = () => {
               className="px-3 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] flex items-center gap-1.5 transition-colors"
             >
               <span className="material-symbols-outlined text-sm">lightbulb</span>
-              <span>{showHint ? 'Masquer l\'indice' : 'Indice syntaxique'}</span>
+              <span>{showHint ? (isEn ? 'Hide hint' : 'Masquer l\'indice') : (isEn ? 'Syntax hint' : 'Indice syntaxique')}</span>
             </button>
             <button
               onClick={() => setShowSolution(!showSolution)}
               className="px-3 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155] flex items-center gap-1.5 transition-colors"
             >
               <span className="material-symbols-outlined text-sm">visibility</span>
-              <span>{showSolution ? 'Masquer la solution' : 'Solution canonique'}</span>
+              <span>{showSolution ? (isEn ? 'Hide solution' : 'Masquer la solution') : (isEn ? 'Canonical solution' : 'Solution canonique')}</span>
             </button>
           </div>
 
@@ -256,7 +259,7 @@ export const ExactTypingModule: React.FC = () => {
             onClick={handleNextChallenge}
             className="px-4 py-2 rounded-lg bg-[#00363d] hover:bg-[#00363d]/80 text-[#00e5ff] text-xs font-mono font-semibold border border-[#00e5ff]/40 flex items-center gap-1.5 transition-all self-end"
           >
-            <span>Défi suivant</span>
+            <span>{isEn ? 'Next drill' : 'Défi suivant'}</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
@@ -266,7 +269,7 @@ export const ExactTypingModule: React.FC = () => {
           <div className="bg-[#0a0e16] p-4 rounded-xl border border-[#00daf3]/40 text-xs font-mono text-[#00daf3] flex items-start gap-2 animate-in fade-in">
             <span className="material-symbols-outlined text-base shrink-0">info</span>
             <div className="flex flex-col gap-1">
-              <span className="font-bold">Indice de commande :</span>
+              <span className="font-bold">{isEn ? 'Command Hint:' : 'Indice de commande :'}</span>
               <p className="text-[#dfe2ee]">{activeChallenge.hint}</p>
             </div>
           </div>
@@ -277,7 +280,7 @@ export const ExactTypingModule: React.FC = () => {
           <div className="bg-[#0a0e16] p-4 rounded-xl border border-[#5be9ad]/40 text-xs font-mono text-[#a8ffd2] flex items-start gap-2 animate-in fade-in">
             <span className="material-symbols-outlined text-base shrink-0">check_circle</span>
             <div className="flex flex-col gap-1.5">
-              <span className="font-bold">Syntaxe officielle attendue (Cisco Reference) :</span>
+              <span className="font-bold">{isEn ? 'Expected Official Syntax (Cisco Reference):' : 'Syntaxe officielle attendue (Cisco Reference) :'}</span>
               <code className="bg-[#181c24] px-3 py-1.5 rounded border border-[#334155] text-sm text-[#00e5ff]">
                 {activeChallenge.canonicalCommand}
               </code>

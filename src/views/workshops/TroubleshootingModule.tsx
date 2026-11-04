@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { initialTroubleshootings, TroubleshootingChallenge } from '../../data/workshopsData';
 import confetti from 'canvas-confetti';
 
 export const TroubleshootingModule: React.FC = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language?.startsWith('en');
   const [challenges] = useState<TroubleshootingChallenge[]>(initialTroubleshootings);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [selectedLineNum, setSelectedLineNum] = useState<number | null>(null);
@@ -45,20 +48,20 @@ export const TroubleshootingModule: React.FC = () => {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#93000a]/20 text-[#ffb4ab] border border-[#ffb4ab]/40">
-              TROUBLESHOOTING &amp; FIND THE BUG
+              {isEn ? 'TROUBLESHOOTING & FIND THE BUG' : 'TROUBLESHOOTING & FIND THE BUG'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Diagnostic de configuration &amp; Syslog triage
+              {isEn ? 'Configuration diagnostics & Syslog triage' : 'Diagnostic de configuration & Syslog triage'}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#dfe2ee]">
-            Défis de Dépannage Réseau
+            {isEn ? 'Network Troubleshooting Drills' : 'Défis de Dépannage Réseau'}
           </h2>
         </div>
 
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50 text-xs font-mono self-start sm:self-auto">
           <span className="material-symbols-outlined text-[#5be9ad] text-base">task_alt</span>
-          <span className="text-[#849396]">Incidents résolus :</span>
+          <span className="text-[#849396]">{isEn ? 'Resolved tickets:' : 'Incidents résolus :'}</span>
           <span className="text-[#a8ffd2] font-bold">
             {resolvedIds.size}/{challenges.length}
           </span>
@@ -92,12 +95,12 @@ export const TroubleshootingModule: React.FC = () => {
                 {isResolved ? (
                   <span className="text-[10px] font-mono text-[#5be9ad] font-bold flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs">check_circle</span>
-                    RÉSOLU
+                    {isEn ? 'RESOLVED' : 'RÉSOLU'}
                   </span>
                 ) : (
                   <span className="text-[10px] font-mono text-[#ffb4ab] flex items-center gap-1">
                     <span className="material-symbols-outlined text-xs">error</span>
-                    OUVERT
+                    {isEn ? 'OPEN' : 'OUVERT'}
                   </span>
                 )}
               </div>
@@ -211,7 +214,7 @@ export const TroubleshootingModule: React.FC = () => {
               <div className="p-4 rounded-xl bg-[#0a0e16] border border-[#ffb4ab]/40 flex flex-col gap-2 text-xs font-mono">
                 <span className="text-[#ffb4ab] font-bold flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-base">verified</span>
-                  Analyse de cause racine (Root Cause Analysis) :
+                  {isEn ? 'Root Cause Analysis (RCA):' : 'Analyse de cause racine (Root Cause Analysis) :'}
                 </span>
                 <p className="text-[#dfe2ee] leading-relaxed">{activeChallenge.bugExplanation}</p>
               </div>
@@ -219,7 +222,7 @@ export const TroubleshootingModule: React.FC = () => {
               {/* Proposed Command Fix */}
               <div className="flex flex-col gap-2">
                 <span className="text-xs font-mono text-[#849396] uppercase">
-                  Commande corrective préconisée :
+                  {isEn ? 'Recommended corrective command:' : 'Commande corrective préconisée :'}
                 </span>
                 <pre className="bg-[#0a0e16] p-3 rounded-lg border border-[#00daf3]/40 font-mono text-xs text-[#00e5ff] whitespace-pre-wrap">
                   {activeChallenge.correctiveCommand}
@@ -233,7 +236,7 @@ export const TroubleshootingModule: React.FC = () => {
                   className="w-full py-3 rounded-xl bg-[#00e5ff] hover:brightness-110 text-[#00363d] font-bold font-mono text-xs shadow-[0_0_14px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 transition-all"
                 >
                   <span className="material-symbols-outlined text-base">bolt</span>
-                  <span>Appliquer le Correctif &amp; Simuler la Convergence</span>
+                  <span>{isEn ? 'Apply Patch & Simulate Convergence' : 'Appliquer le Correctif & Simuler la Convergence'}</span>
                 </button>
               ) : (
                 <div className="flex flex-col gap-3 animate-in slide-in-from-bottom-2 duration-300">
@@ -242,7 +245,7 @@ export const TroubleshootingModule: React.FC = () => {
                       <span className="material-symbols-outlined text-base text-[#5be9ad]">
                         check_circle
                       </span>
-                      <span>Convergence Confirmée ! Syslog Live :</span>
+                      <span>{isEn ? 'Convergence Confirmed! Live Syslog:' : 'Convergence Confirmée ! Syslog Live :'}</span>
                     </div>
                     <pre className="whitespace-pre-wrap text-[11px] leading-relaxed text-[#dfe2ee] bg-[#0a0e16] p-2.5 rounded border border-[#334155]/50">
                       {activeChallenge.simulationSuccessLog}
@@ -253,7 +256,7 @@ export const TroubleshootingModule: React.FC = () => {
                     onClick={handleNextChallenge}
                     className="w-full py-2.5 rounded-xl bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] flex items-center justify-center gap-2 transition-colors"
                   >
-                    <span>Passer à l&apos;incident suivant</span>
+                    <span>{isEn ? 'Proceed to next incident' : 'Passer à l\'incident suivant'}</span>
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </button>
                 </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { initialOrderingExercises, OrderingExercise } from '../../data/workshopsData';
 import confetti from 'canvas-confetti';
 
@@ -10,6 +11,8 @@ interface StepItem {
 }
 
 export const TimelineOrderingModule: React.FC = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language?.startsWith('en');
   const [exercises] = useState<OrderingExercise[]>(initialOrderingExercises);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [currentSteps, setCurrentSteps] = useState<StepItem[]>([]);
@@ -77,20 +80,20 @@ export const TimelineOrderingModule: React.FC = () => {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#3131c0]/20 text-[#c0c1ff] border border-[#c0c1ff]/30">
-              CHRONOLOGIE &amp; TIMELINE LOGIQUE
+              {isEn ? 'CHRONOLOGY & LOGICAL TIMELINE' : 'CHRONOLOGIE & TIMELINE LOGIQUE'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Processus protocolaires &amp; Boot sequence
+              {isEn ? 'Protocol workflows & Boot sequences' : 'Processus protocolaires & Boot sequence'}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#dfe2ee]">
-            Exercices d&apos;Ordonnancement
+            {isEn ? 'Sequential Ordering Exercises' : 'Exercices d\'Ordonnancement'}
           </h2>
         </div>
 
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50 text-xs font-mono self-start sm:self-auto">
           <span className="material-symbols-outlined text-[#5be9ad] text-base">verified</span>
-          <span className="text-[#849396]">Processus validés :</span>
+          <span className="text-[#849396]">{isEn ? 'Validated workflows:' : 'Processus validés :'}</span>
           <span className="text-[#a8ffd2] font-bold">
             {completedIds.size}/{exercises.length}
           </span>
@@ -188,8 +191,8 @@ export const TimelineOrderingModule: React.FC = () => {
                       }`}
                     >
                       {isCorrectPosition
-                        ? '✓ Position exacte'
-                        : `✗ Attendu en #${step.correctIndex + 1}`}
+                        ? (isEn ? '✓ Exact position' : '✓ Position exacte')
+                        : (isEn ? `✗ Expected at #${step.correctIndex + 1}` : `✗ Attendu en #${step.correctIndex + 1}`)}
                     </span>
                   )}
 
@@ -197,7 +200,7 @@ export const TimelineOrderingModule: React.FC = () => {
                     <button
                       onClick={() => moveUp(idx)}
                       disabled={idx === 0}
-                      title="Monter d'une position"
+                      title={isEn ? "Move up one position" : "Monter d'une position"}
                       className="p-1.5 rounded-lg bg-[#262a33] text-[#dfe2ee] hover:bg-[#31353e] disabled:opacity-30 disabled:hover:bg-[#262a33] transition-colors"
                     >
                       <span className="material-symbols-outlined text-base">arrow_upward</span>
@@ -205,7 +208,7 @@ export const TimelineOrderingModule: React.FC = () => {
                     <button
                       onClick={() => moveDown(idx)}
                       disabled={idx === currentSteps.length - 1}
-                      title="Descendre d'une position"
+                      title={isEn ? "Move down one position" : "Descendre d'une position"}
                       className="p-1.5 rounded-lg bg-[#262a33] text-[#dfe2ee] hover:bg-[#31353e] disabled:opacity-30 disabled:hover:bg-[#262a33] transition-colors"
                     >
                       <span className="material-symbols-outlined text-base">arrow_downward</span>
@@ -232,8 +235,8 @@ export const TimelineOrderingModule: React.FC = () => {
               </span>
               <span>
                 {isAllCorrect
-                  ? 'Séquence ordonnée à 100% avec succès !'
-                  : 'Certaines étapes ne sont pas à la bonne place chronologique.'}
+                  ? (isEn ? 'Sequence 100% correctly ordered!' : 'Séquence ordonnée à 100% avec succès !')
+                  : (isEn ? 'Some steps are not in the correct chronological order.' : 'Certaines étapes ne sont pas à la bonne place chronologique.')}
               </span>
             </div>
             <p className="text-[#dfe2ee] leading-relaxed">{activeExercise.explanation}</p>
@@ -247,7 +250,7 @@ export const TimelineOrderingModule: React.FC = () => {
             className="px-3.5 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155] flex items-center gap-2 transition-colors"
           >
             <span className="material-symbols-outlined text-sm">shuffle</span>
-            <span>Mélanger les étapes</span>
+            <span>{isEn ? 'Shuffle steps' : 'Mélanger les étapes'}</span>
           </button>
 
           <div className="flex items-center gap-3">
@@ -256,13 +259,13 @@ export const TimelineOrderingModule: React.FC = () => {
               className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold font-mono text-xs hover:brightness-110 shadow-[0_0_12px_rgba(0,229,255,0.3)] flex items-center gap-2 transition-all"
             >
               <span className="material-symbols-outlined text-base">rule</span>
-              <span>Vérifier la séquence</span>
+              <span>{isEn ? 'Verify sequence' : 'Vérifier la séquence'}</span>
             </button>
             <button
               onClick={handleNext}
               className="px-4 py-2.5 rounded-xl bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] flex items-center gap-1.5 transition-colors"
             >
-              <span>Exercice suivant</span>
+              <span>{isEn ? 'Next exercise' : 'Exercice suivant'}</span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </button>
           </div>

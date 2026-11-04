@@ -16,7 +16,7 @@ export const QuestionBankView: React.FC<QuestionBankViewProps> = ({ onNavigate }
   const [activeQuestionId, setActiveQuestionId] = useState<number>(1);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
-  const bankQuestions = [
+  const bankQuestionsFr = [
     {
       id: 1,
       cert: 'CCNP ENCOR 350-401',
@@ -101,6 +101,93 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
     },
   ];
 
+  const bankQuestionsEn = [
+    {
+      id: 1,
+      cert: 'CCNP ENCOR 350-401',
+      domain: 'IP Connectivity & OSPF',
+      title: 'OSPFv2 Type-5 LSA Non-Zero Forward Address',
+      statement:
+        'When R2 receives a Type-5 LSA with a Forward Address 172.16.10.5, which condition in the routing table is mandatory to install the external route into its RIB?',
+      codeSnippet: `R2# show ip ospf database external 10.250.0.0
+Forward Address: 172.16.10.5
+Metric Type: 2`,
+      options: [
+        'A. The Forward Address must be reachable via an intra-area or inter-area path in the RIB.',
+        'B. The ASBR must reside in a Totally Stubby Area.',
+        'C. The metric must strictly be Type 1 (E1).',
+        'D. A default route 0.0.0.0/0 is sufficient to reach the FA.',
+      ],
+      correctAnswer: 'A',
+      explanation:
+        'RFC 2328 Section 16.4: If the Forward Address is non-zero, the receiving router MUST have an intra-area or inter-area path to this specific address in order to install the external route into its global routing table.',
+      rfc: 'RFC 2328 §16.4',
+    },
+    {
+      id: 2,
+      cert: 'CCNA 200-301',
+      domain: 'Network Access & Switching',
+      title: '802.1Q Encapsulation and Tagged Native VLAN',
+      statement:
+        'By default on a Cisco Catalyst switch, what behavior is applied to frames belonging to the native VLAN traversing an 802.1Q Trunk port?',
+      codeSnippet: `SW1# show interfaces trunk
+Port        Mode             Encapsulation  Status        Native vlan
+Fa0/24      on               802.1q         trunking      1`,
+      options: [
+        'A. They are transmitted without the 4-byte 802.1Q header tag (untagged).',
+        'B. They are systematically dropped by Spanning-Tree.',
+        'C. They receive a level 7 CoS priority tag automatically.',
+        'D. They are redirected to switch CPU for deep packet inspection.',
+      ],
+      correctAnswer: 'A',
+      explanation:
+        'By default in IEEE 802.1Q standard, traffic associated with the native VLAN (usually VLAN 1) traverses Trunk links untagged. The global command "vlan dot1q tag native" can modify this behavior.',
+      rfc: 'IEEE 802.1Q Standard',
+    },
+    {
+      id: 3,
+      cert: 'Palo Alto PCNSE',
+      domain: 'Security & NGFW Policies',
+      title: 'App-ID Behavior with Custom Port (Service Dependency)',
+      statement:
+        'An engineer configures a security rule permitting application "web-browsing" but restricts the service to TCP port 8080. If standard HTTP traffic arrives on port 80, how does the PAN-OS engine handle the session?',
+      codeSnippet: `admin@PA-3220> show security-rule-match application web-browsing destination-port 80
+Status: DENIED (Service port mismatch)`,
+      options: [
+        'A. Traffic is blocked because the destination port does not match the Service field specification.',
+        'B. App-ID automatically bypasses the port mismatch via SSL decryption.',
+        'C. Traffic is rewritten using NAT onto port 8080.',
+        'D. Traffic is quarantined for WildFire dynamic analysis.',
+      ],
+      correctAnswer: 'A',
+      explanation:
+        'In PAN-OS, when an explicit custom service port is configured (e.g. service-http-8080 instead of "application-default"), packets must match BOTH the identified application and the specified TCP/UDP port.',
+      rfc: 'PAN-OS 11.x Security Policy Architecture',
+    },
+    {
+      id: 4,
+      cert: 'CompTIA Security+',
+      domain: 'Zero-Trust Architecture & IAM',
+      title: 'Principle of Least Privilege & PAM (Privileged Access Management)',
+      statement:
+        'Which security control prevents standing privileges and enforces Just-In-Time (JIT) access policies on core network infrastructure devices?',
+      codeSnippet: `AAA Authentication: TACACS+ / RADIUS Authorization Server
+Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
+      options: [
+        'A. Deploy a PAM bastion vault with time-limited ticket provisioning (JIT).',
+        'B. Disable all local administrator accounts and revert to SNMPv1.',
+        'C. Increase Telnet session idle timeout to 3600 seconds.',
+        'D. Enforce a static shared symmetric encryption key across all routers.',
+      ],
+      correctAnswer: 'A',
+      explanation:
+        'The Just-In-Time (JIT) access model in PAM ensures that administrative elevated privileges are only granted for a strictly delimited time window and revoked automatically upon expiration.',
+      rfc: 'NIST SP 800-207 Zero Trust Architecture',
+    },
+  ];
+
+  const bankQuestions = isEn ? bankQuestionsEn : bankQuestionsFr;
+
   const filtered = bankQuestions.filter((q) => {
     const matchSearch =
       q.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -121,22 +208,24 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#00e5ff] text-2xl">database</span>
             <span className="text-xs font-mono uppercase tracking-widest text-[#00daf3]">
-              ITEM BANK &amp; FLASHCARDS
+              {isEn ? 'ITEM BANK & EXPLANATIONS' : 'ITEM BANK & FLASHCARDS'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-[#dfe2ee]">
-            Banque de Questions Réseau &amp; Cybersécurité
+            {isEn ? 'Network & Cyber Question Bank' : 'Banque de Questions Réseau & Cybersécurité'}
           </h1>
           <p className="text-sm text-[#bac9cc]">
-            Explorez 14 280 questions indexées par RFC, vendor et blueprint officiel avec explications détaillées.
+            {isEn
+              ? 'Explore 14,280 questions indexed by RFC, vendor and official blueprints with in-depth technical justifications.'
+              : 'Explorez 14 280 questions indexées par RFC, vendor et blueprint officiel avec explications détaillées.'}
           </p>
         </div>
         <button
           onClick={() => onNavigate('simulateur-d-examen')}
-          className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto"
+          className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 shadow-lg flex items-center gap-2 self-start sm:self-auto cursor-pointer"
         >
           <span className="material-symbols-outlined text-lg">play_arrow</span>
-          <span>Lancer un Mock Exam</span>
+          <span>{isEn ? 'Launch Mock Exam' : 'Lancer un Mock Exam'}</span>
         </button>
       </div>
 
@@ -150,7 +239,11 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher une question, mot-clé RFC, protocole (OSPF, BGP, VLAN)..."
+            placeholder={
+              isEn
+                ? 'Search a question, RFC keyword, protocol (OSPF, BGP, VLAN)...'
+                : 'Rechercher une question, mot-clé RFC, protocole (OSPF, BGP, VLAN)...'
+            }
             className="w-full bg-[#181c24] border border-[#334155]/50 rounded-lg pl-11 pr-4 py-2 text-sm text-[#dfe2ee] placeholder:text-[#849396] focus:outline-none focus:border-[#00e5ff]"
           />
         </div>
@@ -160,7 +253,7 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
           onChange={(e) => setSelectedCert(e.target.value)}
           className="w-full sm:w-56 bg-[#181c24] border border-[#334155]/50 rounded-lg px-3 py-2 text-sm text-[#dfe2ee] focus:outline-none"
         >
-          <option value="all">Toutes les certifications</option>
+          <option value="all">{isEn ? 'All Certifications' : 'Toutes les certifications'}</option>
           <option value="ENCOR">Cisco CCNP ENCOR</option>
           <option value="CCNA">Cisco CCNA 200-301</option>
           <option value="PCNSE">Palo Alto PCNSE</option>
@@ -168,7 +261,7 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
         </select>
       </div>
 
-      {/* Split List & Flashcard View */}
+      {/* Split List & Question Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Questions List (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-3">
@@ -200,7 +293,7 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
           })}
         </div>
 
-        {/* Right: Selected Question Inspector / Flashcard (7 cols) */}
+        {/* Right: Selected Question Inspector / Explanation (7 cols) */}
         <div className="lg:col-span-7 bg-[#181c24] border border-[#334155] rounded-xl p-6 shadow-xl flex flex-col gap-5">
           <div className="flex items-center justify-between pb-3 border-b border-[#334155]/40">
             <div className="flex items-center gap-2">
@@ -222,7 +315,9 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
           )}
 
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-mono text-[#849396] uppercase">Options au choix :</span>
+            <span className="text-xs font-mono text-[#849396] uppercase">
+              {isEn ? 'Multiple Choice Options:' : 'Options au choix :'}
+            </span>
             {activeQ.options.map((opt, i) => (
               <div
                 key={i}
@@ -236,19 +331,23 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
           <div className="pt-3 border-t border-[#334155]/40 flex flex-col gap-3">
             <button
               onClick={() => setShowAnswer(!showAnswer)}
-              className="py-2.5 px-4 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] transition-colors self-start flex items-center gap-2 border border-[#334155]"
+              className="py-2.5 px-4 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] transition-colors self-start flex items-center gap-2 border border-[#334155] cursor-pointer"
             >
               <span className="material-symbols-outlined text-sm">
                 {showAnswer ? 'visibility_off' : 'lightbulb'}
               </span>
-              <span>{showAnswer ? 'Masquer la réponse' : 'Révéler la réponse & justification RFC'}</span>
+              <span>
+                {showAnswer
+                  ? (isEn ? 'Hide Answer' : 'Masquer la réponse')
+                  : (isEn ? 'Reveal Answer & RFC Justification' : 'Révéler la réponse & justification RFC')}
+              </span>
             </button>
 
             {showAnswer && (
               <div className="bg-[#0a0e16] p-4 rounded-xl border border-[#00daf3]/40 flex flex-col gap-2 animate-in fade-in duration-200">
                 <div className="flex items-center gap-2 text-[#a8ffd2] font-mono text-xs font-bold">
                   <span className="material-symbols-outlined text-base">verified</span>
-                  <span>Réponse correcte : {activeQ.correctAnswer}</span>
+                  <span>{isEn ? 'Correct Answer:' : 'Réponse correcte :'} {activeQ.correctAnswer}</span>
                 </div>
                 <p className="text-xs text-[#dfe2ee] leading-relaxed">{activeQ.explanation}</p>
               </div>
@@ -259,3 +358,4 @@ Attribute: Cisco-AVPair = "priv-lvl=15" with Time-Limited Ticket`,
     </div>
   );
 };
+

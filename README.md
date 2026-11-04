@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <strong>🇫🇷 Version Française</strong> | <a href="README.en.md"><strong>🇬🇧 English Documentation (README.en.md)</strong></a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Version-v2.6.0--PROD-00e5ff?style=for-the-badge&logo=fastapi&logoColor=black" alt="Version 2.6.0" />
   <img src="https://img.shields.io/badge/Langues-FR%20%F0%9F%87%AB%F0%9F%87%B7%20%7C%20EN%20%F0%9F%87%AC%F0%9F%87%A7-00daf3?style=for-the-badge&logo=google-translate&logoColor=black" alt="Bilingual FR EN" />
   <img src="https://img.shields.io/badge/PWA-Installable-4edea3?style=for-the-badge&logo=pwa&logoColor=black" alt="PWA Ready" />

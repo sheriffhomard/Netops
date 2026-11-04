@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
-import { lab08Scenario } from '../data/mockData';
+import { getLocalizedLabScenario } from '../data/mockData';
 import { Tooltip } from '../components/Tooltip';
 import confetti from 'canvas-confetti';
 
@@ -14,9 +14,27 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
   const isEn = i18n.language?.startsWith('en');
   const [activeDevice, setActiveDevice] = useState<'R1' | 'SW1' | 'PCA' | 'SVR1'>('R1');
   const [terminalInput, setTerminalInput] = useState('');
-  const [tasks, setTasks] = useState(lab08Scenario.tasks);
+  const [tasks, setTasks] = useState(() => getLocalizedLabScenario(isEn ? 'en' : 'fr').tasks);
   const [isPacketSimulating, setIsPacketSimulating] = useState(false);
   const [showRunningConfig, setShowRunningConfig] = useState(false);
+
+  useEffect(() => {
+    const locTasks = getLocalizedLabScenario(isEn ? 'en' : 'fr').tasks;
+    setTasks((prev) =>
+      locTasks.map((t) => {
+        const existing = prev.find((p) => p.id === t.id);
+        return existing
+          ? {
+              ...t,
+              isValidated: existing.isValidated,
+              specStatus: existing.isValidated
+                ? (isEn ? 'SUCCESS (5/5 ICMP)' : 'SUCCÈS (5/5 ICMP)')
+                : t.specStatus,
+            }
+          : t;
+      })
+    );
+  }, [isEn]);
 
   // Terminal log state per device
   const [terminalLogs, setTerminalLogs] = useState<{
@@ -198,17 +216,17 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
           {/* Progress Indicators */}
           <div className="flex items-center gap-4 bg-[#0a0e16] border border-[#334155]/50 px-4 py-2 rounded-xl text-xs font-mono">
             <div className="flex flex-col pr-3 border-r border-[#334155]/40">
-              <span className="text-[10px] text-[#849396]">TÂCHES RÉUSSIES</span>
+              <span className="text-[10px] text-[#849396]">{isEn ? 'TASKS COMPLETED' : 'TÂCHES RÉUSSIES'}</span>
               <span className="font-bold text-[#a8ffd2]">
                 {completedCount} / {tasks.length}
               </span>
             </div>
             <div className="flex flex-col pr-3 border-r border-[#334155]/40">
-              <span className="text-[10px] text-[#849396]">LATENCE MESH</span>
+              <span className="text-[10px] text-[#849396]">{isEn ? 'MESH LATENCY' : 'LATENCE MESH'}</span>
               <span className="font-bold text-[#00e5ff]">1.4ms</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] text-[#849396]">SCORE PASS</span>
+              <span className="text-[10px] text-[#849396]">{isEn ? 'PASS SCORE' : 'SCORE PASS'}</span>
               <span className="font-bold text-[#dfe2ee]">
                 {Math.round((completedCount / tasks.length) * 100)}%
               </span>
@@ -219,12 +237,11 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                setTasks(lab08Scenario.tasks);
-                alert('Topologie réseau réinitialisée.');
+                setTasks(getLocalizedLabScenario(isEn ? 'en' : 'fr').tasks);
               }}
               className="px-3 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155] transition-colors"
             >
-              Réinitialiser
+              {isEn ? 'Reset' : 'Réinitialiser'}
             </button>
             <button
               onClick={() => setShowRunningConfig(true)}
@@ -242,13 +259,13 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
               onClick={handleValidateLab}
               className="px-4 py-2 rounded-lg bg-[#00e5ff] hover:brightness-110 text-[#00363d] font-bold text-xs font-mono shadow-[0_0_12px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
             >
-              Valider le Lab
+              {isEn ? 'Validate Lab' : 'Valider le Lab'}
             </button>
             <button
               onClick={() => onNavigate('ateliers-et-labs')}
               className="p-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#ffb4ab] border border-[#334155] transition-colors cursor-pointer"
-              title="Quitter le lab et revenir aux ateliers"
-              aria-label="Quitter le lab"
+              title={isEn ? "Exit lab and return to workshops" : "Quitter le lab et revenir aux ateliers"}
+              aria-label={isEn ? "Exit lab" : "Quitter le lab"}
             >
               <span className="material-symbols-outlined text-base">close</span>
             </button>
@@ -446,7 +463,9 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
           </div>
 
           <span className="text-[11px] font-mono text-[#849396] text-center">
-            Cliquez sur un équipement (R1, SW1, PC-A, SVR-1) pour basculer le terminal actif.
+            {isEn
+              ? 'Click on a device (R1, SW1, PC-A, SVR-1) to switch active CLI session.'
+              : 'Cliquez sur un équipement (R1, SW1, PC-A, SVR-1) pour basculer le terminal actif.'}
           </span>
         </div>
 
@@ -470,12 +489,12 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
                   key={dev}
                   content={
                     dev === 'R1'
-                      ? 'Routeur Cisco 2900 (Routage inter-VLAN / Sub-interfaces)'
+                      ? (isEn ? 'Cisco 2900 Router (Inter-VLAN routing / Sub-interfaces)' : 'Routeur Cisco 2900 (Routage inter-VLAN / Sub-interfaces)')
                       : dev === 'SW1'
-                      ? 'Commutateur Catalyst 3650 (Trunk 802.1Q & VLANs)'
+                      ? (isEn ? 'Catalyst 3650 Switch (802.1Q Trunk & VLANs)' : 'Commutateur Catalyst 3650 (Trunk 802.1Q & VLANs)')
                       : dev === 'PCA'
-                      ? 'Poste client Windows VLAN 10 (IP: 192.168.10.10)'
-                      : 'Serveur Linux Intranet VLAN 20 (IP: 192.168.20.50)'
+                      ? (isEn ? 'Windows Client Host VLAN 10 (IP: 192.168.10.10)' : 'Poste client Windows VLAN 10 (IP: 192.168.10.10)')
+                      : (isEn ? 'Linux Intranet Server VLAN 20 (IP: 192.168.20.50)' : 'Serveur Linux Intranet VLAN 20 (IP: 192.168.20.50)')
                   }
                 >
                   <button
@@ -490,11 +509,11 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
                   </button>
                 </Tooltip>
               ))}
-              <Tooltip content="Effacer le contenu de l'écran du terminal">
+              <Tooltip content={isEn ? "Clear terminal screen output" : "Effacer le contenu de l'écran du terminal"}>
                 <button
                   onClick={() => executeCommand('clear')}
                   className="p-1 text-[#849396] hover:text-[#dfe2ee] ml-2 cursor-pointer"
-                  title="Effacer l'écran"
+                  title={isEn ? "Clear screen" : "Effacer l'écran"}
                 >
                   <span className="material-symbols-outlined text-sm">cleaning_services</span>
                 </button>
@@ -515,7 +534,7 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
           {/* Command Pill Quick Suggestions */}
           <div className="bg-[#181c24]/90 px-3 py-2 border-t border-[#334155]/40 flex items-center gap-2 overflow-x-auto">
             <span className="text-[10px] font-mono text-[#849396] uppercase shrink-0">
-              Suggestions :
+              {isEn ? 'Suggestions:' : 'Suggestions :'}
             </span>
             <button
               onClick={() => executeCommand('ping 192.168.20.50')}
@@ -570,14 +589,14 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
               type="text"
               value={terminalInput}
               onChange={(e) => setTerminalInput(e.target.value)}
-              placeholder="Entrez une commande IOS (ex: ping 192.168.20.50, show ip route)..."
+              placeholder={isEn ? "Enter an IOS command (e.g., ping 192.168.20.50, show ip route)..." : "Entrez une commande IOS (ex: ping 192.168.20.50, show ip route)..."}
               className="flex-1 bg-transparent border-none outline-none text-[#dfe2ee] font-mono placeholder:text-[#849396] focus:ring-0"
             />
             <button
               type="submit"
               className="px-3 py-1 rounded bg-[#00e5ff] text-[#00363d] font-bold text-xs hover:brightness-110"
             >
-              Exécuter
+              {isEn ? 'Execute' : 'Exécuter'}
             </button>
           </form>
         </div>
@@ -590,11 +609,11 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-[#5be9ad]">task_alt</span>
               <h3 className="font-semibold text-sm text-[#dfe2ee] font-mono uppercase">
-                Matrice de Validation du Scénario (4 Tâches)
+                {isEn ? 'Scenario Validation Matrix (4 Tasks)' : 'Matrice de Validation du Scénario (4 Tâches)'}
               </h3>
             </div>
             <span className="text-xs font-mono text-[#00daf3]">
-              Validation automatique en temps réel
+              {isEn ? 'Real-time automated validation' : 'Validation automatique en temps réel'}
             </span>
           </div>
 
@@ -633,7 +652,7 @@ export const LabTerminalView: React.FC<LabTerminalViewProps> = ({ onNavigate }) 
                       onClick={() => executeCommand('ping 192.168.20.50')}
                       className="text-[#00e5ff] hover:underline font-semibold"
                     >
-                      Lancer le test
+                      {isEn ? 'Run test' : 'Lancer le test'}
                     </button>
                   )}
                 </div>

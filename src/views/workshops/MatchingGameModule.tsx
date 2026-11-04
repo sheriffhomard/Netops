@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { matchingCategories, MatchingCategory, MatchingPair } from '../../data/workshopsData';
 import confetti from 'canvas-confetti';
 
 export const MatchingGameModule: React.FC = () => {
+  const { i18n } = useTranslation();
+  const isEn = i18n.language?.startsWith('en');
   const [selectedCatId, setSelectedCatId] = useState<string>('cat-ad');
   const [leftItems, setLeftItems] = useState<{ id: string; text: string }[]>([]);
   const [rightItems, setRightItems] = useState<{ id: string; text: string }[]>([]);
@@ -117,18 +120,19 @@ export const MatchingGameModule: React.FC = () => {
   return (
     <div className="flex flex-col gap-6">
       {/* Header and Telemetry */}
+      {/* Header and Live Counters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#334155]/40">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/30">
-              JEU D&apos;APPARIEMENT INTERACTIF
+              {isEn ? 'INTERACTIVE MATCHING GAME' : 'JEU D\'APPARIEMENT INTERACTIF'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Agilité mentale &amp; réflexes protocolaires
+              {isEn ? 'Mental agility & protocol reflex drill' : 'Agilité mentale & réflexes protocolaires'}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#dfe2ee]">
-            Ateliers d&apos;Appariement &amp; Cartes Jumelées
+            {isEn ? 'Matching Workshops & Paired Cards' : 'Ateliers d\'Appariement & Cartes Jumelées'}
           </h2>
         </div>
 
@@ -136,18 +140,18 @@ export const MatchingGameModule: React.FC = () => {
         <div className="flex items-center gap-3 text-xs font-mono self-start sm:self-auto">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
             <span className="material-symbols-outlined text-[#00e5ff] text-base">timer</span>
-            <span className="text-[#849396]">Chrono :</span>
+            <span className="text-[#849396]">{isEn ? 'Timer:' : 'Chrono :'}</span>
             <span className="text-[#00e5ff] font-bold">{formatTime(timerSeconds)}</span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
             <span className="material-symbols-outlined text-[#5be9ad] text-base">check</span>
-            <span className="text-[#849396]">Score :</span>
+            <span className="text-[#849396]">{isEn ? 'Score:' : 'Score :'}</span>
             <span className="text-[#a8ffd2] font-bold">
               {matchedIds.size}/{activeCategory.pairs.length}
             </span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
-            <span className="text-[#849396]">Précision :</span>
+            <span className="text-[#849396]">{isEn ? 'Accuracy:' : 'Précision :'}</span>
             <span className="text-[#dfe2ee] font-bold">{accuracy}%</span>
           </div>
         </div>
@@ -178,7 +182,7 @@ export const MatchingGameModule: React.FC = () => {
           className="text-[#00daf3] hover:underline flex items-center gap-1 ml-3 shrink-0"
         >
           <span className="material-symbols-outlined text-sm">restart_alt</span>
-          <span>Recommencer</span>
+          <span>{isEn ? 'Restart' : 'Recommencer'}</span>
         </button>
       </div>
 
@@ -191,10 +195,12 @@ export const MatchingGameModule: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <h3 className="font-bold text-base text-[#a8ffd2]">
-                Félicitations ! Toutes les paires sont complétées !
+                {isEn ? 'Congratulations! All pairs matched!' : 'Félicitations ! Toutes les paires sont complétées !'}
               </h3>
               <p className="text-xs font-mono text-[#bac9cc]">
-                Temps total : {formatTime(timerSeconds)} • Précision : {accuracy}% en {attempts} tentatives.
+                {isEn
+                  ? `Total time: ${formatTime(timerSeconds)} • Accuracy: ${accuracy}% in ${attempts} attempts.`
+                  : `Temps total : ${formatTime(timerSeconds)} • Précision : ${accuracy}% en ${attempts} tentatives.`}
               </p>
             </div>
           </div>
@@ -206,7 +212,7 @@ export const MatchingGameModule: React.FC = () => {
             }}
             className="px-5 py-2.5 rounded-xl bg-[#5be9ad] hover:brightness-110 text-[#003824] font-bold font-mono text-xs shadow-lg transition-all"
           >
-            Catégorie suivante
+            {isEn ? 'Next Category' : 'Catégorie suivante'}
           </button>
         </div>
       )}
@@ -216,8 +222,8 @@ export const MatchingGameModule: React.FC = () => {
         {/* Left Column (Items/Concepts) */}
         <div className="flex flex-col gap-2.5">
           <div className="text-xs font-mono text-[#849396] uppercase px-1 pb-1 flex items-center justify-between">
-            <span>COLONNE A : CONCEPTS / PROTOCOLES</span>
-            <span>CLIQUEZ POUR SÉLECTIONNER</span>
+            <span>{isEn ? 'COLUMN A: CONCEPTS / PROTOCOLS' : 'COLONNE A : CONCEPTS / PROTOCOLES'}</span>
+            <span>{isEn ? 'CLICK TO SELECT' : 'CLIQUEZ POUR SÉLECTIONNER'}</span>
           </div>
 
           {leftItems.map((item) => {
@@ -251,8 +257,8 @@ export const MatchingGameModule: React.FC = () => {
         {/* Right Column (Values / Ports / ADs) */}
         <div className="flex flex-col gap-2.5">
           <div className="text-xs font-mono text-[#849396] uppercase px-1 pb-1 flex items-center justify-between">
-            <span>COLONNE B : VALEURS / DÉFINITIONS</span>
-            <span>CORRESPONDANCE CIBLE</span>
+            <span>{isEn ? 'COLUMN B: VALUES / DEFINITIONS' : 'COLONNE B : VALEURS / DÉFINITIONS'}</span>
+            <span>{isEn ? 'TARGET MATCH' : 'CORRESPONDANCE CIBLE'}</span>
           </div>
 
           {rightItems.map((item) => {

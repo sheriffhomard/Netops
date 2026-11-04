@@ -44,5 +44,29 @@
     "score": "Score",
     "status": "Résultat",
     "viewReport": "Voir le rapport"
+  },
+  "analytics": {
+    "engine": "TELEMETRY & AI READINESS ENGINE",
+    "title": "Analytiques de Réussite & Diagnostic",
+    "subtitle": "Projection statistique basée sur 1 420 questions répondues et 38 topologies CLI validées.",
+    "exportPdf": "Exporter le Rapport Télémétrique",
+    "exported": "Rapport télémétrique prêt pour l'export.",
+    "globalReadiness": "Readiness Global ENCOR",
+    "last7Days": "+4.2% ces 7 derniers jours",
+    "avgAccuracy": "Précision Moyenne",
+    "officialThreshold": "Seuil officiel : 82.5%",
+    "avgSpeed": "Vitesse Moyenne",
+    "speedMargin": "+11s de marge par question",
+    "labConvergence": "Convergence Labs",
+    "topologiesSuccess": "76% des topologies réussies",
+    "blueprintMastery": "Maîtrise par Domaine Blueprint ENCOR",
+    "weighting100": "PONDÉRATION 100%",
+    "actionPlanTitle": "Plan d'action préconisé",
+    "actionPlanText": "2 séries de drills sur Spanning-Tree et VXLAN sont recommandées avant l'examen blanc.",
+    "start": "Lancer",
+    "recentMocks": "Derniers Examens Blancs",
+    "history30d": "HISTORIQUE 30J",
+    "mentorTip": "CONSEIL MENTOR NETOPS IA",
+    "mentorText": "Vous gagnez en moyenne +1.8% par session d'examen blanc de 102 questions. En maintenant ce rythme, votre probabilité de succès à l'examen CCNP ENCOR dépasse 94% à J-18."
   }
 }

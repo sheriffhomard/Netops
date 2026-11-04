@@ -692,49 +692,69 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         </div>
       </div>
 
+      {/* PEDAGOGICAL CONTENT LANGUAGE & SRS INTEGRITY NOTICE */}
+      <div className="bg-[#0f172a]/80 border border-[#0284c7]/40 rounded-xl p-3.5 flex items-start gap-3 text-xs">
+        <span className="material-symbols-outlined text-[#38bdf8] text-base shrink-0 mt-0.5">translate</span>
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="font-bold text-[#f1f5f9]">
+              {isEn ? 'Content Language Standard (Bilingual Engine)' : 'Standard Linguistique des Contenus (Moteur Bilingue)'}
+            </span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#1e293b] text-[#38bdf8] border border-[#38bdf8]/40">
+              {isEn ? 'SOURCE CONTENT: FR (RFC & CLI in EN)' : 'CONTENU SOURCE : FR (RFC & CLI en EN)'}
+            </span>
+          </div>
+          <p className="text-[#94a3b8] leading-relaxed">
+            {isEn
+              ? 'Flashcards prompts and deep technical explanations are authored in technical French alongside official vendor CLI commands (IOS-XE, PAN-OS, FortiOS) and international RFC references. Leitner spaced repetition states and custom cards persist without loss across language switches.'
+              : 'Les questions et synthèses techniques des fiches mémos sont rédigées en français technique avec syntaxe CLI constructeurs, références RFC et acronymes universels. Votre progression Leitner SRS et vos cartes personnalisées sont préservées lors du basculement de langue.'}
+          </p>
+        </div>
+      </div>
+
       {/* STATS TILES BANNER */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
           <div className="flex items-center justify-between text-[#849396] text-[11px] uppercase">
-            <span>Cartes Totales</span>
+            <span>{isEn ? 'Total Cards' : 'Cartes Totales'}</span>
             <span className="material-symbols-outlined text-sm text-[#00e5ff]">style</span>
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-[#dfe2ee]">{cards.length}</span>
-            <span className="text-[10px] text-[#00e5ff]">Fiches mémos</span>
+            <span className="text-[10px] text-[#00e5ff]">{isEn ? 'Flashcards' : 'Fiches mémos'}</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
           <div className="flex items-center justify-between text-[#849396] text-[11px] uppercase">
-            <span>Taux de Maîtrise</span>
+            <span>{isEn ? 'Mastery Rate' : 'Taux de Maîtrise'}</span>
             <span className="material-symbols-outlined text-sm text-[#4edea3]">verified</span>
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-[#4edea3]">{masteryPercent}%</span>
-            <span className="text-[10px] text-[#bac9cc]">({masteredIds.size} validées)</span>
+            <span className="text-[10px] text-[#bac9cc]">({masteredIds.size} {isEn ? 'mastered' : 'validées'})</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
           <div className="flex items-center justify-between text-[#849396] text-[11px] uppercase">
-            <span>File "À revoir"</span>
+            <span>{isEn ? 'Review Queue' : 'File "À revoir"'}</span>
             <span className="material-symbols-outlined text-sm text-[#ffb4ab]">sync_problem</span>
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-[#ffb4ab]">{reviewIds.size}</span>
-            <span className="text-[10px] text-[#bac9cc]">Intervalles courts</span>
+            <span className="text-[10px] text-[#bac9cc]">{isEn ? 'Short intervals' : 'Intervalles courts'}</span>
           </div>
         </div>
 
         <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-3.5 flex flex-col gap-1 shadow-sm">
           <div className="flex items-center justify-between text-[#849396] text-[11px] uppercase">
-            <span>Étudiées Aujourd'hui</span>
+            <span>{isEn ? 'Studied Today' : 'Étudiées Aujourd\'hui'}</span>
             <span className="material-symbols-outlined text-sm text-[#ffcc00]">local_fire_department</span>
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-bold text-[#ffcc00]">{studiedCount}</span>
-            <span className="text-[10px] text-[#bac9cc]">Répétitions</span>
+            <span className="text-[10px] text-[#bac9cc]">{isEn ? 'Repetitions' : 'Répétitions'}</span>
           </div>
         </div>
       </div>
@@ -744,10 +764,10 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Vendor Selector */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            <span className="text-xs font-mono text-[#849396] uppercase shrink-0">Écosystème :</span>
+            <span className="text-xs font-mono text-[#849396] uppercase shrink-0">{isEn ? 'Ecosystem:' : 'Écosystème :'}</span>
             {(
               [
-                { id: 'all', label: 'Tous' },
+                { id: 'all', label: isEn ? 'All' : 'Tous' },
                 { id: 'cisco', label: 'Cisco (CCNA/CCNP)' },
                 { id: 'paloalto', label: 'Palo Alto (PCNSE)' },
                 { id: 'fortinet', label: 'Fortinet (FCP FortiGate)' },
@@ -781,7 +801,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher une notion, RFC..."
+              placeholder={isEn ? "Search by concept, RFC, command..." : "Rechercher une notion, RFC..."}
               className="w-full bg-[#0f131c] border border-[#334155]/40 rounded-lg pl-9 pr-8 py-1.5 text-xs text-[#dfe2ee] placeholder-[#849396] focus:outline-none focus:border-[#00e5ff]"
             />
             {searchQuery && (
@@ -799,7 +819,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-[#334155]/30">
           {/* Module dropdown */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-[#849396] uppercase shrink-0">Module :</span>
+            <span className="text-xs font-mono text-[#849396] uppercase shrink-0">{isEn ? 'Module:' : 'Module :'}</span>
             <select
               value={selectedModule}
               onChange={(e) => handleModuleChange(e.target.value)}
@@ -867,10 +887,10 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             <div className="flex items-center gap-2 text-[#00e5ff] overflow-hidden">
               <span className="material-symbols-outlined text-sm shrink-0">filter_alt</span>
               <span className="truncate">
-                Recherche active : <strong className="text-white">"{searchQuery}"</strong>
+                {isEn ? 'Active search:' : 'Recherche active :'} <strong className="text-white">"{searchQuery}"</strong>
                 {selectedModule !== 'all' && (
                   <span className="text-[#849396] ml-1">
-                    (dans {moduleOptions.find((m) => m.id === selectedModule)?.label.split(':')[0] || selectedModule})
+                    ({isEn ? 'in' : 'dans'} {moduleOptions.find((m) => m.id === selectedModule)?.label.split(':')[0] || selectedModule})
                   </span>
                 )}
               </span>
@@ -878,10 +898,10 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             <button
               onClick={() => setSearchQuery('')}
               className="shrink-0 px-2.5 py-1 bg-[#00e5ff] text-[#00363d] font-bold rounded-lg hover:brightness-110 flex items-center gap-1 text-[11px]"
-              title="Effacer la recherche textuelle"
+              title={isEn ? "Clear text search" : "Effacer la recherche textuelle"}
             >
               <span className="material-symbols-outlined text-xs">close</span>
-              <span>Effacer la recherche</span>
+              <span>{isEn ? 'Clear search' : 'Effacer la recherche'}</span>
             </button>
           </div>
         )}
@@ -1032,8 +1052,13 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                           {activeCard.moduleCode}
                         </span>
                       )}
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded font-bold bg-[#1e293b] text-[#94a3b8] border border-[#475569]/50 flex items-center gap-1" title={isEn ? "Pedagogical source content in French with RFC & English technical CLI terms" : "Contenu pédagogique en français avec termes techniques RFC & CLI en anglais"}>
+                        🌐 {isEn ? 'Content: FR' : 'Contenu : FR'}
+                      </span>
                       <span className="text-xs font-mono font-semibold text-[#00daf3] uppercase tracking-wider">
-                        {isFlipped ? 'RÉPONSE & EXPLICATION TECHNIQUE' : `QUESTION • ${activeCard.category}`}
+                        {isFlipped 
+                          ? (isEn ? 'ANSWER & TECHNICAL SPECIFICATION' : 'RÉPONSE & EXPLICATION TECHNIQUE') 
+                          : `QUESTION • ${activeCard.category}`}
                       </span>
                     </div>
 
@@ -1051,7 +1076,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                       </span>
                       <span className="text-xs font-mono text-[#849396] group-hover:text-[#00e5ff] transition-colors flex items-center gap-1">
                         <span className="material-symbols-outlined text-sm">sync</span>
-                        {isFlipped ? 'Voir Question' : 'Retourner'}
+                        {isFlipped ? (isEn ? 'View Question' : 'Voir Question') : (isEn ? 'Flip Card' : 'Retourner')}
                       </span>
                     </div>
                   </div>
@@ -1079,11 +1104,11 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                             className="text-xs font-mono text-[#ffcc00] hover:underline flex items-center gap-1"
                           >
                             <span className="material-symbols-outlined text-sm">lightbulb</span>
-                            <span>{showHint ? 'Masquer l\'indice' : 'Afficher un indice (Touche H)'}</span>
+                            <span>{showHint ? (isEn ? 'Hide hint' : 'Masquer l\'indice') : (isEn ? 'Show hint (Key H)' : 'Afficher un indice (Touche H)')}</span>
                           </button>
                           {showHint && (
                             <div className="mt-2 p-3 rounded-lg bg-[#241c00]/60 border border-[#ffcc00]/40 text-xs text-[#ffdf99] font-mono animate-fadeIn">
-                              💡 Indice : {activeCard.hint}
+                              {isEn ? '💡 Hint:' : '💡 Indice :'} {activeCard.hint}
                             </div>
                           )}
                         </div>
@@ -1104,7 +1129,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                           <div className="flex flex-col gap-1 mt-1">
                             <span className="text-[10px] font-mono text-[#00daf3] uppercase tracking-wider flex items-center gap-1">
                               <span className="material-symbols-outlined text-xs">terminal</span>
-                              Extrait CLI Officiel :
+                              {isEn ? 'Official CLI Snippet:' : 'Extrait CLI Officiel :'}
                             </span>
                             <pre className="bg-[#05080e] p-3 rounded-lg border border-[#00e5ff]/30 text-xs font-mono text-[#a8ffd2] overflow-x-auto">
                               {activeCard.cliExample}
@@ -1115,7 +1140,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                         {activeCard.rfcRef && (
                           <div className="flex items-center gap-2 text-[11px] font-mono text-[#849396] mt-1">
                             <span className="material-symbols-outlined text-sm text-[#00e5ff]">menu_book</span>
-                            <span>Référence normative : <strong className="text-[#00daf3]">{activeCard.rfcRef}</strong></span>
+                            <span>{isEn ? 'Standard reference:' : 'Référence normative :'} <strong className="text-[#00daf3]">{activeCard.rfcRef}</strong></span>
                           </div>
                         )}
 
@@ -1124,7 +1149,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                           <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-xl bg-[#00363d]/40 border border-[#00e5ff]/40 mt-2">
                             <span className="text-[10px] font-mono font-bold text-[#00e5ff] uppercase flex items-center gap-1">
                               <span className="material-symbols-outlined text-xs">cloud_sync</span>
-                              Liaison Glossaire &amp; Cloud :
+                              {isEn ? 'Glossary & Cloud Link:' : 'Liaison Glossaire & Cloud :'}
                             </span>
                             {matchedCloudTerms.map((ct) => (
                               <button
@@ -1663,14 +1688,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
                 onClick={() => setDisplayMode('focus')}
                 className="px-4 py-2 text-[#849396] hover:text-[#dfe2ee]"
               >
-                Annuler
+                {isEn ? 'Cancel' : 'Annuler'}
               </button>
               <button
                 type="submit"
                 className="px-6 py-2.5 bg-[#00e5ff] text-[#00363d] font-bold rounded-xl hover:brightness-110 shadow-[0_0_14px_rgba(0,229,255,0.4)] flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-base">save</span>
-                <span>Enregistrer la Flashcard</span>
+                <span>{isEn ? 'Save Flashcard' : 'Enregistrer la Flashcard'}</span>
               </button>
             </div>
           </form>
@@ -1680,14 +1705,14 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
       {/* QUICK SHORTCUTS CHEATSHEET FOOTER */}
       <div className="bg-[#0a0e16]/80 border border-[#334155]/30 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-[#849396]">
         <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-[#00e5ff] font-bold">Raccourcis Clavier :</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">Espace</kbd> Retourner</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">←</kbd> Précédente</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">→</kbd> Suivante</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">1</kbd> À revoir</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">2</kbd> Correct</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">3</kbd> Maîtrisé</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">H</kbd> Indice</span>
+          <span className="text-[#00e5ff] font-bold">{isEn ? 'Keyboard Shortcuts:' : 'Raccourcis Clavier :'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">{isEn ? 'Space' : 'Espace'}</kbd> {isEn ? 'Flip' : 'Retourner'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">←</kbd> {isEn ? 'Previous' : 'Précédente'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">→</kbd> {isEn ? 'Next' : 'Suivante'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">1</kbd> {isEn ? 'Review' : 'À revoir'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">2</kbd> {isEn ? 'Good' : 'Correct'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">3</kbd> {isEn ? 'Mastered' : 'Maîtrisé'}</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-[#dfe2ee]">H</kbd> {isEn ? 'Hint' : 'Indice'}</span>
         </div>
 
         {onNavigate && (
@@ -1695,7 +1720,7 @@ export const FlashcardsView: React.FC<FlashcardsViewProps> = ({
             onClick={() => onNavigate('ateliers-et-labs')}
             className="text-[#00daf3] hover:underline flex items-center gap-1"
           >
-            <span>Voir aussi tous les Ateliers &amp; Labs</span>
+            <span>{isEn ? 'Explore all Workshops & Labs' : 'Voir aussi tous les Ateliers & Labs'}</span>
             <span className="material-symbols-outlined text-xs">arrow_forward</span>
           </button>
         )}

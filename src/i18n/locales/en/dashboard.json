@@ -44,5 +44,29 @@
     "score": "Score",
     "status": "Result",
     "viewReport": "View report"
+  },
+  "analytics": {
+    "engine": "TELEMETRY & AI READINESS ENGINE",
+    "title": "Success Analytics & Readiness Diagnosis",
+    "subtitle": "Statistical projection based on 1,420 answered questions and 38 verified CLI topologies.",
+    "exportPdf": "Export Telemetry Report",
+    "exported": "Telemetry report ready for export.",
+    "globalReadiness": "ENCOR Global Readiness",
+    "last7Days": "+4.2% over last 7 days",
+    "avgAccuracy": "Average Accuracy",
+    "officialThreshold": "Official passing: 82.5%",
+    "avgSpeed": "Average Speed",
+    "speedMargin": "+11s margin per question",
+    "labConvergence": "Lab Convergence",
+    "topologiesSuccess": "76% of topologies passed",
+    "blueprintMastery": "Mastery by ENCOR Blueprint Domain",
+    "weighting100": "100% WEIGHTING",
+    "actionPlanTitle": "Recommended Action Plan",
+    "actionPlanText": "2 drill series on Spanning-Tree and VXLAN are recommended before the mock exam.",
+    "start": "Launch",
+    "recentMocks": "Recent Mock Exams",
+    "history30d": "30-DAY HISTORY",
+    "mentorTip": "NETOPS AI MENTOR ADVICE",
+    "mentorText": "You gain an average of +1.8% per 102-question mock exam session. At this pace, your probability of passing the CCNP ENCOR exam exceeds 94% at D-18."
   }
 }

@@ -16,10 +16,18 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
   onNavigate,
   examCode = '350-401 ENCOR',
 }) => {
-  const { t, i18n } = useTranslation(['common', 'exams']);
+  const { t, i18n } = useTranslation(['common', 'exams', 'navigation']);
   const isEn = i18n.language?.startsWith('en');
   const { user, saveExamResult } = useAuth();
-  const [questions, setQuestions] = useState<ExamQuestion[]>(() => generateFullExamQuestions());
+  const [questions, setQuestions] = useState<ExamQuestion[]>(() =>
+    generateFullExamQuestions(i18n.language?.startsWith('en') ? 'en' : 'fr')
+  );
+
+  // Sync questions dynamically when language changes, preserving state
+  useEffect(() => {
+    const lang = i18n.language?.startsWith('en') ? 'en' : 'fr';
+    setQuestions(generateFullExamQuestions(lang));
+  }, [i18n.language]);
 
   const [currentIndex, setCurrentIndex] = useState<number>(33); // Index 33 corresponds to Question 34
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, 'A' | 'B' | 'C' | 'D'>>({
@@ -226,21 +234,29 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
 
           <div className="flex flex-col gap-2">
             <span className="text-xs font-mono uppercase tracking-widest text-[#00daf3]">
-              RÉSULTAT OFFICIEL DU TEST SIMULÉ
+              {isEn ? 'OFFICIAL SIMULATED TEST RESULTS' : 'RÉSULTAT OFFICIEL DU TEST SIMULÉ'}
             </span>
             <h2 className="text-3xl font-bold text-[#dfe2ee]">
-              {finalScore >= 825 ? 'FÉLICITATIONS ! EXAMEN RÉUSSI' : 'EXAMEN NON VALIDÉ'}
+              {finalScore >= 825
+                ? (isEn ? 'CONGRATULATIONS — EXAM PASSED!' : 'FÉLICITATIONS ! EXAMEN RÉUSSI')
+                : (isEn ? 'EXAM NOT PASSED — FURTHER STUDY RECOMMENDED' : 'EXAMEN NON VALIDÉ')}
             </h2>
             <p className="text-sm text-[#bac9cc] max-w-lg">
               {finalScore >= 825
-                ? 'Votre niveau d\'assimilation sur les technologies Cisco Enterprise Core est suffisant pour le passage de l\'examen officiel 350-401 ENCOR.'
-                : 'Le seuil de validation est fixé à 825/1000 points. Nous vous recommandons de réviser les domaines critiques avant votre prochaine tentative.'}
+                ? (isEn
+                    ? 'Your mastery of Cisco Enterprise Core technologies meets official 350-401 ENCOR passing requirements.'
+                    : 'Votre niveau d\'assimilation sur les technologies Cisco Enterprise Core est suffisant pour le passage de l\'examen officiel 350-401 ENCOR.')
+                : (isEn
+                    ? 'The passing threshold is 825/1000 points. We recommend reviewing critical domain topics before your next attempt.'
+                    : 'Le seuil de validation est fixé à 825/1000 points. Nous vous recommandons de réviser les domaines critiques avant votre prochaine tentative.')}
             </p>
           </div>
 
           <div className="grid grid-cols-3 gap-4 w-full max-w-md bg-[#0a0e16] p-4 rounded-xl border border-[#334155]">
             <div className="flex flex-col">
-              <span className="text-[10px] font-mono text-[#849396]">VOTRE SCORE</span>
+              <span className="text-[10px] font-mono text-[#849396]">
+                {isEn ? 'YOUR SCORE' : 'VOTRE SCORE'}
+              </span>
               <span
                 className={`text-2xl font-bold font-mono ${
                   finalScore >= 825 ? 'text-[#a8ffd2]' : 'text-[#ffb4ab]'
@@ -250,11 +266,15 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-mono text-[#849396]">SEUIL REQUIS</span>
+              <span className="text-[10px] font-mono text-[#849396]">
+                {isEn ? 'PASSING' : 'SEUIL REQUIS'}
+              </span>
               <span className="text-2xl font-bold font-mono text-[#dfe2ee]">825</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-mono text-[#849396]">STATUT</span>
+              <span className="text-[10px] font-mono text-[#849396]">
+                {isEn ? 'STATUS' : 'STATUT'}
+              </span>
               <span
                 className={`text-2xl font-bold font-mono ${
                   finalScore >= 825 ? 'text-[#5be9ad]' : 'text-[#ffb4ab]'
@@ -268,28 +288,35 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
           {hasSavedToFirestore ? (
             <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#00363d]/70 border border-[#00e5ff]/40 text-xs font-mono text-[#a8ffd2]">
               <span className="material-symbols-outlined text-base text-[#00e5ff]">cloud_done</span>
-              <span>Résultat officiel synchronisé avec votre base Google Firestore</span>
+              <span>
+                {isEn
+                  ? 'Official result synchronized with your Google Firestore database'
+                  : 'Résultat officiel synchronisé avec votre base Google Firestore'}
+              </span>
             </div>
           ) : !user ? (
             <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#262a33]/60 border border-[#334155] text-xs font-mono text-[#bac9cc]">
               <span className="material-symbols-outlined text-base text-[#eab308]">cloud_off</span>
-              <span>Connectez-vous avec Google pour enregistrer ce résultat en base</span>
+              <span>
+                {isEn
+                  ? 'Sign in with Google to save this simulation score to database'
+                  : 'Connectez-vous avec Google pour enregistrer ce résultat en base'}
+              </span>
             </div>
           ) : null}
 
           <div className="flex gap-4">
-
             <button
               onClick={() => setIsExamCompleted(false)}
-              className="px-6 py-2.5 rounded-lg bg-[#262a33] text-[#dfe2ee] font-mono text-sm hover:bg-[#31353e] border border-[#334155]"
+              className="px-6 py-2.5 rounded-lg bg-[#262a33] text-[#dfe2ee] font-mono text-sm hover:bg-[#31353e] border border-[#334155] cursor-pointer"
             >
-              Revoir les réponses
+              {isEn ? 'Review Answers' : 'Revoir les réponses'}
             </button>
             <button
               onClick={() => onNavigate('tableau-de-bord')}
-              className="px-6 py-2.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 shadow-lg"
+              className="px-6 py-2.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold text-sm hover:brightness-110 shadow-lg cursor-pointer"
             >
-              Retour au Dashboard
+              {isEn ? 'Back to Dashboard' : 'Retour au Dashboard'}
             </button>
           </div>
         </div>
@@ -507,19 +534,19 @@ export const ExamSimulatorView: React.FC<ExamSimulatorViewProps> = ({
               <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-[#bac9cc]">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-[#5be9ad]" />
-                  <span>Répondu</span>
+                  <span>{isEn ? 'Answered' : 'Répondu'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-[#00e5ff] ring-1 ring-[#00e5ff]" />
-                  <span>En cours</span>
+                  <span>{isEn ? 'Current' : 'En cours'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-[#c0c1ff]" />
-                  <span>Pour révision</span>
+                  <span>{isEn ? 'For Review' : 'Pour révision'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded bg-[#262a33]" />
-                  <span>Non répondu</span>
+                  <span>{isEn ? 'Unanswered' : 'Non répondu'}</span>
                 </div>
               </div>
 
