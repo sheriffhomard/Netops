@@ -175,10 +175,30 @@ Every technical field and action features explanatory micro-tooltips (`<Tooltip>
 ## 🛠️ Tech Stack & Deployment
 
 - **Frontend**: React 19, TypeScript 5.8, Vite 6.2, Tailwind CSS v4.
-- **Internationalization**: i18next & react-i18next with 10 namespaces per locale (`en` / `fr`).
+- **Internationalization**: i18next & react-i18next with 10 modular domain namespaces per locale (`common`, `dashboard`, `encyclopedia`, `errors`, `exams`, `flashcards`, `labs`, `navigation`, `settings`, `terminal`).
 - **Persistence & Cloud**: Firebase Firestore SDK v12, Firebase Authentication.
 - **PWA**: Web App Manifest, Service Worker with Cache-First asset strategy.
 - **Audio & Visuals**: Web Speech API (TTS), Canvas-Confetti, Material Symbols.
+
+---
+
+## 🌐 i18n Contribution Guide & Pedagogical Policy
+
+### 1. Strict 1:1 Parity Rule
+Any translation key added to `src/i18n/locales/fr/*.json` must have an identical counterpart in `src/i18n/locales/en/*.json`, preserving all interpolation variables (`{{count}}`, etc.).
+Run the automated CI parity check anytime:
+```bash
+npm run test:i18n
+```
+
+### 2. Industry CLI & Technical Command Integrity
+Official network CLI syntax (**Cisco IOS-XE**, **Palo Alto PAN-OS**, **Fortinet FortiOS**), IETF RFC standard references, and IEEE protocol acronyms remain untranslated to accurately reflect real production environments and vendor exam formats.
+
+### 3. Pedagogical Content Localization Standards
+- **Exam Simulator**: 102 questions dynamically localized in French and English via `generateFullExamQuestions(lang)`.
+- **Question Bank**: Synchronized bilingual practice question sets (`bankQuestionsFr` / `bankQuestionsEn`).
+- **Virtual Hands-on Lab**: Step-by-step tasks and criteria localized via `getLocalizedLabScenario(lang)`.
+- **Flashcards & Cloud Encyclopedia**: The foundational body of technical articles is preserved with explicit source language transparency badges (`🌐 Content: FR (RFC & CLI in EN)`), protecting Spaced Repetition (SRS) Leitner progress from artificial machine translation drift.
 
 ---
 

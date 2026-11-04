@@ -13,7 +13,7 @@ export const CertificationsView: React.FC<CertificationsViewProps> = ({
   onSelectExam,
 }) => {
   const { t, i18n } = useTranslation(['common', 'navigation', 'exams']);
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language?.startsWith('en');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVendor, setSelectedVendor] = useState<string>('all');
   const [selectedLevel, setSelectedLevel] = useState<string>('all');

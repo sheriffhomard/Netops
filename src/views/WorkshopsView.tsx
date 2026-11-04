@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ViewMode } from '../types';
 import { initialFlashcards } from '../data/workshopsData';
 import { FlashcardsModule } from './workshops/FlashcardsModule';
@@ -21,6 +22,8 @@ interface WorkshopsViewProps {
 }
 
 export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
+  const { i18n } = useTranslation(['common', 'labs', 'navigation']);
+  const isEn = i18n.language?.startsWith('en');
   const [activeTab, setActiveTab] = useState<WorkshopTab>('flashcards');
 
   const tabs: {
@@ -33,44 +36,44 @@ export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
     {
       id: 'flashcards',
       label: 'Flashcards',
-      sublabel: 'Cartes Mémo & Répétition Espacée',
+      sublabel: isEn ? 'Memo Cards & Spaced Repetition' : 'Cartes Mémo & Répétition Espacée',
       icon: 'style',
-      badgeCount: `${initialFlashcards.length} Cartes`,
+      badgeCount: isEn ? `${initialFlashcards.length} Cards` : `${initialFlashcards.length} Cartes`,
     },
     {
       id: 'exact-typing',
-      label: 'Saisie Exacte',
-      sublabel: 'CLI Sans QCM & Tolérance Syntaxique',
+      label: isEn ? 'Exact Typing' : 'Saisie Exacte',
+      sublabel: isEn ? 'CLI Without MCQ & Syntax Tolerance' : 'CLI Sans QCM & Tolérance Syntaxique',
       icon: 'terminal',
-      badgeCount: '5 Défis',
+      badgeCount: isEn ? '5 Drills' : '5 Défis',
     },
     {
       id: 'troubleshooting',
-      label: 'Défis de Dépannage',
-      sublabel: 'Find the Bug & Diagnostic Syslog',
+      label: isEn ? 'Troubleshooting Drills' : 'Défis de Dépannage',
+      sublabel: isEn ? 'Find the Bug & Syslog Diagnostics' : 'Find the Bug & Diagnostic Syslog',
       icon: 'troubleshoot',
-      badgeCount: '4 Incidents',
+      badgeCount: isEn ? '4 Incidents' : '4 Incidents',
     },
     {
       id: 'ordering',
-      label: 'Ordonnancement',
-      sublabel: 'Timeline, DORA & Boot Order',
+      label: isEn ? 'Sequencing / Ordering' : 'Ordonnancement',
+      sublabel: isEn ? 'Timeline, DORA & Boot Order' : 'Timeline, DORA & Boot Order',
       icon: 'reorder',
-      badgeCount: '4 Séquences',
+      badgeCount: isEn ? '4 Sequences' : '4 Séquences',
     },
     {
       id: 'matching',
-      label: 'Appariement',
-      sublabel: 'Matching Games & Associations',
+      label: isEn ? 'Matching Games' : 'Appariement',
+      sublabel: isEn ? 'Matching Games & Associations' : 'Matching Games & Associations',
       icon: 'join_inner',
-      badgeCount: '4 Jeux',
+      badgeCount: isEn ? '4 Games' : '4 Jeux',
     },
     {
       id: 'mini-labs',
-      label: 'Scénarios Guidés',
-      sublabel: 'Mini-Labs Pas à Pas en Console',
+      label: isEn ? 'Guided Mini-Labs' : 'Scénarios Guidés',
+      sublabel: isEn ? 'Step-by-Step Console Mini-Labs' : 'Mini-Labs Pas à Pas en Console',
       icon: 'assignment_turned_in',
-      badgeCount: '2 Labs',
+      badgeCount: isEn ? '2 Labs' : '2 Labs',
     },
   ];
 
@@ -84,20 +87,21 @@ export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
         <div className="flex flex-col gap-2 relative z-10">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 font-bold">
-              ATELIERS &amp; LABS INTERACTIFS
+              {isEn ? 'INTERACTIVE WORKSHOPS & LABS' : 'ATELIERS & LABS INTERACTIFS'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Entraînement Pratique Haute Intensité
+              {isEn ? 'High-Intensity Practical Training' : 'Entraînement Pratique Haute Intensité'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#dfe2ee]">
-            Centre d&apos;Ateliers Réseau &amp; Labs Pratiques
+            {isEn
+              ? 'Network Workshops & Hands-on Labs Hub'
+              : 'Centre d\'Ateliers Réseau & Labs Pratiques'}
           </h1>
           <p className="text-sm text-[#bac9cc] max-w-3xl leading-relaxed">
-            Consolidez vos compétences d&apos;ingénieur réseau avec 6 formats d&apos;apprentissage
-            interactifs : révision de protocoles par flashcards, ancrage réflexe en saisie exacte de
-            commandes, analyse de bugs de configuration, ordonnancement logique de processus,
-            jeux d&apos;appariement et scénarios guidés en console IOS.
+            {isEn
+              ? 'Consolidate your network engineering skills with 6 interactive learning formats: protocol review via flashcards, reflex conditioning through exact command typing, configuration bug troubleshooting, logical process sequencing, matching associations, and guided Cisco IOS console scenarios.'
+              : 'Consolidez vos compétences d\'ingénieur réseau avec 6 formats d\'apprentissage interactifs : révision de protocoles par flashcards, ancrage réflexe en saisie exacte de commandes, analyse de bugs de configuration, ordonnancement logique de processus, jeux d\'appariement et scénarios guidés en console IOS.'}
           </p>
         </div>
 
@@ -105,13 +109,13 @@ export const WorkshopsView: React.FC<WorkshopsViewProps> = ({ onNavigate }) => {
         <div className="flex flex-row md:flex-col gap-2 self-start md:self-auto shrink-0 relative z-10 font-mono text-xs">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/60">
             <span className="w-2 h-2 rounded-full bg-[#5be9ad]" />
-            <span className="text-[#849396]">Mode Simulation :</span>
-            <span className="text-[#a8ffd2] font-bold">Actif (RFC/IOS)</span>
+            <span className="text-[#849396]">{isEn ? 'Simulation Mode:' : 'Mode Simulation :'}</span>
+            <span className="text-[#a8ffd2] font-bold">{isEn ? 'Active (RFC/IOS)' : 'Actif (RFC/IOS)'}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/60">
             <span className="material-symbols-outlined text-sm text-[#00e5ff]">school</span>
-            <span className="text-[#849396]">Modules disponibles :</span>
-            <span className="text-[#00e5ff] font-bold">6 Ateliers</span>
+            <span className="text-[#849396]">{isEn ? 'Available Modules:' : 'Modules disponibles :'}</span>
+            <span className="text-[#00e5ff] font-bold">{isEn ? '6 Workshops' : '6 Ateliers'}</span>
           </div>
         </div>
       </div>

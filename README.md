@@ -175,9 +175,30 @@ Pour faciliter la prise en main par les **utilisateurs novices**, chaque écran 
 ## 🛠️ Stack Technique & Déploiement
 
 - **Frontend** : React 19, TypeScript 5.8, Vite 6.2, Tailwind CSS v4.
+- **Internationalisation (i18n)** : `i18next` & `react-i18next` avec 10 namespaces modulaires (`common`, `dashboard`, `encyclopedia`, `errors`, `exams`, `flashcards`, `labs`, `navigation`, `settings`, `terminal`).
 - **Persistance & Données** : Firebase Firestore SDK v12, Firebase Authentication.
 - **PWA** : Web App Manifest, Service Worker avec stratégie Cache-First / Network-First.
 - **Audio & Animations** : Web Speech API (TTS), Canvas-Confetti, Material Symbols.
+
+---
+
+## 🌐 Guide de Contribution i18n & Charte Pédagogique
+
+### 1. Règle de Parité Stricte 1:1
+Toute nouvelle clé de traduction ajoutée dans `src/i18n/locales/fr/*.json` doit posséder sa contrepartie exacte dans `src/i18n/locales/en/*.json`, avec les mêmes variables d'interpolation (`{{count}}`, etc.).
+Pour valider la conformité en intégration continue :
+```bash
+npm run test:i18n
+```
+
+### 2. Intégrité Technique des Commandes CLI
+Les commandes CLI réseau officielles (**Cisco IOS-XE**, **Palo Alto PAN-OS**, **Fortinet FortiOS**), les RFC IETF et les acronymes IEEE ne sont jamais traduits littéralement. Ils restent universels afin de refléter fidèlement les conditions réelles d'examen et de production.
+
+### 3. Contenus Pédagogiques Bilingues
+- **Simulateur d'Examen** : 102 questions synchronisées dynamiquement en FR et EN via `generateFullExamQuestions(lang)`.
+- **Banque de Questions** : Jeux bilingues synchronisés (`bankQuestionsFr` / `bankQuestionsEn`).
+- **Lab Virtuel** : Tâches d'évaluation localisées via `getLocalizedLabScenario(lang)`.
+- **Flashcards & Encyclopédie Cloud** : Maintien du corpus de référence technique avec badge explicite de langue source (`🌐 Content: FR (RFC & CLI in EN)`), garantissant l'intégrité du système de répétition espacée Leitner.
 
 ---
 

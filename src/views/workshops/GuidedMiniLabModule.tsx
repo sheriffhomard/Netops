@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { guidedMiniLabs, GuidedMiniLab, MiniLabStep } from '../../data/workshopsData';
 import confetti from 'canvas-confetti';
 
 export const GuidedMiniLabModule: React.FC = () => {
+  const { i18n } = useTranslation(['common', 'labs']);
+  const isEn = i18n.language?.startsWith('en');
   const [labs] = useState<GuidedMiniLab[]>(guidedMiniLabs);
   const [currentLabIndex, setCurrentLabIndex] = useState<number>(0);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
@@ -43,7 +46,9 @@ export const GuidedMiniLabModule: React.FC = () => {
     } else {
       setStepStatus('error');
       setErrorMessage(
-        `Commande non reconnue pour cet objectif. Tapez : "${activeStep.suggestedCommand}" ou consultez l'indice.`
+        isEn
+          ? `Unrecognized command for this objective. Type: "${activeStep.suggestedCommand}" or consult the hint.`
+          : `Commande non reconnue pour cet objectif. Tapez : "${activeStep.suggestedCommand}" ou consultez l'indice.`
       );
     }
   };
@@ -103,20 +108,20 @@ export const GuidedMiniLabModule: React.FC = () => {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#003824] text-[#5be9ad] border border-[#5be9ad]/40">
-              MINI-LABS PAS À PAS
+              {isEn ? 'STEP-BY-STEP MINI-LABS' : 'MINI-LABS PAS À PAS'}
             </span>
             <span className="text-xs font-mono text-[#849396]">
-              Scénarios guidés &amp; validation incrémentale
+              {isEn ? 'Guided scenarios & incremental validation' : 'Scénarios guidés & validation incrémentale'}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#dfe2ee]">
-            Scénarios Pratiques Guidés
+            {isEn ? 'Hands-on Guided Scenarios' : 'Scénarios Pratiques Guidés'}
           </h2>
         </div>
 
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0a0e16] border border-[#334155]/50 text-xs font-mono self-start sm:self-auto">
           <span className="material-symbols-outlined text-[#00e5ff] text-base">engineering</span>
-          <span className="text-[#849396]">Progression lab :</span>
+          <span className="text-[#849396]">{isEn ? 'Lab progress:' : 'Progression lab :'}</span>
           <span className="text-[#00e5ff] font-bold">{progressPercent}%</span>
         </div>
       </div>
@@ -141,7 +146,7 @@ export const GuidedMiniLabModule: React.FC = () => {
                 </span>
                 <span className="text-xs font-mono text-[#849396] flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm">checklist</span>
-                  {lab.steps.length} Étapes
+                  {lab.steps.length} {isEn ? 'Steps' : 'Étapes'}
                 </span>
               </div>
               <h3 className="text-sm font-bold text-[#dfe2ee]">{lab.title}</h3>
@@ -155,9 +160,9 @@ export const GuidedMiniLabModule: React.FC = () => {
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between text-xs font-mono text-[#849396]">
           <span>
-            ÉTAPE {activeStep.stepNumber} SUR {activeLab.steps.length} : {activeStep.title}
+            {isEn ? 'STEP' : 'ÉTAPE'} {activeStep.stepNumber} {isEn ? 'OF' : 'SUR'} {activeLab.steps.length} : {activeStep.title}
           </span>
-          <span>{progressPercent}% TERMINÉ</span>
+          <span>{progressPercent}% {isEn ? 'COMPLETED' : 'TERMINÉ'}</span>
         </div>
         <div className="grid grid-cols-5 gap-1.5">
           {activeLab.steps.map((step, sIdx) => {
@@ -179,7 +184,7 @@ export const GuidedMiniLabModule: React.FC = () => {
                     ? 'bg-[#00e5ff]'
                     : 'bg-[#262a33]'
                 }`}
-                title={`Étape ${step.stepNumber}: ${step.title}`}
+                title={`${isEn ? 'Step' : 'Étape'} ${step.stepNumber}: ${step.title}`}
               />
             );
           })}
@@ -193,7 +198,7 @@ export const GuidedMiniLabModule: React.FC = () => {
           {/* Mission Objective Card */}
           <div className="flex flex-col gap-2">
             <span className="text-[10px] font-mono text-[#00daf3] uppercase tracking-wider font-semibold">
-              CONTEXTE &amp; OBJECTIF GLOBAL :
+              {isEn ? 'CONTEXT & GLOBAL OBJECTIVE:' : 'CONTEXTE & OBJECTIF GLOBAL :'}
             </span>
             <p className="text-xs sm:text-sm text-[#bac9cc] bg-[#0a0e16] p-3.5 rounded-xl border border-[#334155]/40 leading-relaxed">
               {activeLab.objective}
@@ -205,7 +210,7 @@ export const GuidedMiniLabModule: React.FC = () => {
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold text-[#00e5ff] flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#00e5ff]" />
-                INSTRUCTION POUR L&apos;ÉTAPE #{activeStep.stepNumber}
+                {isEn ? `INSTRUCTION FOR STEP #${activeStep.stepNumber}` : `INSTRUCTION POUR L'ÉTAPE #${activeStep.stepNumber}`}
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#0a0e16] text-[#849396]">
                 {activeStep.devicePrompt}
@@ -225,14 +230,14 @@ export const GuidedMiniLabModule: React.FC = () => {
                 className="px-3 py-1.5 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] flex items-center gap-1 transition-colors"
               >
                 <span className="material-symbols-outlined text-sm">lightbulb</span>
-                <span>{showHint ? 'Masquer' : 'Indice'}</span>
+                <span>{showHint ? (isEn ? 'Hide hint' : 'Masquer') : (isEn ? 'Hint' : 'Indice')}</span>
               </button>
               <button
                 onClick={handleAutoFill}
                 className="px-3 py-1.5 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155] flex items-center gap-1 transition-colors"
               >
                 <span className="material-symbols-outlined text-sm">auto_fix_high</span>
-                <span>Pré-remplir</span>
+                <span>{isEn ? 'Auto-fill' : 'Pré-remplir'}</span>
               </button>
             </div>
 
@@ -242,14 +247,14 @@ export const GuidedMiniLabModule: React.FC = () => {
                 disabled={currentStepIndex === 0}
                 className="px-3 py-1.5 rounded-lg bg-[#262a33] text-xs font-mono text-[#bac9cc] disabled:opacity-40 transition-colors"
               >
-                Précédent
+                {isEn ? 'Previous' : 'Précédent'}
               </button>
               <button
                 onClick={handleNextStep}
                 disabled={currentStepIndex >= activeLab.steps.length - 1}
                 className="px-3 py-1.5 rounded-lg bg-[#00363d] text-xs font-mono text-[#00e5ff] border border-[#00e5ff]/40 disabled:opacity-40 transition-colors"
               >
-                Suivant
+                {isEn ? 'Next' : 'Suivant'}
               </button>
             </div>
           </div>
@@ -258,7 +263,7 @@ export const GuidedMiniLabModule: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-[#0a0e16] border border-[#00daf3]/40 text-xs font-mono text-[#00daf3] animate-in fade-in">
               <div className="flex items-center gap-1.5 font-bold mb-1">
                 <span className="material-symbols-outlined text-sm">info</span>
-                <span>Indice opérationnel :</span>
+                <span>{isEn ? 'Operational hint:' : 'Indice opérationnel :'}</span>
               </div>
               <p className="text-[#dfe2ee]">{activeStep.hint}</p>
             </div>
@@ -281,7 +286,7 @@ export const GuidedMiniLabModule: React.FC = () => {
                 className="text-[11px] font-mono text-[#00daf3] hover:underline flex items-center gap-1"
               >
                 <span className="material-symbols-outlined text-xs">content_copy</span>
-                <span>{copiedLog ? 'Copié !' : 'Copier transcript'}</span>
+                <span>{copiedLog ? (isEn ? 'Copied!' : 'Copié !') : (isEn ? 'Copy transcript' : 'Copier transcript')}</span>
               </button>
             )}
           </div>
@@ -292,7 +297,7 @@ export const GuidedMiniLabModule: React.FC = () => {
               Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.0(2)SE4
             </div>
             <div className="text-[#849396] select-none text-[11px] pb-2 border-b border-[#334155]/30">
-              * Connecté sur console série locale (Speed 9600 8-N-1).
+              {isEn ? '* Connected to local serial console (Speed 9600 8-N-1).' : '* Connecté sur console série locale (Speed 9600 8-N-1).'}
             </div>
 
             {stepLogs.map((log, idx) => (
@@ -322,14 +327,14 @@ export const GuidedMiniLabModule: React.FC = () => {
                 type="text"
                 value={cliInput}
                 onChange={(e) => setCliInput(e.target.value)}
-                placeholder="Tapez la commande et appuyez sur Entrée..."
+                placeholder={isEn ? "Type command and press Enter..." : "Tapez la commande et appuyez sur Entrée..."}
                 className="flex-1 bg-transparent border-none outline-none font-mono text-xs text-[#dfe2ee] placeholder:text-[#849396]/50 focus:ring-0"
               />
               <button
                 type="submit"
                 className="px-3 py-1 rounded-lg bg-[#00e5ff] text-[#00363d] font-mono font-bold text-xs hover:brightness-110 shrink-0 transition-all"
               >
-                Exécuter
+                {isEn ? 'Execute' : 'Exécuter'}
               </button>
             </div>
           </form>
@@ -343,10 +348,10 @@ export const GuidedMiniLabModule: React.FC = () => {
                 </span>
                 <div className="flex flex-col">
                   <span className="text-xs font-bold font-mono text-[#a8ffd2]">
-                    Mini-Lab entièrement validé !
+                    {isEn ? 'Mini-Lab fully validated!' : 'Mini-Lab entièrement validé !'}
                   </span>
                   <span className="text-[11px] font-mono text-[#bac9cc]">
-                    Toutes les règles de durcissement sont appliquées.
+                    {isEn ? 'All hardening rules are enforced.' : 'Toutes les règles de durcissement sont appliquées.'}
                   </span>
                 </div>
               </div>
@@ -357,7 +362,7 @@ export const GuidedMiniLabModule: React.FC = () => {
                 }}
                 className="px-3 py-1.5 rounded-lg bg-[#5be9ad] text-[#003824] font-mono font-bold text-xs hover:brightness-110"
               >
-                Lab suivant
+                {isEn ? 'Next Lab' : 'Lab suivant'}
               </button>
             </div>
           )}

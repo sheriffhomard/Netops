@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { initialFlashcards, Flashcard } from '../../data/workshopsData';
 
 interface FlashcardsModuleProps {
@@ -6,6 +7,8 @@ interface FlashcardsModuleProps {
 }
 
 export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedicated }) => {
+  const { i18n } = useTranslation(['common', 'flashcards']);
+  const isEn = i18n.language?.startsWith('en');
   const [selectedFilter, setSelectedFilter] = useState<string>('CCNA-D1');
   const [cards, setCards] = useState<Flashcard[]>(initialFlashcards);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -15,7 +18,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
   const [reviewIds, setReviewIds] = useState<Set<string>>(new Set());
 
   const filterOptions = [
-    { id: 'all', label: 'Toutes les cartes', count: cards.length },
+    { id: 'all', label: isEn ? 'All cards' : 'Toutes les cartes', count: cards.length },
     {
       id: 'CCNA-D1',
       label: 'Cisco CCNA-D1 (Fundamentals)',
@@ -137,12 +140,12 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
     },
     {
       id: 'VLAN & Commutation',
-      label: 'VLAN & Commutation',
+      label: isEn ? 'VLAN & Switching' : 'VLAN & Commutation',
       count: cards.filter((c) => c.category === 'VLAN & Commutation').length,
     },
     {
       id: 'Sécurité & Crypto',
-      label: 'Sécurité & Crypto',
+      label: isEn ? 'Security & Crypto' : 'Sécurité & Crypto',
       count: cards.filter((c) => c.category === 'Sécurité & Crypto').length,
     },
     {
@@ -152,7 +155,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
     },
     {
       id: 'Automatisation & Cloud',
-      label: 'Automatisation & Cloud',
+      label: isEn ? 'Automation & Cloud' : 'Automatisation & Cloud',
       count: cards.filter((c) => c.category === 'Automatisation & Cloud').length,
     },
   ];
@@ -219,7 +222,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
   if (!activeCard) {
     return (
       <div className="bg-[#181c24] border border-[#334155]/40 rounded-xl p-8 text-center text-[#bac9cc]">
-        Aucune flashcard dans cette catégorie.
+        {isEn ? 'No flashcard available in this category.' : 'Aucune flashcard dans cette catégorie.'}
       </div>
     );
   }
@@ -268,34 +271,34 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
         <div className="flex items-center gap-3 text-xs font-mono self-start md:self-auto">
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
             <span className="w-2 h-2 rounded-full bg-[#5be9ad]" />
-            <span className="text-[#849396]">Maîtrisées :</span>
+            <span className="text-[#849396]">{isEn ? 'Mastered:' : 'Maîtrisées :'}</span>
             <span className="text-[#a8ffd2] font-bold">{masteredIds.size}</span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0a0e16] border border-[#334155]/50">
             <span className="w-2 h-2 rounded-full bg-[#ffb4ab]" />
-            <span className="text-[#849396]">À revoir :</span>
+            <span className="text-[#849396]">{isEn ? 'To review:' : 'À revoir :'}</span>
             <span className="text-[#ffb4ab] font-bold">{reviewIds.size}</span>
           </div>
           {onOpenDedicated && (
             <button
               onClick={onOpenDedicated}
               className="px-3 py-1.5 rounded-lg bg-[#00e5ff] text-[#00363d] font-bold hover:brightness-110 transition-all flex items-center gap-1 shadow-[0_0_10px_rgba(0,229,255,0.3)]"
-              title="Ouvrir l'écran dédié plein format avec Chrono-Blitz et créateur de cartes"
+              title={isEn ? "Open full-format dedicated screen with Chrono-Blitz & card creator" : "Ouvrir l'écran dédié plein format avec Chrono-Blitz et créateur de cartes"}
             >
               <span className="material-symbols-outlined text-sm">open_in_new</span>
-              <span>Écran Dédié</span>
+              <span>{isEn ? 'Dedicated Screen' : 'Écran Dédié'}</span>
             </button>
           )}
           <button
             onClick={handleShuffle}
-            title="Mélanger le paquet"
+            title={isEn ? "Shuffle deck" : "Mélanger le paquet"}
             className="p-1.5 rounded-lg bg-[#262a33] text-[#00daf3] hover:bg-[#31353e] transition-colors"
           >
             <span className="material-symbols-outlined text-base">shuffle</span>
           </button>
           <button
             onClick={handleReset}
-            title="Réinitialiser"
+            title={isEn ? "Reset" : "Réinitialiser"}
             className="p-1.5 rounded-lg bg-[#262a33] text-[#849396] hover:text-[#dfe2ee] hover:bg-[#31353e] transition-colors"
           >
             <span className="material-symbols-outlined text-base">restart_alt</span>
@@ -306,7 +309,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
       {/* Card Progress Bar */}
       <div className="flex items-center justify-between text-xs font-mono text-[#849396]">
         <span>
-          CARTE {currentIndex + 1} SUR {filteredCards.length}
+          {isEn ? 'CARD' : 'CARTE'} {currentIndex + 1} {isEn ? 'OF' : 'SUR'} {filteredCards.length}
         </span>
         <div className="flex items-center gap-2">
           <span className="text-[10px] px-2 py-0.5 rounded bg-[#262a33] text-[#00daf3] border border-[#334155]/60">
@@ -314,12 +317,12 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
           </span>
           {isMastered && (
             <span className="text-[10px] px-2 py-0.5 rounded bg-[#003824] text-[#5be9ad] border border-[#5be9ad]/40">
-              ✓ MAÎTRISÉE
+              {isEn ? '✓ MASTERED' : '✓ MAÎTRISÉE'}
             </span>
           )}
           {isReview && (
             <span className="text-[10px] px-2 py-0.5 rounded bg-[#93000a]/20 text-[#ffb4ab] border border-[#ffb4ab]/40">
-              ⚠ À REVOIR
+              {isEn ? '⚠ TO REVIEW' : '⚠ À REVOIR'}
             </span>
           )}
         </div>
@@ -354,7 +357,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
                 </span>
               )}
               <span className="text-xs font-mono font-semibold text-[#00daf3] uppercase tracking-wider">
-                {isFlipped ? 'RÉPONSE & JUSTIFICATION RFC' : `QUESTION • ${activeCard.category}`}
+                {isFlipped ? (isEn ? 'RESPONSE & RFC JUSTIFICATION' : 'RÉPONSE & JUSTIFICATION RFC') : `QUESTION • ${activeCard.category}`}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -365,7 +368,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
               )}
               <span className="text-xs font-mono text-[#849396] group-hover:text-[#00e5ff] flex items-center gap-1">
                 <span className="material-symbols-outlined text-sm">cached</span>
-                <span>{isFlipped ? 'Voir question' : 'Retourner'}</span>
+                <span>{isFlipped ? (isEn ? 'View question' : 'Voir question') : (isEn ? 'Flip card' : 'Retourner')}</span>
               </span>
             </div>
           </div>
@@ -408,7 +411,7 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
                   className="flex items-center gap-1 text-[#00daf3] hover:underline"
                 >
                   <span className="material-symbols-outlined text-sm">lightbulb</span>
-                  <span>{showHint ? 'Masquer l\'indice' : 'Afficher un indice'}</span>
+                  <span>{showHint ? (isEn ? 'Hide hint' : 'Masquer l\'indice') : (isEn ? 'Show hint' : 'Afficher un indice')}</span>
                 </button>
                 {showHint && (
                   <span className="text-[#a8ffd2] italic animate-in fade-in">
@@ -418,10 +421,10 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
               </div>
             ) : (
               <span className="text-[#849396] text-[11px]">
-                Évaluez votre niveau de maîtrise pour ajuster la répétition espacée.
+                {isEn ? 'Rate your mastery level to calibrate spaced repetition intervals.' : 'Évaluez votre niveau de maîtrise pour ajuster la répétition espacée.'}
               </span>
             )}
-            <span className="text-[10px] text-[#849396]">Cliquez n&apos;importe où pour retourner</span>
+            <span className="text-[10px] text-[#849396]">{isEn ? 'Click anywhere to flip' : 'Cliquez n\'importe où pour retourner'}</span>
           </div>
         </div>
 
@@ -433,21 +436,21 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
               className="px-5 py-2.5 rounded-xl bg-[#93000a]/30 hover:bg-[#93000a]/50 text-[#ffb4ab] border border-[#ffb4ab]/40 text-xs font-mono font-semibold flex items-center gap-2 transition-colors"
             >
               <span className="material-symbols-outlined text-base">replay</span>
-              <span>À revoir (Difficile)</span>
+              <span>{isEn ? 'Review (Hard)' : 'À revoir (Difficile)'}</span>
             </button>
             <button
               onClick={() => handleRate('good')}
               className="px-5 py-2.5 rounded-xl bg-[#262a33] hover:bg-[#31353e] text-[#dfe2ee] border border-[#334155] text-xs font-mono font-semibold flex items-center gap-2 transition-colors"
             >
               <span className="material-symbols-outlined text-base">done</span>
-              <span>Correct (Normal)</span>
+              <span>{isEn ? 'Good (Normal)' : 'Correct (Normal)'}</span>
             </button>
             <button
               onClick={() => handleRate('mastered')}
               className="px-5 py-2.5 rounded-xl bg-[#003824] hover:bg-[#003824]/80 text-[#5be9ad] border border-[#5be9ad]/50 text-xs font-mono font-semibold flex items-center gap-2 transition-colors shadow-sm"
             >
               <span className="material-symbols-outlined text-base">verified</span>
-              <span>Maîtrisé (Facile)</span>
+              <span>{isEn ? 'Mastered (Easy)' : 'Maîtrisé (Facile)'}</span>
             </button>
           </div>
         )}
@@ -459,19 +462,19 @@ export const FlashcardsModule: React.FC<FlashcardsModuleProps> = ({ onOpenDedica
             className="px-4 py-2 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155]/50 flex items-center gap-1.5 transition-colors"
           >
             <span className="material-symbols-outlined text-sm">arrow_back</span>
-            <span>Précédente</span>
+            <span>{isEn ? 'Previous' : 'Précédente'}</span>
           </button>
           <button
             onClick={() => setIsFlipped(!isFlipped)}
             className="px-4 py-2 rounded-lg bg-[#262a33] hover:bg-[#31353e] text-xs font-mono text-[#00daf3] border border-[#334155] transition-colors"
           >
-            {isFlipped ? 'Voir la question' : 'Révéler la réponse'}
+            {isFlipped ? (isEn ? 'Show question' : 'Voir la question') : (isEn ? 'Reveal answer' : 'Révéler la réponse')}
           </button>
           <button
             onClick={handleNext}
             className="px-4 py-2 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-xs font-mono text-[#bac9cc] hover:text-[#dfe2ee] border border-[#334155]/50 flex items-center gap-1.5 transition-colors"
           >
-            <span>Suivante</span>
+            <span>{isEn ? 'Next' : 'Suivante'}</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </div>
