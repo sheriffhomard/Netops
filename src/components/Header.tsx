@@ -18,6 +18,7 @@ interface HeaderProps {
   onOpenLegalDisclaimer?: () => void;
   onOpenHamburgerMenu?: () => void;
   onOpenSystemSettings?: () => void;
+  onNavigateToLanding?: () => void;
   isSidebarCollapsed?: boolean;
   onToggleSidebarCollapse?: () => void;
 }
@@ -31,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenLegalDisclaimer,
   onOpenHamburgerMenu,
   onOpenSystemSettings,
+  onNavigateToLanding,
   isSidebarCollapsed = false,
   onToggleSidebarCollapse,
 }) => {
@@ -149,6 +151,19 @@ export const Header: React.FC<HeaderProps> = ({
               {updateAvailable && (
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] animate-pulse" />
               )}
+            </button>
+          )}
+
+          {/* Landing Page Showcase Trigger */}
+          {onNavigateToLanding && (
+            <button
+              onClick={onNavigateToLanding}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#262a33] text-[#00e5ff] border border-[#334155]/40 text-xs font-mono transition-colors cursor-pointer shrink-0"
+              title="Retourner à la page d'accueil / vitrine"
+              aria-label="Vitrine NetOps Academy"
+            >
+              <span className="material-symbols-outlined text-base">storefront</span>
+              <span className="hidden xl:inline">Vitrine</span>
             </button>
           )}
 

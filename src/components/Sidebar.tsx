@@ -15,6 +15,7 @@ interface SidebarProps {
   globalReadiness?: string;
   onOpenLegalDisclaimer?: () => void;
   onOpenSystemSettings?: () => void;
+  onNavigateToLanding?: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   onCloseMobile?: () => void;
@@ -29,6 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   globalReadiness = '84.5%',
   onOpenLegalDisclaimer,
   onOpenSystemSettings,
+  onNavigateToLanding,
   isCollapsed = false,
   onToggleCollapse,
   onCloseMobile,
@@ -256,6 +258,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {!isCollapsed && updateAvailable && (
               <span className="w-2 h-2 rounded-full bg-[#00e5ff] shadow-[0_0_6px_#00e5ff] animate-pulse" />
             )}
+          </button>
+        )}
+
+        {/* Vitrine / Landing Page Button */}
+        {onNavigateToLanding && (
+          <button
+            onClick={onNavigateToLanding}
+            className={`flex items-center rounded text-[11px] font-mono text-[#00e5ff] hover:bg-[#262a33]/60 transition-colors py-1 cursor-pointer ${
+              isCollapsed ? 'justify-center p-2' : 'justify-between px-2'
+            }`}
+            title="Afficher la page d'accueil / vitrine"
+          >
+            <span className="flex items-center gap-1.5 truncate">
+              <span className="material-symbols-outlined text-sm text-[#00e5ff]">storefront</span>
+              {!isCollapsed && <span className="truncate">Vitrine / Accueil</span>}
+            </span>
           </button>
         )}
 

@@ -15,6 +15,7 @@ interface HamburgerMenuModalProps {
   onOpenSubnetCalc: () => void;
   onOpenSystemSettings: () => void;
   onOpenLegalDisclaimer: () => void;
+  onNavigateToLanding?: () => void;
 }
 
 export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
@@ -25,6 +26,7 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
   onOpenSubnetCalc,
   onOpenSystemSettings,
   onOpenLegalDisclaimer,
+  onNavigateToLanding,
 }) => {
   const { t } = useTranslation(['common', 'navigation', 'settings']);
   const [filterQuery, setFilterQuery] = useState('');
@@ -290,18 +292,33 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
           </div>
         </div>
 
-        {/* Footer with Legal disclaimer and Version info */}
+        {/* Footer with Legal disclaimer, Landing Page link and Version info */}
         <div className="p-4 border-t border-[#334155]/60 bg-[#0a0e16]/90 flex items-center justify-between text-xs font-mono text-[#849396] shrink-0">
-          <button
-            onClick={() => {
-              onClose();
-              onOpenLegalDisclaimer();
-            }}
-            className="flex items-center gap-1.5 hover:text-[#00e5ff] transition-colors cursor-pointer text-[11px]"
-          >
-            <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
-            <span>{t('navigation:legalNotice')}</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {onNavigateToLanding && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onNavigateToLanding();
+                }}
+                className="flex items-center gap-1.5 text-[#00e5ff] hover:underline cursor-pointer text-[11px]"
+              >
+                <span className="material-symbols-outlined text-sm">storefront</span>
+                <span>Vitrine / Accueil</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => {
+                onClose();
+                onOpenLegalDisclaimer();
+              }}
+              className="flex items-center gap-1.5 hover:text-[#00e5ff] transition-colors cursor-pointer text-[11px]"
+            >
+              <span className="material-symbols-outlined text-sm text-[#00e5ff]">gavel</span>
+              <span>{t('navigation:legalNotice')}</span>
+            </button>
+          </div>
 
           <span className="text-[10px]">NetOps v{currentVersion}</span>
         </div>

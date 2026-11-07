@@ -23,11 +23,51 @@ import { AnalyticsView } from './views/AnalyticsView';
 import { WorkshopsView } from './views/WorkshopsView';
 import { FlashcardsView } from './views/FlashcardsView';
 import { CloudEncyclopediaView } from './views/CloudEncyclopediaView';
+import { LandingPageView } from './views/LandingPageView';
 
 export function App() {
   const { user, userProfile } = useAuth();
   const { isLight, toggleTheme } = useTheme();
   const { updateAvailable } = useUpdate();
+
+  // Public Landing Page vs Application Routing
+  const getInitialRoute = (): 'landing' | 'app' => {
+    if (typeof window === 'undefined') return 'landing';
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    if (path.startsWith('/app') || hash.startsWith('#/app')) {
+      return 'app';
+    }
+    return 'landing';
+  };
+
+  const [appRoute, setAppRoute] = useState<'landing' | 'app'>(getInitialRoute);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setAppRoute(getInitialRoute());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleLaunchApp = (targetView?: ViewMode) => {
+    if (targetView) setCurrentView(targetView);
+    setAppRoute('app');
+    if (window.location.pathname !== '/app') {
+      window.history.pushState(null, '', '/app');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavigateToLanding = () => {
+    setAppRoute('landing');
+    if (window.location.pathname !== '/') {
+      window.history.pushState(null, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const [currentView, setCurrentView] = useState<ViewMode>('tableau-de-bord');
   const [selectedExamCode, setSelectedExamCode] = useState<string>('350-401 ENCOR');
   const [nocMode, setNocMode] = useState<boolean>(true);
@@ -144,6 +184,18 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  if (appRoute === 'landing') {
+    return (
+      <LandingPageView
+        onLaunchApp={() => handleLaunchApp()}
+        onOpenSignIn={() => {
+          handleLaunchApp();
+          setIsProfileModalOpen(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div
       className={`min-h-screen bg-[#0f131c] text-[#dfe2ee] flex ${
@@ -161,6 +213,16 @@ export function App() {
             aria-label="Menu principal"
           >
             <span className="material-symbols-outlined text-xl">menu</span>
+          </button>
+
+          {/* Return to Landing Page */}
+          <button
+            onClick={handleNavigateToLanding}
+            className="p-1 rounded-lg bg-[#181c24] text-[#00daf3] hover:text-[#00e5ff] hover:bg-[#262a33] border border-[#334155]/40 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+            title="Vitrine / Accueil"
+            aria-label="Vitrine"
+          >
+            <span className="material-symbols-outlined text-lg">storefront</span>
           </button>
 
           {currentView !== 'tableau-de-bord' && (
@@ -267,6 +329,7 @@ export function App() {
           globalReadiness="84.5%"
           onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
           onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
+          onNavigateToLanding={handleNavigateToLanding}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={handleToggleSidebarCollapse}
           onCloseMobile={() => setIsMobileMenuOpen(false)}
@@ -290,6 +353,7 @@ export function App() {
             onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
             onOpenHamburgerMenu={() => setIsHamburgerOpen(true)}
             onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
+            onNavigateToLanding={handleNavigateToLanding}
             isSidebarCollapsed={isSidebarCollapsed}
             onToggleSidebarCollapse={handleToggleSidebarCollapse}
           />
@@ -405,6 +469,7 @@ export function App() {
         onOpenSubnetCalc={() => setIsSubnetCalcOpen(true)}
         onOpenSystemSettings={() => setIsSystemSettingsOpen(true)}
         onOpenLegalDisclaimer={handleOpenLegalDisclaimer}
+        onNavigateToLanding={handleNavigateToLanding}
       />
 
       <SystemSettingsModal

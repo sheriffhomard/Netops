@@ -13,6 +13,8 @@ import frEncyclopedia from './locales/fr/encyclopedia.json';
 import frSettings from './locales/fr/settings.json';
 import frErrors from './locales/fr/errors.json';
 
+import frLanding from './locales/fr/landing.json';
+
 // English namespaces
 import enCommon from './locales/en/common.json';
 import enNavigation from './locales/en/navigation.json';
@@ -24,6 +26,7 @@ import enTerminal from './locales/en/terminal.json';
 import enEncyclopedia from './locales/en/encyclopedia.json';
 import enSettings from './locales/en/settings.json';
 import enErrors from './locales/en/errors.json';
+import enLanding from './locales/en/landing.json';
 
 export const defaultNS = 'common';
 
@@ -39,6 +42,7 @@ export const resources = {
     encyclopedia: frEncyclopedia,
     settings: frSettings,
     errors: frErrors,
+    landing: frLanding,
   },
   en: {
     common: enCommon,
@@ -51,6 +55,7 @@ export const resources = {
     encyclopedia: enEncyclopedia,
     settings: enSettings,
     errors: enErrors,
+    landing: enLanding,
   },
 } as const;
 

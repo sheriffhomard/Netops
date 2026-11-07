@@ -38,7 +38,7 @@ let hasError = false;
 
 const allNamespaces = Array.from(new Set([...frFiles, ...enFiles])).sort();
 
-console.log(`\n[STEP 1] Audit of 10 Translation Dictionaries (FR vs EN):\n`);
+console.log(`\n[STEP 1] Audit of ${allNamespaces.length} Translation Dictionaries (FR vs EN):\n`);
 
 for (const file of allNamespaces) {
   const frPath = path.join(frDir, file);

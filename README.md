@@ -36,8 +36,9 @@
 ## 📑 Sommaire
 
 - [🌟 Présentation Générale](#-présentation-générale)
+- [🚀 Nouvelle Landing Page Vitrine & Séparation des Routes (`/` & `/app`)](#-nouvelle-landing-page-vitrine--séparation-des-routes----app)
 - [🌍 Nouveautés v2.6.0 : Internationalisation Bilingue Intégrale (FR / EN)](#-nouveautés-v260--internationalisation-bilingue-intégrale-fr--en)
-- [📱 Nouveautés v2.5.0 : Ergonomie & Mises à Jour](#-nouveautés-v250--ergonomie--mises-à-jour)
+- [📱 Ergonomie, Thèmes & Mises à Jour](#-ergonomie-thèmes--mises-à-jour)
 - [📦 Installation PWA 1-Clic](#-installation-pwa-1-clic)
 - [✨ Architecture & Navigation Catégorisée](#-architecture--navigation-catégorisée)
 - [⚖️ Cadre Légal, Non-Affiliation & Exonération](#-cadre-légal-non-affiliation--exonération)
@@ -56,6 +57,24 @@
 L'application allie deux vocations complémentaires :
 1. **Console Opérationnelle NOC (Network Operations Center)** : télémétrie en direct, radar des faiblesses techniques, métriques de session et simulateur CLI interactif Cisco IOS-XE.
 2. **Moteur Pédagogique Avancé** : 2 900+ flashcards haute fidélité avec algorithme de répétition espacée (SRS Leitner), simulateurs d'examens proctorisés et matrice comparative multi-cloud (AWS vs Azure vs GCP vs On-Prem).
+
+---
+
+## 🚀 Nouvelle Landing Page Vitrine & Séparation des Routes (`/` & `/app`)
+
+NetOps Academy intègre une **landing page vitrine moderne, épurée et technologique** accessible publiquement, respectant une séparation nette entre présentation et application :
+
+- **`/` (Racine publique)** : Landing page SaaS & EdTech complète sans barrière d'authentification :
+  - **Hero Section** : titre d'accroche officiel, métriques clés (2 900+ fiches, 102 questions, terminal simulé, 100% PWA), et bouton principal d'accès direct.
+  - **Topologie Réseau & Télémétrie Interactive** : schéma SVG dynamique d'architecture d'entreprise (Transit WAN Tier-1 BGP, Cluster Pare-feu NGFW-HA, Switch Core L3 Backbone OSPF et matrice Spine-Leaf VLAN) avec inspection de télémétrie au clic.
+  - **Bac à Sable Interactif** : test direct et sans quitter la page du terminal Cisco IOS-XE simulé, d'une fiche SRS Leitner 3D avec référence RFC, et du calculateur de sous-réseaux CIDR / VLSM.
+  - **Curriculum Réel** : cartographie des 6 domaines fondamentaux (Fondamentaux OSI/TCP-IP, Commutation & VLANs 802.1Q, Routage dynamique OSPF/BGP, Sécurité & Zero Trust, Interconnexions Cloud Direct Connect/ExpressRoute, Supervision NOC).
+  - **Parcours Pédagogique en 4 Étapes** : Learn, Practice, Evaluate, Improve.
+  - **Section Bilingue & Expérience Multi-Écrans** : démonstration du basculement instantané FR / EN et compatibilité Desktop, Tablette et Smartphone PWA.
+  - **Call to Action & Liens Sécurisés** : boutons d'accès direct vers `/app` et lien officiel vers le dépôt GitHub (`https://github.com/sheriffhomard/Netops`).
+- **`/app` (Plateforme NetOps Academy)** : Cockpit NOC, simulateurs d'examens, ateliers, flashcards, terminal et profil utilisateur.
+- **Navigation Bidirectionnelle Fluide** : Un bouton dédié « Vitrine / Accueil » présent dans le Header, la Sidebar et le menu Hamburger permet à tout utilisateur de revenir sur la landing page sans perte d'état.
+- **Référencement & SEO Propre** : balisage Schema.org `WebApplication` (JSON-LD), balises OpenGraph, Twitter Cards, `robots.txt` et `sitemap.xml` multilingue.
 
 ---
 

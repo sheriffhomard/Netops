@@ -1,0 +1,8 @@
+# Robots.txt for NetOps Academy
+User-agent: *
+Allow: /
+Allow: /app
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://netops-academy.web.app/sitemap.xml

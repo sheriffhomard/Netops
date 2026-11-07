@@ -1,0 +1,233 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "learning": "Méthode",
+    "technologies": "Technologies",
+    "audiences": "Publics",
+    "about": "À propos",
+    "launchApp": "Accéder à la plateforme",
+    "signIn": "Se connecter",
+    "github": "Code source",
+    "toggleMenu": "Ouvrir le menu"
+  },
+  "hero": {
+    "kicker": "Learn · Practice · Master",
+    "title": "Maîtrisez les réseaux. Construisez votre expertise.",
+    "subtitle": "NetOps Academy est votre plateforme d'apprentissage dédiée aux infrastructures réseau, aux technologies professionnelles et aux compétences essentielles du Network Engineering.",
+    "ctaDiscover": "Découvrir la plateforme",
+    "ctaFeatures": "Explorer les fonctionnalités",
+    "stats": {
+      "cards": "2 900+ fiches de révision",
+      "questions": "102 questions d'examen",
+      "terminal": "Terminal Cisco IOS-XE simulé",
+      "pwa": "100% PWA & Hors-ligne"
+    },
+    "mockup": {
+      "nocTitle": "NOC Cockpit Telemetry",
+      "latency": "2.1 ms",
+      "packetLoss": "0.00%",
+      "activeSessions": "1 420 sessions",
+      "healthScore": "99.98% SLA",
+      "cliTitle": "Cisco IOS-XE Console",
+      "cliPrompt": "Core-R1# show ip route ospf",
+      "cliOutput": "O    10.100.20.0/24 [110/20] via 172.16.1.2, GigabitEthernet0/1\nO E2 192.168.50.0/24 [110/30] via 172.16.2.2, GigabitEthernet0/2"
+    }
+  },
+  "presentation": {
+    "title": "Tout pour apprendre et progresser en réseau",
+    "subtitle": "Une plateforme unifiée qui réunit les dimensions théoriques, pratiques et mnémotechniques de l'ingénierie réseau dans un environnement cohérent.",
+    "pillars": {
+      "theory": {
+        "title": "Apprentissage théorique",
+        "desc": "Standards RFC fondamentaux, protocoles de routage d'entreprise et architectures multi-constructeurs structurées."
+      },
+      "memory": {
+        "title": "Mémorisation active",
+        "desc": "Algorithme SRS Leitner à 5 boîtes calculant les intervalles optimaux de révision pour ancrer la mémoire à long terme."
+      },
+      "evaluation": {
+        "title": "Évaluation rigoureuse",
+        "desc": "Simulateur d'examen chronométré avec barème certifiant à 825/1000 points, surveillance proctorisée et corrigés détaillés."
+      },
+      "practice": {
+        "title": "Pratique technique",
+        "desc": "Terminal de simulation Cisco IOS-XE complet et ateliers guidés de configuration VLAN, trunk 802.1Q et routage dynamique."
+      },
+      "exploration": {
+        "title": "Exploration technologique",
+        "desc": "Encyclopédie comparative multi-cloud (AWS Direct Connect, Azure ExpressRoute, GCP Interconnect) avec schémas de topologie."
+      },
+      "progress": {
+        "title": "Progression continue",
+        "desc": "Radar de compétences en temps réel, calcul de précision par domaine et identification immédiate des axes d'amélioration."
+      }
+    }
+  },
+  "features": {
+    "heading": "Fonctionnalités Principales",
+    "subheading": "Six piliers technologiques conçus pour accélérer votre maîtrise des réseaux d'entreprise.",
+    "items": {
+      "noc": {
+        "title": "Cockpit NOC & Télémétrie",
+        "desc": "Tableau de bord de pilotage en direct avec indicateurs de readiness globale, suivi du streak d'assiduité et métriques d'endurance cognitive.",
+        "badge": "Supervision & Pilotage"
+      },
+      "flashcards": {
+        "title": "Flashcards Intelligentes (SRS)",
+        "desc": "Système de répétition espacée Leitner (5 boîtes) avec animations 3D, filtres par domaine technique et synthèse vocale TTS intégrée.",
+        "badge": "Mémorisation Active"
+      },
+      "exams": {
+        "title": "Examens Blancs Proctorisés",
+        "desc": "Simulateur officiel chronométré avec barème international à 825/1000 points, questions à choix multiples, bloc-notes et calculatrice CIDR.",
+        "badge": "Évaluation Certifiante"
+      },
+      "labs": {
+        "title": "Laboratoires & Ateliers Réseau",
+        "desc": "Scénarios pratiques d'ingénierie : trunks 802.1Q, agrégation EtherChannel, listes de contrôle d'accès (ACL) et routage OSPF.",
+        "badge": "Pratique Guidée"
+      },
+      "terminal": {
+        "title": "Terminal Cisco IOS-XE Simulé",
+        "desc": "Environnement d'entraînement reproduisant l'arborescence des modes d'exécution (User EXEC, Privileged, Config), complétion TAB et historique.",
+        "badge": "Simulation CLI"
+      },
+      "encyclopedia": {
+        "title": "Encyclopédie Technique & Cloud",
+        "desc": "Base de connaissances comparative multi-cloud, topologies de réseaux hybrides, schémas de connectivité et matrice d'interconnexion.",
+        "badge": "Base de Connaissances"
+      }
+    }
+  },
+  "learning": {
+    "heading": "Une Approche Pédagogique Complète",
+    "subheading": "Un parcours méthodique en quatre phases pour transformer des notions complexes en réflexes d'ingénieur.",
+    "steps": {
+      "step1": {
+        "num": "01",
+        "name": "Learn",
+        "title": "Acquérir les fondamentaux",
+        "desc": "Assimiler les concepts protocolaires, lesRFC publiques et les blueprints officiels des constructeurs leaders."
+      },
+      "step2": {
+        "num": "02",
+        "name": "Practice",
+        "title": "Manipuler par la pratique",
+        "desc": "Appliquer la théorie sur des flashcards ciblées, des ateliers guidés et des lignes de commande en terminal simulé."
+      },
+      "step3": {
+        "num": "03",
+        "name": "Evaluate",
+        "title": "Mesurer ses acquis",
+        "desc": "Se confronter à des simulations d'examens chronométrées avec notation stricte et corrections argumentées."
+      },
+      "step4": {
+        "num": "04",
+        "name": "Improve",
+        "title": "Consolider et progresser",
+        "desc": "Identifier ses faiblesses grâce au radar de performance et programmer des révisions optimisées via l'algorithme SRS."
+      }
+    }
+  },
+  "technologies": {
+    "heading": "Technologies & Domaines Couverts",
+    "subheading": "Les compétences et protocoles fondamentaux réellement présents dans les contenus pédagogiques de la plateforme.",
+    "categories": {
+      "fundamentals": {
+        "title": "Fondamentaux & Modèles",
+        "tags": ["Modèle OSI (7 couches)", "TCP/IP Stack", "Adressage IPv4 & IPv6", "Calculateur CIDR / VLSM", "DNS & DHCP", "ARP & ICMP"]
+      },
+      "switching": {
+        "title": "Commutation & VLANs",
+        "tags": ["VLANs & Trunks 802.1Q", "Spanning Tree (STP / RSTP)", "EtherChannel (LACP / PAgP)", "Routage Inter-VLAN", "Port Security"]
+      },
+      "routing": {
+        "title": "Routage & Protocoles Dynamiques",
+        "tags": ["OSPFv2 & OSPFv3", "BGP (eBGP & iBGP)", "EIGRP Métrique Composite", "Routage Statique & Par Défaut", "Tables de Routage RIB / FIB"]
+      },
+      "security": {
+        "title": "Sécurité & Infrastructure",
+        "tags": ["Pare-feu Stateful", "Access Control Lists (ACLs)", "VPN IPsec & Cryptographie", "Architecture Zero Trust", "NAT / PAT (Overload)"]
+      },
+      "cloud": {
+        "title": "Interconnexions Cloud Hybrides",
+        "tags": ["AWS Direct Connect", "Azure ExpressRoute", "GCP Cloud Interconnect", "Topologies Hub-and-Spoke", "BGP Peering Privé"]
+      },
+      "operations": {
+        "title": "Opérations & Diagnostic NOC",
+        "tags": ["Cisco IOS-XE CLI", "Supervision SNMP & Syslog", "Analyse de Trames & Télémétrie", "Dépannage Méthodique", "Capture & Diagnostic"]
+      }
+    }
+  },
+  "bilingual": {
+    "heading": "Learn in Your Language",
+    "subheading": "Une expérience pensée pour les ingénieurs francophones et anglophones.",
+    "desc": "NetOps Academy propose une expérience accessible en français et en anglais, avec un changement de langue instantané et sans rechargement de page.",
+    "detail": "L'interface utilisateur, la navigation, le cockpit NOC, le simulateur d'examen (102 questions certifiantes) et les ateliers sont 100% bilingues. Le corpus historique de 2 900 flashcards est proposé dans sa langue source française, intégrant nativement la terminologie anglaise standard des RFC et des commandes CLI.",
+    "currentLanguage": "Langue actuellement active :",
+    "toggleAction": "Basculer vers l'anglais",
+    "toggleActionFr": "Basculer vers le français"
+  },
+  "devices": {
+    "heading": "Expérience Multi-Appareils & Hors-Ligne",
+    "subheading": "Étudiez partout, du poste de travail NOC au smartphone en déplacement.",
+    "desktop": {
+      "title": "Station de Travail",
+      "desc": "Vue étendue multi-panneaux avec terminal plein écran, raccourcis clavier (Ctrl+K) et calculateur CIDR flottant."
+    },
+    "tablet": {
+      "title": "Tablette Tactile",
+      "desc": "Interface fluide optimisée pour le feuilletage des flashcards en 3D et la consultation des topologies réseau."
+    },
+    "mobile": {
+      "title": "Smartphone & PWA",
+      "desc": "Barre de navigation tactile au pouce, tiroir de menu rapide et sessions de révision Blitz en mobilité."
+    },
+    "pwaBadge": "PWA Ready",
+    "pwaTitle": "Application Web Progressive Installable",
+    "pwaDesc": "Ajoutez NetOps Academy à votre écran d'accueil en un clic. Grâce au Service Worker intégré, vos révisions restent accessibles même lors de coupures réseau.",
+    "installBtn": "Installer l'application"
+  },
+  "audiences": {
+    "heading": "À Qui S'adresse NetOps Academy ?",
+    "subheading": "Un outil adapté aux différents stades de parcours des spécialistes des réseaux.",
+    "roles": {
+      "students": {
+        "title": "Étudiants en Réseaux & Télécoms",
+        "desc": "Pour concrétiser la théorie des cours universitaires ou d'écoles d'ingénieurs par de la manipulation technique immédiate."
+      },
+      "technicians": {
+        "title": "Techniciens Support & Administrateurs",
+        "desc": "Pour monter en compétences sur les configurations CLI constructeurs et automatiser les diagnostics d'incidents."
+      },
+      "engineers": {
+        "title": "Ingénieurs Réseau & Exploitants NOC",
+        "desc": "Pour maintenir un niveau d'excellence technique quotidien et tester des réflexes sur des architectures complexes."
+      },
+      "candidates": {
+        "title": "Candidats aux Certifications",
+        "desc": "Pour s'entraîner aux examens professionnels (Cisco CCNA, CCNP ENCOR/ENARSI, Palo Alto PCNSE, CompTIA Network+)."
+      }
+    },
+    "disclaimer": "Avertissement : NetOps Academy est une plateforme indépendante d'apprentissage et d'entraînement technique. Elle ne délivre pas d'accréditations ni de certifications constructeurs officielles."
+  },
+  "cta": {
+    "heading": "Prêt à développer vos compétences réseau ?",
+    "subheading": "Découvrez NetOps Academy et commencez à construire votre expertise réseau dès aujourd'hui.",
+    "launchBtn": "Accéder à NetOps Academy",
+    "githubBtn": "Découvrir le projet sur GitHub",
+    "featuresBtn": "Voir les fonctionnalités"
+  },
+  "footer": {
+    "tagline": "Cockpit NOC d'entreprise & Plateforme d'entraînement aux certifications réseau.",
+    "navigation": "Navigation",
+    "platform": "Plateforme",
+    "resources": "Ressources",
+    "legal": "Mentions Légales",
+    "disclaimerText": "NetOps Academy est un projet pédagogique indépendant sans affiliation avec Cisco Systems, Palo Alto Networks, Fortinet, CompTIA ou Juniper. Les marques sont citées à des fins d'identification technique loyale (Nominative Fair Use).",
+    "allRightsReserved": "Tous droits réservés.",
+    "version": "Version",
+    "backToTop": "Haut de page"
+  }
+}
