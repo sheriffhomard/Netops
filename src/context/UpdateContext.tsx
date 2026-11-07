@@ -25,8 +25,8 @@ interface UpdateContextType {
 
 const UpdateContext = createContext<UpdateContextType | undefined>(undefined);
 
-const CURRENT_VERSION = '2.5.0';
-const RELEASE_DATE = '2 novembre 2026';
+const CURRENT_VERSION = '2.6.0';
+const RELEASE_DATE = '4 novembre 2026';
 
 const formatDateTime = (date: Date): string => {
   return new Intl.DateTimeFormat('fr-FR', {

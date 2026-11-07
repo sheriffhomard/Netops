@@ -4,24 +4,27 @@ Toutes les modifications notables apportées au projet sont documentées dans ce
 
 ---
 
-## [2.6.0] — 2026-11-03
+## [2.6.0] — 2026-11-04
 
-### 🌍 Internationalisation Intégrale Bilingue Français / Anglais
-- **Moteur d'Internationalisation Moderne** (`i18next`, `react-i18next`, `/src/i18n/index.ts`) :
-  - Support natif complet du Français (`fr`, langue par défaut) et de l'Anglais (`en`).
-  - Basculement instantané sans rechargement de page (`zero page reload`) préservant le chronomètre des examens proctorisés, le bloc-notes, le terminal Cisco IOS-XE et la position des cartes SRS.
-  - Persistance automatique du choix de langue dans `localStorage` (`netops_lang`) et mise à jour de `<html lang="...">`.
-- **10 Espaces de Noms Modulaires Bilingues** (`/src/i18n/locales/{fr,en}/`) :
-  - `common.json`, `navigation.json`, `dashboard.json`, `flashcards.json`, `exams.json`, `labs.json`, `terminal.json`, `encyclopedia.json`, `settings.json`, `errors.json`.
-- **Composant Sélecteur de Langue Dédié** (`LanguageSwitcher.tsx`) :
-  - 4 variantes ergonomiques (`header`, `menu`, `settings`, `compact`) intégrées dans l'en-tête, la barre latérale, le menu hamburger, les paramètres système, l'onboarding et le profil ingénieur.
-- **Rigueur Technique & Données Réseau Inaltérées** :
-  - Les commandes CLI exactes (`show ip interface brief`, `ping`, `ip route`, etc.) demeurent inchangées en français comme en anglais.
-  - Stabilité absolue des identifiants (IDs) des 2 900+ flashcards, questions et ateliers, préservant la synchronisation Firestore et les boîtes Leitner.
-  - Synthèse vocale adaptative (`utterance.lang = 'en-US'` en anglais et `'fr-FR'` en français).
-  - Formatage localisé des dates et nombres avec `Intl.NumberFormat` et `Intl.DateTimeFormat`.
-- **Localisation Complète des Composants & Vues** :
-  - Fil d'Ariane (`Breadcrumbs.tsx`), barre latérale, palette de commandes (`Ctrl+K`), mentions légales complètes en 5 clauses, onboarding, simulateur d'examen et catalogue des certifications.
+### 🛡️ Audit de Préproduction, Durcissement Sécurité & Suite de Tests
+- **Sécurité Firestore & Isolation Zero-Trust (`firestore.rules`, `security_spec.md`)** :
+  - Mise en conformité stricte avec `security_spec.md` : vérification obligatoire de l'adresse e-mail (`request.auth.token.email_verified == true`) sur toutes les opérations mutantes (`create`, `update`, `delete`).
+  - Architecture administrateur triple niveau : support des Firebase Custom Claims (`request.auth.token.admin == true`), du répertoire `/admins/{uid}` et du compte propriétaire de secours.
+  - Immutabilité absolue des résultats d'examens officiels (`allow update: if false;`).
+  - Protection Denial of Wallet sur les longueurs de chaînes et limites de tableaux.
+- **Suite de Tests Automatisés & Intégration Continue (Vitest & GitHub Actions)** :
+  - Intégration complète de Vitest, jsdom et `@testing-library` (`npm run test`, `npm run test:coverage`).
+  - 5 suites de tests unitaires et d'intégration validées (22 tests réussis) : calculs de sous-réseaux CIDR/VLSM, algorithme SRS Leitner, seuil officiel de scoring Cisco (825/1000), parité bilingue et règles de sécurité Firestore.
+  - Pipeline GitHub Actions `.github/workflows/ci.yml` exécutant l'audit complet (install, typecheck, lint, test, test:i18n, build).
+- **Internationalisation Exhaustive & Script d'Audit Pédagogique** :
+  - Parité stricte 1:1 sur les 10 dictionnaires de traduction (402 clés FR = 402 clés EN).
+  - Recensement exhaustif et transparent des contenus pédagogiques bilingues via `npm run test:i18n` (102 questions d'examen synchronisées, banque de questions bilingue, labs localisés, corpus de flashcards avec badge de transparence).
+- **Conformité W3C PWA & Stratégie de Cache** :
+  - Synchronisation de `public/manifest.json` avec identifiant canonique (`"id": "/"`), scope et séparation stricte des icônes masquables.
+  - Service Worker incrémenté en cache `netops-v2.6.0`.
+- **Documentation Complète d'Exploitation & Maintenance** :
+  - Création de `DEPLOYMENT.md`, `SECURITY.md`, `OPERATIONS.md`, et `BACKUP_AND_RESTORE.md`.
+  - Nettoyage des métadonnées `package.json` (`netops-academy` v2.6.0).
 
 ---
 

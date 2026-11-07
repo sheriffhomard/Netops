@@ -40,12 +40,12 @@ L'arborescence est désormais catégorisée et accessible par trois points d'ent
 Le système de cycle de vie logiciel est orchestré par `src/context/UpdateContext.tsx` et `/public/version.json` :
 
 - **Métadonnées Système** :
-  - `releaseDate` : 2 novembre 2026.
-  - `version` : 2.5.0-PROD.
+  - `releaseDate` : 4 novembre 2026.
+  - `version` : 2.6.0-PROD.
   - `lastCheckedDate` : Horodatage dynamique français mémorisé dans le stockage local.
 - **Mises à Jour en Arrière-Plan (Background Worker)** :
   - Intervalle périodique toutes les 15 minutes vérifiant la disponibilité d'une nouvelle version sans perturber un examen ou une session de terminal active.
-  - Cache purge et rafraîchissement transparent des assets statiques via `sw.js`.
+  - Cache purge et rafraîchissement transparent des assets statiques via `sw.js` (cache `netops-v2.6.0`).
 - **Commandes Manuelles** :
   - « Vérifier les mises à jour » : interrogation immédiate et confirmation visuelle.
   - « Forcer la mise à jour » : purge des caches `CacheStorage`, `skipWaiting` sur le Service Worker et actualisation propre.
@@ -79,9 +79,13 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
 - **Google Cloud Firestore** :
   - `/users/{userId}` : profil utilisateur, streak, examen cible, précision globale.
   - `/users/{userId}/flashcards` : flashcards personnalisées rédigées par l'utilisateur.
-  - `/users/{userId}/exam_results` : historique des examens blancs avec scores et date.
-- **Règles de sécurité Firestore (firestore.rules)** :
-  - Modèle ABAC Zero Trust limitant la lecture et l'écriture strictement aux données du propriétaire authentifié (`request.auth.uid == userId`).
+  - `/users/{userId}/exam_results` : historique des examens blancs avec scores et date (immutables en écriture).
+- **Règles de sécurité Firestore (firestore.rules - v2.6.0)** :
+  - Modèle Zero Trust durci :
+    - Écriture conditionnée au propriétaire vérifié : `isVerifiedOwner(userId)` avec `request.auth.token.email_verified == true`.
+    - Support des Custom Claims Administrateur : `request.auth.token.admin == true` et annuaire Firestore `/admins/{uid}`.
+    - Immutabilité des résultats d'examen (`exam_results`) : interdiction stricte de mise à jour (`allow update: if false`) et suppression réservée aux administrateurs.
+    - Protection Denial-of-Wallet : plafonnement des payloads de requêtes à 150 Ko.
 
 ---
 
@@ -103,3 +107,15 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
   - `settings` : Paramètres système, mentions légales et calculateur CIDR/VLSM.
   - `errors` : Diagnostics réseau et messages d'erreur techniques.
 - **Préservation des Données Techniques** : Syntaxe exacte des commandes CLI (Cisco IOS-XE, Palo Alto PAN-OS, Fortinet FortiOS) et identifiants techniques stables pour les 2 900+ flashcards.
+
+---
+
+## 8. Automatisation, Qualité & Suite de Tests
+
+- **Framework de Tests Automatisés** : Vitest + `@testing-library/react` + `jsdom`.
+- **Scripts de Contrôle Qualité** :
+  - `npm run typecheck` : validation TypeScript stricte (`tsc --noEmit`).
+  - `npm run lint` : linter de conformité du codebase.
+  - `npm run test` : exécution des 22 tests unitaires et d'intégration (SRS Leitner, CIDR, scoring examen, parité bilingue, matrice de sécurité Firestore).
+  - `npm run test:i18n` : audit automatique de parité des dictionnaires et recensement exhaustif des contenus pédagogiques.
+- **Intégration Continue (CI)** : Workflow GitHub Actions `.github/workflows/ci.yml` exécutant le pipeline complet sur Node 20.

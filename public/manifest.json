@@ -1,8 +1,10 @@
 {
-  "name": "NetOps Academy - Enterprise NOC & Certifications",
+  "id": "/",
+  "name": "NetOps Academy — Enterprise NOC & Certifications",
   "short_name": "NetOps",
   "description": "Enterprise NOC Engine & Plateforme d'entraînement aux certifications réseau et cybersécurité (CCNA, CCNP ENCOR, PCNSE, Fortinet, Junos).",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f131c",
   "theme_color": "#00daf3",
@@ -18,7 +20,13 @@
       "src": "/logo.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
     }
   ],
   "categories": ["education", "productivity", "utilities"],

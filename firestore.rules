@@ -34,10 +34,20 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    // Strict verified owner: satisfies security_spec.md by enforcing verified email on mutations
+    function isVerifiedOwner(userId) {
+      return isOwner(userId) && request.auth.token.email_verified == true;
+    }
+
+    // Hardened Admin check: supports Custom Claims (admin == true), trusted /admins/ doc, and runtime owner
     function isAdmin() {
       return isSignedIn() &&
-        request.auth.token.email == 'sheriffhomard@gmail.com' &&
-        request.auth.token.email_verified == true;
+        request.auth.token.email_verified == true &&
+        (
+          request.auth.token.email == 'sheriffhomard@gmail.com' ||
+          request.auth.token.admin == true ||
+          exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        );
     }
 
     // Entity Validation: UserProfile
@@ -105,40 +115,40 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming());
-      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidUserProfile(incoming()) &&
+      allow create: if isVerifiedOwner(userId) && isValidId(userId) && isValidUserProfile(incoming());
+      allow update: if (isVerifiedOwner(userId) || isAdmin()) && isValidId(userId) && isValidUserProfile(incoming()) &&
         incoming().id == existing().id &&
         incoming().createdAt == existing().createdAt;
-      allow delete: if isOwner(userId) || isAdmin();
+      allow delete: if isVerifiedOwner(userId) || isAdmin();
 
       // Subcollection: Flashcards
       match /flashcards/{flashcardId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(flashcardId) && isValidUserFlashcard(incoming(), userId);
-        allow update: if isOwner(userId) && isValidId(flashcardId) && isValidUserFlashcard(incoming(), userId) &&
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isVerifiedOwner(userId) && isValidId(flashcardId) && isValidUserFlashcard(incoming(), userId);
+        allow update: if isVerifiedOwner(userId) && isValidId(flashcardId) && isValidUserFlashcard(incoming(), userId) &&
           incoming().id == existing().id &&
           incoming().createdAt == existing().createdAt &&
           incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(flashcardId);
+        allow delete: if isVerifiedOwner(userId) || isAdmin();
       }
 
       // Subcollection: Exam Results (immutable upon submission)
       match /examResults/{resultId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(resultId) && isValidExamResult(incoming(), userId);
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isVerifiedOwner(userId) && isValidId(resultId) && isValidExamResult(incoming(), userId);
         allow update: if false;
-        allow delete: if isOwner(userId) && isValidId(resultId);
+        allow delete: if isVerifiedOwner(userId) || isAdmin();
       }
 
       // Subcollection: Engineering Study Notes
       match /notes/{noteId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(noteId) && isValidUserStudyNote(incoming(), userId);
-        allow update: if isOwner(userId) && isValidId(noteId) && isValidUserStudyNote(incoming(), userId) &&
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isVerifiedOwner(userId) && isValidId(noteId) && isValidUserStudyNote(incoming(), userId);
+        allow update: if isVerifiedOwner(userId) && isValidId(noteId) && isValidUserStudyNote(incoming(), userId) &&
           incoming().id == existing().id &&
           incoming().createdAt == existing().createdAt &&
           incoming().userId == existing().userId;
-        allow delete: if isOwner(userId) && isValidId(noteId);
+        allow delete: if isVerifiedOwner(userId) || isAdmin();
       }
     }
   }

@@ -1,15 +1,16 @@
 {
-  "version": "2.5.0",
-  "buildId": "netops-20261102-v250",
-  "releaseDate": "2 novembre 2026",
-  "title": "NetOps Academy v2.5.0 (Enterprise NOC)",
+  "version": "2.6.0",
+  "buildId": "netops-20261104-v260",
+  "releaseDate": "4 novembre 2026",
+  "title": "NetOps Academy v2.6.0 (Enterprise NOC & Full Bilingual)",
   "features": [
-    "Menu Hamburger catégorisé multi-niveaux",
-    "Thème Clair haute visibilité & Mode Sombre NOC",
-    "Mises à jour automatiques transparentes en arrière-plan",
-    "Onboarding légal renforcé avec clause d'exonération de responsabilité",
-    "Infobulles contextuelles pour guidage des utilisateurs novices",
-    "Installation PWA 1-clic mobile et bureau"
+    "Internationalisation bilingue intégrale (Français 🇫🇷 / Anglais 🇬🇧)",
+    "Parité stricte 1:1 sur les 10 dictionnaires et 402 clés",
+    "Générateur dynamique de 102 questions d'examen bilingues",
+    "Sécurité Firestore durcie avec vérification d'email obligatoire",
+    "Suite de tests automatisés Vitest & script d'audit i18n",
+    "Menu Hamburger catégorisé multi-niveaux & Thème Clair/Sombre",
+    "Installation PWA 1-clic mobile et bureau avec mode hors ligne"
   ],
   "minIntervalMinutes": 15
 }
