@@ -36,8 +36,9 @@
 ## 📑 Table of Contents
 
 - [🌟 General Overview](#-general-overview)
+- [🚀 Public Landing Page Showcase & Route Separation (`/` & `/app`)](#-public-landing-page-showcase--route-separation----app)
 - [🌍 Release v2.6.0: Complete Bilingual Internationalization (FR / EN)](#-release-v260-complete-bilingual-internationalization-fr--en)
-- [📱 Release v2.5.0: Navigation & Background Updates](#-release-v250-navigation--background-updates)
+- [📱 Ergonomics, Themes & Background Updates](#-ergonomics-themes--background-updates)
 - [📦 1-Click PWA Desktop & Mobile Installation](#-1-click-pwa-desktop--mobile-installation)
 - [✨ Architecture & Categorized Navigation](#-architecture--categorized-navigation)
 - [⚖️ Legal Framework, Non-Affiliation & Data Disclaimer](#-legal-framework-non-affiliation--data-disclaimer)
@@ -56,6 +57,28 @@
 The application combines two complementary operational purposes:
 1. **Network Operations Center (NOC) Console**: Live telemetry, domain readiness radar, exam analytics, and an interactive simulated Cisco IOS-XE terminal.
 2. **Advanced Learning Engine**: 2,900+ high-fidelity technical flashcards powered by the Leitner 5-box Spaced Repetition System (SRS), proctored exam simulator, and multi-cloud architectural topology matrix (AWS vs Azure vs GCP vs On-Premises).
+
+---
+
+## 🚀 Public Landing Page Showcase & Route Separation (`/` & `/app`)
+
+NetOps Academy incorporates a **modern, high-fidelity public landing page showcase** adhering to SaaS & EdTech best practices with clean route boundaries:
+
+- **`/` (Public Root)**: Marketing & technical presentation page accessible without authentication:
+  - **Hero Section**: Official tagline, core curriculum statistics (2,900+ flashcards, 102 exam questions, Cisco CLI, 100% PWA), and prominent Launch button.
+  - **Interactive Network Topology & Telemetry**: Dynamic SVG architecture schematic (Tier-1 Transit WAN BGP, NGFW-HA Cluster, Core L3 Backbone OSPF, Spine-Leaf VLAN access) with live telemetry inspection on click.
+  - **Interactive Sandbox**: In-page live testing of simulated Cisco IOS-XE CLI, Leitner 3D spaced flashcard with RFC citations, and CIDR/VLSM subnet calculator.
+  - **Verifiable Curriculum Matrix**: 6 technical pillars covering fundamental OSI/TCP-IP models, 802.1Q switching, dynamic routing protocols, network security, and hybrid cloud interconnects.
+  - **Four-Stage Learning Path**: Learn, Practice, Evaluate, Improve.
+  - **Bilingual Experience & Multi-Device Responsive PWA**: Instant zero-reload French/English toggling and desktop/tablet/mobile layouts.
+  - **Direct CTAs & Open Source Repository**: Direct entry into `/app` and official link to GitHub (`https://github.com/sheriffhomard/Netops`).
+- **`/app` (NetOps Academy Cockpit)**: Operational NOC dashboard, exam simulations, workshops, flashcards, terminal, and user profile.
+- **Direct Access from Hamburger Menu & Navigation**:
+  - **From Hamburger Menu**: Dedicated top banner (`Vitrine & Présentation`) and quick tool card in the utility grid.
+  - **From Top Header**: Direct storefront icon button.
+  - **From Desktop Sidebar**: Dedicated footer button.
+  - Enables smooth instant navigation back and forth between the application and the showcase without losing session progress.
+- **Enterprise SEO & Meta Compliance**: Schema.org `WebApplication` structured data (JSON-LD), OpenGraph cards, Twitter preview cards, `robots.txt`, and multilingual `sitemap.xml`.
 
 ---
 

@@ -30,6 +30,7 @@ L'arborescence est désormais catégorisée et accessible par trois points d'ent
   - Modal/tiroir plein écran accessible sur mobile (via le bouton Menu du bas et l'en-tête) ainsi que sur desktop via le bouton de l'en-tête.
   - Recherche instantanée par mots-clés (RFC, CLI, domaine).
   - Accès direct au Calculateur CIDR, Paramètres Système, Thèmes et installation PWA.
+  - **Accès Direct Vitrine & Présentation (Landing Page)** : Bannière supérieure dédiée avec icône `storefront` et carte dédiée dans la grille des outils rapides, permettant de basculer instantanément sur la page vitrine publique.
 - **Barre Inférieure Mobile (MobileBottomNav)** :
   - Ergonomie tactile pouce avec accès direct Accueil, Flashcards, Examens, Labs et tiroir complet Menu.
 

@@ -2,6 +2,38 @@
 
 Toutes les modifications notables apportées au projet sont documentées dans ce fichier.
 
+## [2.7.0] — 2026-11-08
+
+### 🚀 Landing Page Professionnelle Vitrine & Intégration Navigation
+- **Landing Page Publique & Séparation des Routes (`/` & `/app`)** :
+  - Création de la landing page vitrine moderne, épurée et technologique pour NetOps Academy (`/src/views/LandingPageView.tsx`).
+  - Hero section avec titre officiel, accroche et statistiques réelles (2 900+ fiches, 102 questions certifiantes, terminal simulé, 100% PWA).
+  - Topologie réseau et télémétrie interactive SVG/React (transit WAN Tier-1, firewall NGFW-HA, switch Core L3 OSPF et matrice Spine-Leaf VLAN) avec inspection télémétrique au clic.
+  - Bac à sable interactif : aperçu en direct du terminal Cisco IOS-XE simulé, d'une fiche SRS Leitner 3D avec références RFC, et du calculateur de sous-réseaux CIDR / VLSM.
+  - Présentation en 6 piliers et curriculum réel couvrant les 6 domaines d'ingénierie réseau.
+  - Parcours méthodique en 4 étapes : Learn, Practice, Evaluate, Improve.
+  - Section bilingue avec démonstration interactive du basculement instantané FR / EN.
+  - Section expérience multi-appareils & PWA (desktop, tablette, smartphone) avec bouton d'installation directe.
+  - Publics cibles (étudiants, techniciens, ingénieurs, candidats certifiants) avec mention de non-affiliation constructeurs.
+  - Call to action final vers l'application et lien officiel vers le dépôt GitHub (`https://github.com/sheriffhomard/Netops`).
+  - Footer complet avec liens de navigation, mentions légales et copyright dynamique.
+- **Accès Direct depuis le Menu Hamburger & Navigation Globale** :
+  - **Menu Hamburger (`HamburgerMenuModal.tsx`)** : intégration d'une bannière supérieure dédiée avec icône `storefront` et d'une carte d'action dédiée dans la grille des outils rapides.
+  - **En-tête Desktop (`Header.tsx`)** : bouton « Vitrine » dédié avec icône storefront.
+  - **Barre Latérale (`Sidebar.tsx`)** : bouton « Vitrine / Accueil » accessible à tout moment.
+  - **En-tête Mobile (`App.tsx`)** : bouton storefront d'accès rapide.
+  - Transition réactive instantanée sans rechargement de page préservant toutes les sessions actives.
+- **Internationalisation & Dictionnaires Dédiés (`landing.json`)** :
+  - 137 clés de traduction avec parité stricte 1:1 en français (`src/i18n/locales/fr/landing.json`) et anglais (`src/i18n/locales/en/landing.json`).
+  - Total de 541 clés parfaitement synchronisées réparties sur 11 espaces de noms, validées par `npm run test:i18n`.
+- **Référencement SEO & Données Structurées** :
+  - Données structurées Schema.org `WebApplication` en JSON-LD dans `index.html`.
+  - Métadonnées complètes OpenGraph et Twitter Card pour le partage social.
+  - Création de `public/robots.txt` et `public/sitemap.xml` avec balises d'alternance linguistique `xhtml:link`.
+- **Suite de Tests Dédiée (`src/test/landingPage.test.tsx`)** :
+  - 6 tests automatisés validant le rendu des 11 sections, les CTAs de lancement, le lien GitHub sécurisé, le basculement d'onglets du bac à sable, la réactivité bilingue et l'accès direct depuis `HamburgerMenuModal`.
+  - 28 tests totaux validés avec succès sur l'ensemble du projet (`npm run test`).
+
 ---
 
 ## [2.6.0] — 2026-11-04

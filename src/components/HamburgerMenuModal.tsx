@@ -100,6 +100,39 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
           </div>
         </div>
 
+        {/* Showcase / Landing Page Quick Access Banner */}
+        {onNavigateToLanding && !filterQuery && (
+          <div className="px-5 pt-3 pb-1 border-b border-[#334155]/30 bg-[#0a0e16]/40">
+            <button
+              onClick={() => {
+                onClose();
+                onNavigateToLanding();
+              }}
+              className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#00363d]/60 via-[#181c24] to-[#121620] border border-[#00e5ff]/50 hover:border-[#00e5ff] text-left transition-all cursor-pointer group shadow-sm hover:shadow-[0_0_15px_rgba(0,229,255,0.2)]"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-[#00e5ff]/20 text-[#00e5ff] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <span className="material-symbols-outlined text-lg">storefront</span>
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-mono font-bold text-[#00e5ff] flex items-center gap-1.5 truncate">
+                    <span>{t('navigation:landingPage')}</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#00e5ff]/20 text-[#00e5ff] uppercase font-bold tracking-wider shrink-0">
+                      Vitrine
+                    </span>
+                  </span>
+                  <span className="text-[11px] text-[#849396] group-hover:text-[#dfe2ee] transition-colors truncate">
+                    {t('navigation:landingPageDesc')}
+                  </span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-[#00e5ff] text-sm group-hover:translate-x-1 transition-transform ml-2 shrink-0">
+                arrow_forward
+              </span>
+            </button>
+          </div>
+        )}
+
         {/* Categorized List of Features */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 flex flex-col gap-5">
           {localizedCategories.map((cat) => {
@@ -199,6 +232,30 @@ export const HamburgerMenuModal: React.FC<HamburgerMenuModalProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {/* Showcase / Landing Page Card */}
+              {onNavigateToLanding && (
+                <button
+                  onClick={() => {
+                    onClose();
+                    onNavigateToLanding();
+                  }}
+                  className="p-2.5 rounded-xl bg-[#00363d]/30 hover:bg-[#00363d]/60 border border-[#00e5ff]/40 text-left flex items-center gap-2.5 transition-all cursor-pointer group"
+                >
+                  <div className="w-7 h-7 rounded-lg bg-[#00e5ff]/20 text-[#00e5ff] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-base">storefront</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-xs font-mono font-bold text-[#00e5ff] flex items-center gap-1.5 truncate">
+                      <span>{t('navigation:landingPage')}</span>
+                      <span className="text-[9px] px-1 py-0.2 rounded bg-[#00e5ff]/20 text-[#00e5ff] uppercase font-bold shrink-0">Web</span>
+                    </div>
+                    <div className="text-[10px] text-[#849396] truncate">
+                      {t('navigation:landingPageDesc')}
+                    </div>
+                  </div>
+                </button>
+              )}
+
               {/* Language Switcher pill in menu */}
               <div className="p-2 rounded-xl bg-[#181c24] border border-[#334155]/50 flex items-center justify-between gap-2">
                 <span className="text-xs font-mono font-semibold text-[#dfe2ee]">

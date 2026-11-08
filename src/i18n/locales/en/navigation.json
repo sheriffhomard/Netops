@@ -18,6 +18,8 @@
   "sessionDuration": "Session duration",
   "globalReadiness": "Global readiness",
   "legalNotice": "Legal Notice & Independence",
+  "landingPage": "Showcase & Overview",
+  "landingPageDesc": "Explore public platform showcase",
   "categories": {
     "accueil": "Home",
     "apprendre": "Learn",

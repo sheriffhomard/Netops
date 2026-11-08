@@ -71,9 +71,11 @@ NetOps Academy intègre une **landing page vitrine moderne, épurée et technolo
   - **Curriculum Réel** : cartographie des 6 domaines fondamentaux (Fondamentaux OSI/TCP-IP, Commutation & VLANs 802.1Q, Routage dynamique OSPF/BGP, Sécurité & Zero Trust, Interconnexions Cloud Direct Connect/ExpressRoute, Supervision NOC).
   - **Parcours Pédagogique en 4 Étapes** : Learn, Practice, Evaluate, Improve.
   - **Section Bilingue & Expérience Multi-Écrans** : démonstration du basculement instantané FR / EN et compatibilité Desktop, Tablette et Smartphone PWA.
-  - **Call to Action & Liens Sécurisés** : boutons d'accès direct vers `/app` et lien officiel vers le dépôt GitHub (`https://github.com/sheriffhomard/Netops`).
-- **`/app` (Plateforme NetOps Academy)** : Cockpit NOC, simulateurs d'examens, ateliers, flashcards, terminal et profil utilisateur.
-- **Navigation Bidirectionnelle Fluide** : Un bouton dédié « Vitrine / Accueil » présent dans le Header, la Sidebar et le menu Hamburger permet à tout utilisateur de revenir sur la landing page sans perte d'état.
+- **Navigation Bidirectionnelle Fluide** : Un accès direct « Vitrine / Accueil » est disponible dans l'application :
+  - **Depuis le Menu Hamburger** : bannière supérieure dédiée avec icône et descriptif (`Vitrine & Présentation`), ainsi qu'une carte dédiée dans la grille des outils.
+  - **Depuis la Barre Supérieure (Header)** : bouton direct avec icône storefront.
+  - **Depuis la Barre Latérale (Sidebar)** : lien direct en bas de menu.
+  - Permet à tout utilisateur de basculer instantanément entre l'application et la landing page sans perte de session.
 - **Référencement & SEO Propre** : balisage Schema.org `WebApplication` (JSON-LD), balises OpenGraph, Twitter Cards, `robots.txt` et `sitemap.xml` multilingue.
 
 ---
