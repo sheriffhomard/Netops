@@ -25,10 +25,43 @@
 
 ---
 
-## 📸 Capture d'Écran — Cockpit & Console de Supervision NOC
+## 📸 Galerie Visuelle de l'Application — Captures Écran Réelles & Actualisées
+
+L'ensemble des captures d'écran ci-dessous illustre l'interface réelle de NetOps Academy, ses modules d'ingénierie et ses outils pédagogiques interactifs.
+
+### 1. 🌐 Console NOC & Télémétrie Opérationnelle en Direct
+*Supervision en temps réel de l'infrastructure réseau : schéma vectoriel d'interconnexion (Transit WAN, BGP AS 65001, Pare-feu HA, Matrice Spine-Leaf), radar de compétences Cisco 6 axes (Fondamentaux, Routage OSPF/BGP, Sécurité, Automatisation), journal d'incidents et flux de télémétrie en temps réel.*
 
 <p align="center">
-  <img src="/screenshot.jpg" alt="NetOps Academy Dashboard Preview" width="100%" style="border-radius: 16px; border: 1px solid #334155; box-shadow: 0 12px 35px rgba(0,0,0,0.6);" />
+  <img src="public/screenshots/noc-dashboard.jpg" alt="Console NOC et Télémétrie en Direct - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 2. 🔬 Simulateur d'Examens Officiels Proctorisé
+*Session d'examen minutée conforme aux conditions réelles (CCNA 200-301 / CCNP ENCOR 350-401) : chronomètre temps réel, barre de progression, questions scénarisées avec topologie réseau ASCII, commandes CLI, bloc-notes intégré et suivi des questions à réviser.*
+
+<p align="center">
+  <img src="public/screenshots/exam-simulator.jpg" alt="Simulateur d'Examens Proctorisé - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 3. 💻 Terminal Cisco IOS-XE & Laboratoire de Configuration Virtuel
+*Console en ligne de commande interactive exécutant un simulateur de système IOS-XE : tables de routage réelles (`show ip route ospf`), statut BGP, modes de configuration hiérarchiques et panneau latéral d'objectifs de laboratoire guidés avec validation en direct.*
+
+<p align="center">
+  <img src="public/screenshots/cisco-terminal.jpg" alt="Simulateur Terminal Cisco IOS-XE et Lab Guidé - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 4. 🧠 Moteur Flashcards SRS Leitner (5 Boîtes & Références RFC)
+*Système de répétition espacée (SRS) optimisant la rétention mémorielle : progression dynamique dans les 5 boîtes de Leitner, cartes 3D réversibles avec citations normatives des RFCs de l'IETF (ex. RFC 4271 BGP Path Selection), extraits de syntaxe CLI et filtres par domaine technologique.*
+
+<p align="center">
+  <img src="public/screenshots/flashcards-srs.jpg" alt="Moteur Flashcards SRS Leitner - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 5. 🚀 Landing Page Vitrine Publique & Bac à Sable Interactif
+*Portail d'accueil public sans friction séparé de l'application (`/` vs `/app`) : présentation institutionnelle, métriques clés, bac à sable interactif permettant de tester le terminal IOS-XE, les fiches 3D et le calculateur CIDR directement depuis la page d'accueil.*
+
+<p align="center">
+  <img src="public/screenshots/landing-page.jpg" alt="Vitrine Publique et Bac à Sable Interactif - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
 </p>
 
 ---

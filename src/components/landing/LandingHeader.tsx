@@ -62,6 +62,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onLaunchApp }) => 
           </button>
           <button
             type="button"
+            onClick={() => scrollToSection('screenshots')}
+            className="hover:text-[#00e5ff] transition-colors cursor-pointer py-1"
+          >
+            {t('landing:nav.screens')}
+          </button>
+          <button
+            type="button"
             onClick={() => scrollToSection('learning')}
             className="hover:text-[#00e5ff] transition-colors cursor-pointer py-1"
           >
@@ -173,6 +180,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ onLaunchApp }) => 
               className="text-left py-2 px-3 rounded-lg hover:bg-[#181c24] text-[#bac9cc] hover:text-[#00e5ff]"
             >
               {t('landing:nav.features')}
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToSection('screenshots')}
+              className="text-left py-2 px-3 rounded-lg hover:bg-[#181c24] text-[#bac9cc] hover:text-[#00e5ff]"
+            >
+              {t('landing:nav.screens')}
             </button>
             <button
               type="button"

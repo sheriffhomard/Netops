@@ -73,20 +73,20 @@ describe('Landing Page & Public Showcase Unit Tests', () => {
     renderLanding({ onLaunchApp: vi.fn() });
 
     // Find sandbox tab buttons
-    const terminalTab = screen.getByText('Terminal IOS-XE');
-    const flashcardsTab = screen.getByText('Fiches SRS 3D');
-    const subnetTab = screen.getByText('Calculateur CIDR');
+    const terminalTabs = screen.getAllByText('Terminal IOS-XE');
+    const flashcardsTabs = screen.getAllByText('Fiches SRS 3D');
+    const subnetTabs = screen.getAllByText('Calculateur CIDR');
 
-    expect(terminalTab).toBeDefined();
-    expect(flashcardsTab).toBeDefined();
-    expect(subnetTab).toBeDefined();
+    expect(terminalTabs.length).toBeGreaterThanOrEqual(1);
+    expect(flashcardsTabs.length).toBeGreaterThanOrEqual(1);
+    expect(subnetTabs.length).toBeGreaterThanOrEqual(1);
 
     // Switch to flashcards
-    fireEvent.click(flashcardsTab);
+    fireEvent.click(flashcardsTabs[0]);
     expect(screen.getAllByText(/Algorithme SRS Leitner/i).length).toBeGreaterThanOrEqual(1);
 
     // Switch to CIDR calculator
-    fireEvent.click(subnetTab);
+    fireEvent.click(subnetTabs[0]);
     expect(screen.getByText(/Calculateur CIDR \/ VLSM Instantané/i)).toBeDefined();
   });
 
@@ -139,5 +139,35 @@ describe('Landing Page & Public Showcase Unit Tests', () => {
     fireEvent.click(showcaseButtons[0]);
     expect(handleNavigateToLanding).toHaveBeenCalledTimes(1);
     expect(handleClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders Screenshots Gallery with tabs and real application preview images', () => {
+    const { container } = renderLanding({ onLaunchApp: vi.fn() });
+
+    // Verify #screenshots section exists
+    const screenshotsSection = container.querySelector('#screenshots');
+    expect(screenshotsSection).not.toBeNull();
+
+    // Verify tab buttons exist
+    const nocTabs = screen.getAllByRole('button', { name: /Console NOC|NOC Console/i });
+    const examsTabs = screen.getAllByRole('button', { name: /Simulateur d'Examens|Exam Simulator/i });
+    const terminalTabs = screen.getAllByRole('button', { name: /Terminal IOS-XE|IOS-XE Terminal/i });
+    const flashcardsTabs = screen.getAllByRole('button', { name: /Flashcards SRS|SRS Flashcards/i });
+
+    expect(nocTabs.length).toBeGreaterThanOrEqual(1);
+    expect(examsTabs.length).toBeGreaterThanOrEqual(1);
+    expect(terminalTabs.length).toBeGreaterThanOrEqual(1);
+    expect(flashcardsTabs.length).toBeGreaterThanOrEqual(1);
+
+    // Verify initial active image
+    const initialImgs = screen.getAllByAltText(/Console NOC|Live NOC Console/i);
+    expect(initialImgs.length).toBeGreaterThanOrEqual(1);
+    expect(initialImgs[0].getAttribute('src')).toContain('noc-dashboard.jpg');
+
+    // Switch to Exam Simulator
+    fireEvent.click(examsTabs[0]);
+    const examImgs = screen.getAllByAltText(/Simulateur d'Examens|Proctored Certification Exam/i);
+    expect(examImgs.length).toBeGreaterThanOrEqual(1);
+    expect(examImgs[0].getAttribute('src')).toContain('exam-simulator.jpg');
   });
 });

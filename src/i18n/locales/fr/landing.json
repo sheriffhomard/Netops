@@ -2,6 +2,7 @@
   "nav": {
     "home": "Accueil",
     "features": "Fonctionnalités",
+    "screens": "Captures",
     "learning": "Méthode",
     "technologies": "Technologies",
     "audiences": "Publics",
@@ -211,6 +212,47 @@
       }
     },
     "disclaimer": "Avertissement : NetOps Academy est une plateforme indépendante d'apprentissage et d'entraînement technique. Elle ne délivre pas d'accréditations ni de certifications constructeurs officielles."
+  },
+  "gallery": {
+    "kicker": "Aperçu Réel",
+    "title": "L'Application en Images",
+    "subtitle": "Découvrez les véritables interfaces de NetOps Academy : cockpit NOC, simulateurs de certification, console IOS-XE et fiches de mémorisation SRS.",
+    "tabs": {
+      "noc": "Console NOC",
+      "exams": "Simulateur d'Examens",
+      "terminal": "Terminal IOS-XE",
+      "flashcards": "Flashcards SRS",
+      "landing": "Vitrine & Bac à Sable"
+    },
+    "items": {
+      "noc": {
+        "title": "Console NOC & Télémétrie Opérationnelle en Direct",
+        "description": "Supervision en direct de l'infrastructure réseau : schéma vectoriel (Transit WAN, BGP AS 65001, pare-feu HA, matrice Spine-Leaf), radar de compétences 6 axes et flux télémétrique temps réel.",
+        "badge": "Supervision & Télémétrie"
+      },
+      "exams": {
+        "title": "Simulateur d'Examens Officiels Proctorisé",
+        "description": "Session d'examen minutée en conditions réelles avec chronomètre en direct, schémas de topologie ASCII, commandes CLI, bloc-notes et marquage pour relecture.",
+        "badge": "Évaluation Certifiante"
+      },
+      "terminal": {
+        "title": "Terminal Cisco IOS-XE & Atelier Virtuel Guidé",
+        "description": "Console CLI authentique exécutant un simulateur IOS-XE : tables de routage réelles, commandes de diagnostic et panneau d'objectifs guidés avec validation.",
+        "badge": "Laboratoire & Ligne de Commande"
+      },
+      "flashcards": {
+        "title": "Moteur Flashcards SRS Leitner à 5 Boîtes",
+        "description": "Système de répétition espacée optimisé : 5 boîtes de progression, cartes 3D interactives, citations normatives des RFCs de l'IETF et extraits de syntaxe CLI.",
+        "badge": "Mémorisation Active"
+      },
+      "landing": {
+        "title": "Vitrine Publique & Bac à Sable Interactif",
+        "description": "Portail d'accueil public sans friction avec bac à sable interactif permettant de tester le terminal, les flashcards et le calculateur CIDR directement.",
+        "badge": "Vitrine & Découverte"
+      }
+    },
+    "viewFullscreen": "Agrandir la capture",
+    "closeModal": "Fermer l'aperçu"
   },
   "cta": {
     "heading": "Prêt à développer vos compétences réseau ?",

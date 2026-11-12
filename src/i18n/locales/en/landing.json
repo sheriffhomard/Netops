@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "features": "Features",
+    "screens": "Screenshots",
     "learning": "Method",
     "technologies": "Technologies",
     "audiences": "Audiences",
@@ -211,6 +212,47 @@
       }
     },
     "disclaimer": "Disclaimer: NetOps Academy is an independent educational and technical training platform. It does not issue official vendor credentials or accreditations."
+  },
+  "gallery": {
+    "kicker": "Real Application Preview",
+    "title": "The Platform in Screenshots",
+    "subtitle": "Explore the actual interfaces of NetOps Academy: NOC cockpit, proctored exam simulator, Cisco IOS-XE terminal, and SRS flashcards engine.",
+    "tabs": {
+      "noc": "NOC Console",
+      "exams": "Exam Simulator",
+      "terminal": "IOS-XE Terminal",
+      "flashcards": "SRS Flashcards",
+      "landing": "Showcase & Sandbox"
+    },
+    "items": {
+      "noc": {
+        "title": "Live NOC Console & Operational Telemetry",
+        "description": "Real-time enterprise network supervision: vector topology (Transit WAN, BGP AS 65001, HA firewalls, Spine-Leaf matrix), 6-axis readiness radar, and live telemetry stream.",
+        "badge": "Supervision & Telemetry"
+      },
+      "exams": {
+        "title": "Proctored Certification Exam Simulator",
+        "description": "Timed exam proctoring session matching real-world conditions: live timer, ASCII topology diagrams, CLI syntax options, scratchpad notes, and review flag tracking.",
+        "badge": "Certification Assessment"
+      },
+      "terminal": {
+        "title": "Cisco IOS-XE Terminal & Virtual Hands-on Lab",
+        "description": "Authentic CLI console running simulated IOS-XE routing tables, troubleshooting commands, and guided lab task checklist with real-time step validation.",
+        "badge": "Lab & Command Line"
+      },
+      "flashcards": {
+        "title": "Leitner 5-Box SRS Flashcards Engine",
+        "description": "Scientifically engineered spaced repetition: 5 Leitner boxes, interactive 3D flippable cards, authoritative IETF RFC citations, and CLI syntax snippets.",
+        "badge": "Active Recall"
+      },
+      "landing": {
+        "title": "Public Showcase & Interactive Sandbox",
+        "description": "Frictionless public entry portal with live in-page sandbox allowing visitors to test the CLI terminal, 3D cards, and CIDR calculator directly.",
+        "badge": "Showcase & Discovery"
+      }
+    },
+    "viewFullscreen": "Enlarge screenshot",
+    "closeModal": "Close preview"
   },
   "cta": {
     "heading": "Ready to elevate your network engineering skills?",

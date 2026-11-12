@@ -96,7 +96,7 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
 - **Langue par défaut** : Français (`fr`), basculement bidirectionnel fluide vers l'Anglais (`en`).
 - **Persistance** : Mémorisation locale sous `localStorage.getItem('netops_lang')` et synchronisation immédiate de l'attribut HTML `document.documentElement.lang`.
 - **Zéro Rechargement de Page** : `i18n.changeLanguage()` met à jour l'arbre React de manière purement réactive, préservant sans perte les timers de simulation d'examen, le bloc-notes, les sessions du terminal virtuel et les cartes SRS.
-- **10 Espaces de Noms Modulaires** :
+- **11 Espaces de Noms Modulaires** :
   - `common` : Boutons universels, statuts, niveaux de certification, thèmes, métriques et PWA.
   - `navigation` : Catégories hiérarchiques, fil d'Ariane dynamique et libellés de menus.
   - `dashboard` : Métriques du cockpit NOC, session active, radar et sprint Blitz.
@@ -107,6 +107,10 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
   - `encyclopedia` : Topologies hybrides, schémas ASCII et comparatif Cloud.
   - `settings` : Paramètres système, mentions légales et calculateur CIDR/VLSM.
   - `errors` : Diagnostics réseau et messages d'erreur techniques.
+  - `landing` : Vitrine publique, hero section, curriculum, bac à sable interactif et galerie visuelle des captures applicatives.
+- **Actifs Visuels & Galerie Réelle (`public/screenshots/`)** :
+  - Captures réelles et actualisées de la plateforme sans cadre : console NOC, simulateur d'examens proctorisé, terminal Cisco IOS-XE, flashcards Leitner SRS et vitrine publique.
+  - Intégrées dans la galerie interactive de la landing page (`ScreenshotsGallery.tsx`) et documentées dans `README.md` et `README.en.md`.
 - **Préservation des Données Techniques** : Syntaxe exacte des commandes CLI (Cisco IOS-XE, Palo Alto PAN-OS, Fortinet FortiOS) et identifiants techniques stables pour les 2 900+ flashcards.
 
 ---
@@ -117,6 +121,6 @@ Le système de cycle de vie logiciel est orchestré par `src/context/UpdateConte
 - **Scripts de Contrôle Qualité** :
   - `npm run typecheck` : validation TypeScript stricte (`tsc --noEmit`).
   - `npm run lint` : linter de conformité du codebase.
-  - `npm run test` : exécution des 22 tests unitaires et d'intégration (SRS Leitner, CIDR, scoring examen, parité bilingue, matrice de sécurité Firestore).
-  - `npm run test:i18n` : audit automatique de parité des dictionnaires et recensement exhaustif des contenus pédagogiques.
+  - `npm run test` : exécution des 29 tests unitaires et d'intégration (landing page, screenshots gallery, SRS Leitner, CIDR, scoring examen, parité bilingue, matrice de sécurité Firestore).
+  - `npm run test:i18n` : audit automatique de parité des dictionnaires (567 clés FR / 567 clés EN) et recensement exhaustif des contenus pédagogiques.
 - **Intégration Continue (CI)** : Workflow GitHub Actions `.github/workflows/ci.yml` exécutant le pipeline complet sur Node 20.

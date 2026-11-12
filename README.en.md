@@ -25,10 +25,43 @@
 
 ---
 
-## 📸 Screen Preview — NOC Cockpit & Telemetry Console
+## 📸 Application Visual Gallery — Actual & Updated Screen Previews
+
+The screenshots below showcase the actual, production-ready interface of NetOps Academy, spanning its engineering cockpits, interactive labs, and pedagogical tools.
+
+### 1. 🌐 Live NOC Console & Operational Telemetry
+*Real-time enterprise network supervision: vector topology diagram (Tier-1 Transit WAN, BGP AS 65001, HA Firewall Cluster, Spine-Leaf Matrix), 6-axis Cisco readiness spider radar chart (Fundamentals, Routing OSPF/BGP, Security, Automation), incident alerts log, and live telemetry stream.*
 
 <p align="center">
-  <img src="/screenshot.jpg" alt="NetOps Academy Dashboard Preview" width="100%" style="border-radius: 16px; border: 1px solid #334155; box-shadow: 0 12px 35px rgba(0,0,0,0.6);" />
+  <img src="public/screenshots/noc-dashboard.jpg" alt="Live NOC Console and Telemetry - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 2. 🔬 Proctored Certification Exam Simulator
+*Timed exam proctoring session matching official exam conditions (CCNA 200-301 / CCNP ENCOR 350-401): live countdown timer, progress indicator, scenario-based questions with ASCII network topologies, CLI options, integrated scratchpad notes, and review flag tracking.*
+
+<p align="center">
+  <img src="public/screenshots/exam-simulator.jpg" alt="Proctored Exam Simulator - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 3. 💻 Cisco IOS-XE Terminal & Virtual Hands-on Lab
+*Interactive CLI console running simulated IOS-XE routing tables (`show ip route ospf`), real BGP status, hierarchical configuration command modes, and a guided lab task checklist with real-time step validation.*
+
+<p align="center">
+  <img src="public/screenshots/cisco-terminal.jpg" alt="Cisco IOS-XE Terminal Simulator and Virtual Lab - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 4. 🧠 Leitner SRS Flashcards Engine (5 Boxes & RFC Standards)
+*Spaced Repetition System (SRS) scientifically engineered for long-term memory retention: Leitner 5-box distribution, 3D interactive flippable cards with authoritative IETF RFC citations (e.g. RFC 4271 BGP Path Selection), CLI syntax examples, and domain filters.*
+
+<p align="center">
+  <img src="public/screenshots/flashcards-srs.jpg" alt="Leitner SRS Flashcards Engine - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</p>
+
+### 5. 🚀 Public Landing Page Showcase & Interactive Sandbox
+*Frictionless public entry portal cleanly decoupled from the application (`/` vs `/app`): corporate presentation, core metrics, and live in-page interactive sandbox allowing visitors to test the IOS-XE terminal, 3D flashcards, and CIDR calculator directly.*
+
+<p align="center">
+  <img src="public/screenshots/landing-page.jpg" alt="Public Showcase and Interactive Sandbox - NetOps Academy" width="100%" style="border-radius: 12px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
 </p>
 
 ---

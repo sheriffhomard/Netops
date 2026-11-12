@@ -2,6 +2,32 @@
 
 Toutes les modifications notables apportées au projet sont documentées dans ce fichier.
 
+## [2.7.1] — 2026-11-08
+
+### 📸 Galerie Visuelle de Captures Réelles & Vitrine Landing Page Actualisée
+- **Captures Écran Réelles & Haute Définition (`public/screenshots/`)** :
+  - Génération et intégration de 5 véritables captures d'écran de l'interface applicative sans cadre d'appareil (zero device frame) :
+    - `noc-dashboard.jpg` : Console de supervision NOC, topologie vectorielle WAN/BGP/Firewall/Core/Leaf-Spine, radar 6 axes de préparation Cisco CCNA/CCNP et télémétrie temps réel.
+    - `exam-simulator.jpg` : Simulateur d'examens officiels proctorisé avec chronomètre réel, barre de progression, question OSPFv2 scénarisée et schéma ASCII.
+    - `cisco-terminal.jpg` : Terminal interactif Cisco IOS-XE avec tables de routage authentiques (`show ip route ospf`), statut BGP et checklist guidée d'objectifs lab.
+    - `flashcards-srs.jpg` : Moteur pédagogique SRS Leitner à 5 boîtes avec cartes 3D interactives, références normatives RFC 4271 et filtres par domaine.
+    - `landing-page.jpg` : Vitrine publique d'accueil avec bac à sable interactif et présentation sans friction.
+  - Mise à jour de `public/screenshot.jpg` avec la console NOC actualisée.
+- **Enrichissement Visuel du README (`README.md` & `README.en.md`)** :
+  - Remplacement de la capture unique fictive par une galerie visuelle complète à 5 panneaux détaillant le rôle et les fonctionnalités de chaque écran en français et en anglais.
+- **Module Interactif Galerie sur la Landing Page (`ScreenshotsGallery.tsx`)** :
+  - Nouveau composant interactif `ScreenshotsGallery` intégré dans `LandingPageView.tsx` (#screenshots).
+  - Sélecteur d'onglets réactif, carrousel de miniatures, vue agrandie plein écran modale et descriptifs techniques contextualisés.
+  - Lien de navigation direct « Captures » / « Screenshots » dans la barre d'en-tête desktop et mobile.
+- **Internationalisation & Dictionnaires Synchronisés (`landing.json`)** :
+  - Ajout des libellés et descriptions d'écrans dans `src/i18n/locales/fr/landing.json` et `src/i18n/locales/en/landing.json`.
+  - Parité stricte 1:1 maintenue (567 clés FR / 567 clés EN sur 11 espaces de noms), validée par `npm run test:i18n`.
+- **Validation & Tests Automatisés** :
+  - Ajout d'un test dédié dans `src/test/landingPage.test.tsx` pour valider le rendu du composant et le basculement d'onglets de la galerie.
+  - 29 tests unitaires validés avec succès sur l'ensemble de la suite Vitest.
+
+---
+
 ## [2.7.0] — 2026-11-08
 
 ### 🚀 Landing Page Professionnelle Vitrine & Intégration Navigation

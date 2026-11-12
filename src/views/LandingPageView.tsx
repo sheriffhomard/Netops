@@ -5,6 +5,7 @@ import { InteractiveTopologyGraphic } from '../components/landing/InteractiveTop
 import { InteractiveTerminalPreview } from '../components/landing/InteractiveTerminalPreview';
 import { InteractiveFlashcardDemo } from '../components/landing/InteractiveFlashcardDemo';
 import { InteractiveSubnetWidget } from '../components/landing/InteractiveSubnetWidget';
+import { ScreenshotsGallery } from '../components/landing/ScreenshotsGallery';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { usePWA } from '../context/PWAContext';
 
@@ -434,6 +435,28 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 {activeInteractiveTab === 'subnet' && <InteractiveSubnetWidget />}
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* SECTION 4.5: GALERIE VISUELLE DE L'APPLICATION (CAPTURES RÉELLES & ACTUALISÉES) */}
+        <section
+          id="screenshots"
+          className="py-16 sm:py-24 border-b border-[#334155]/40 bg-[#070a10]/80"
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-12">
+              <span className="text-xs font-mono text-[#00e5ff] uppercase tracking-wider block mb-2">
+                {t('landing:gallery.kicker')}
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-[#dfe2ee]">
+                {t('landing:gallery.title')}
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-[#bac9cc] leading-relaxed">
+                {t('landing:gallery.subtitle')}
+              </p>
+            </div>
+
+            <ScreenshotsGallery />
           </div>
         </section>
 
